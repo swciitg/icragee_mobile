@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
-class profile_page extends StatefulWidget {
-  const profile_page({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<profile_page> createState() => _profile_pageState();
+  State<ProfilePage> createState() => ProfilePageState();
 }
 
-class _profile_pageState extends State<profile_page> {
+class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
