@@ -4,6 +4,8 @@ import 'package:icragee_mobile/firebase_options.dart';
 import 'package:icragee_mobile/routing/route_config.dart';
 import 'package:icragee_mobile/services/notification_service.dart';
 
+import 'QR_tab.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
