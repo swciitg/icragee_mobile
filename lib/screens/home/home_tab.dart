@@ -8,9 +8,10 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.primaryColor,
+      backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: MyColors.primaryColor,
+        scrolledUnderElevation: 0,
+        backgroundColor: MyColors.backgroundColor,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -33,17 +34,9 @@ class HomeTab extends StatelessWidget {
           ],
         ),
         actions: [
-          /*IconButton(
-            iconSize: 42.0,
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-          ),*/
           IconButton(
-            iconSize: 42.0,
-            onPressed: () {
-              // Navigator.push(
-              // context, MaterialPageRoute(builder: (context) {ProfilePage()}));
-            },
+            iconSize: 42,
+            onPressed: () {},
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],
@@ -53,12 +46,12 @@ class HomeTab extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 15),
+            SizedBox(height: 15),
             Text(
               " Upcoming Events",
               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             MainTitle(
               eventTitle: "Title Lorem Ipsum",
               speaker: "Speaker",
@@ -67,7 +60,7 @@ class HomeTab extends StatelessWidget {
               description:
                   "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
             ),
-            const SizedBox(
+            SizedBox(
               height: 8,
             ),
             Text(

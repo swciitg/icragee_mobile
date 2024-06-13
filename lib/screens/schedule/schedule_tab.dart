@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/Schedule_list.dart';
 
 class ScheduleTab extends StatefulWidget {
   const ScheduleTab({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ScheduleTab();
@@ -70,45 +72,49 @@ class _ScheduleTab extends State<ScheduleTab> {
       mainContent = SchedulesList(schedules: _registerdSchedule);
     }
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 167, 227, 227),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Time Table',
-              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-            ),
-            Row(children: [
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                ),
-                child: const Text('Day 1'),
-              ),
-              const SizedBox( width: 4,),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                ),
-                child: const Text('Day 2'),
-              )
-            ]),
-            // const SizedBox(height: 4),
-            Expanded(child: mainContent),
-          ],
+      appBar: AppBar(
+        backgroundColor: MyColors.backgroundColor,
+        title: const Text(
+          'Time Table',
+          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
+        scrolledUnderElevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(40),
+          child: Row(children: [
+            const SizedBox(width: 20),
+            OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                side: const BorderSide(
+                  color: Colors.black,
+                  width: 1.5,
+                ),
+              ),
+              child: const Text('Day 1'),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                side: const BorderSide(
+                  color: Colors.black,
+                  width: 1.5,
+                ),
+              ),
+              child: const Text('Day 2'),
+            )
+          ]),
+        ),
+      ),
+      backgroundColor: MyColors.backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: mainContent,
       ),
     );
   }
