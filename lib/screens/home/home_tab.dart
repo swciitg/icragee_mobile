@@ -8,9 +8,9 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(136, 43, 213, 187),
+      backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(128, 32, 229, 199),
+        backgroundColor: MyColors.primaryColor,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
