@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tiles.dart';
 
 class HomeTab extends StatelessWidget {
@@ -7,7 +8,9 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
+        backgroundColor: MyColors.primaryColor,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -23,18 +26,18 @@ class HomeTab extends StatelessWidget {
             Text(
               "Sumeet Ahire",
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
         actions: [
-          IconButton(
+          /*IconButton(
             iconSize: 42.0,
             onPressed: () {},
             icon: const Icon(Icons.notifications_outlined),
-          ),
+          ),*/
           IconButton(
             iconSize: 42.0,
             onPressed: () {
@@ -45,67 +48,33 @@ class HomeTab extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Text(
               " Upcoming Events",
-              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             MainTitle(
-              eventTitle: "Event Title",
+              eventTitle: "Title Lorem Ipsum",
               speaker: "Speaker",
               time: "Timing",
-              date: "Date",
+              location: "Location",
+              description:
+                  "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Day 1",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    side: const BorderSide(width: 2.0, color: Colors.black),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Day 2",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    side: const BorderSide(width: 2.0, color: Colors.black),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Day 3",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    side: const BorderSide(width: 2.0, color: Colors.black),
-                  ),
-                ),
-              ],
+            Text(
+              " Notifications",
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
-            Expanded(child: eventile(totalEvents: 5)),
+            Expanded(child: EventTile(totalEvents: 5)),
           ],
         ),
       ),
