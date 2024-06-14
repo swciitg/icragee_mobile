@@ -8,9 +8,10 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.primaryColor,
+      backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: MyColors.primaryColor,
+        scrolledUnderElevation: 0,
+        backgroundColor: MyColors.backgroundColor,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -34,11 +35,8 @@ class HomeTab extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            iconSize: 42.0,
-            onPressed: () {
-              // Navigator.push(
-              // context, MaterialPageRoute(builder: (context) {ProfilePage()}));
-            },
+            iconSize: 42,
+            onPressed: () {},
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],
