@@ -41,34 +41,36 @@ class HomeTab extends StatelessWidget {
           ),
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            Text(
-              " Upcoming Events",
-              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
-            ),
-            SizedBox(height: 10),
-            MainTitle(
-              eventTitle: "Title Lorem Ipsum",
-              speaker: "Speaker",
-              time: "Timing",
-              location: "Location",
-              description:
-                  "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Text(
-              " Notifications",
-              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
-            ),
-            Expanded(child: EventTile(totalEvents: 5)),
-          ],
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 15),
+              Text(
+                " Upcoming Events",
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+              ),
+              SizedBox(height: 10),
+              MainTitle(
+                eventTitle: "Title Lorem Ipsum",
+                speaker: "Speaker",
+                time: "Timing",
+                location: "Location",
+                description:
+                    "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                " Notifications",
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+              ),
+              EventTile(totalEvents: 6),
+            ],
+          ),
         ),
       ),
     );
