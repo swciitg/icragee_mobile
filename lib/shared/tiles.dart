@@ -20,15 +20,14 @@ class MainTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // Ensures the container takes full width
+      width: double.infinity,
       decoration: BoxDecoration(
         color: MyColors.navBarBackgroundColor,
-        borderRadius: BorderRadius.circular(15), // Rounded corners
+        borderRadius: BorderRadius.circular(15),
       ),
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Aligns children to the start
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             eventTitle,
@@ -52,11 +51,7 @@ class MainTitle extends StatelessWidget {
               fontWeight: FontWeight.w300,
             ),
           ),
-
-          //const SizedBox(height: 10),
           Row(
-            //mainAxisAlignment: MainAxisAlignment.end,
-
             children: [
               Icon(Icons.access_time_outlined),
               Text(
@@ -94,79 +89,12 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: totalEvents,
-      itemBuilder: (context, index) {
-        return NotificationTiles(); // Return the NotificationTiles widget
-      },
+    return Column(
+      children:
+          List.generate(totalEvents, (index) => const NotificationTiles()),
     );
   }
 }
-/*
-class NotificationTiles extends StatelessWidget {
-  const NotificationTiles({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 90,
-      decoration: BoxDecoration(
-        color: MyColors.navBarBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(10.0),
-      margin: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Stack(
-        children: [
-          // Main content of the container
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Admin",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Positioned icon and text at the top right
-          Positioned(
-            right: 10,
-            top: 10,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time_outlined,
-                  size: 16,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  '9:00',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/
 
 class NotificationTiles extends StatefulWidget {
   const NotificationTiles({super.key});
@@ -180,6 +108,10 @@ class _NotificationTilesState extends State<NotificationTiles> {
 
   @override
   Widget build(BuildContext context) {
+    String fullMessage =
+        "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.";
+    String shortMessage = fullMessage.split(' ').take(15).join(' ') + '...';
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -187,58 +119,45 @@ class _NotificationTilesState extends State<NotificationTiles> {
         });
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         width: double.infinity,
-        height: _isExpanded ? 140 : 90,
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
           color: MyColors.navBarBackgroundColor,
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.all(10.0),
-        margin: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Main content of the container
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Admin",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Admin",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.access_time_outlined, size: 16),
+                    SizedBox(width: 5),
+                    Text(
+                      '9:00',
+                      style: TextStyle(fontSize: 14),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            // Positioned icon and text at the top right
-            Positioned(
-              right: 10,
-              top: 10,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.access_time_outlined,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '9:00',
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 5),
+            Text(
+              _isExpanded ? fullMessage : shortMessage,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ],
