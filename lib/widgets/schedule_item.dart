@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 
 class ScheduleItem extends StatelessWidget {
   const ScheduleItem(this.schedule, {super.key});
@@ -9,48 +10,77 @@ class ScheduleItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: MyColors.navBarBackgroundColor,
+      ),
+      margin: const EdgeInsets.all(3),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
-          vertical: 16,
+          vertical: 2,
         ),
         child: Column(
           children: [
             Row(
-               children: [
-                Text(schedule.title,  style:const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                )),
+              children: [
+                Text(schedule.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    )),
                 const Spacer(),
-               const Icon(Icons.place ,size: 30,)
-               ],
+                const Icon(
+                  Icons.place_outlined,
+                  size: 25,
+                )
+              ],
             ),
-           
             const SizedBox(height: 4),
-            Text(schedule.description),
             Row(
               children: [
                 Row(children: [
-                  const Icon(Icons.access_time ,size: 20,),
+                  const Icon(
+                    Icons.access_time,
+                    size: 15,
+                  ),
                   Text(
                     ' ${schedule.timeStart.toStringAsFixed(2)} - ${schedule.timeEnd.toStringAsFixed(2)}  ',
+                    style: const TextStyle(fontSize: 10),
                   ),
-                  const Icon(Icons.place,size:20),
-                  const Text(' Location')
+                  const Icon(Icons.place_outlined, size: 15),
+                  const Text(
+                    ' Location',
+                    style: TextStyle(fontSize: 10),
+                  )
                 ]),
                 const Spacer(),
-                //    OutlinedButton.icon(
-                //   onPressed: (){},
-                //   style: OutlinedButton.styleFrom(
-                //     foregroundColor: Colors.white,
-                //   ),
-                //   icon: const Icon(Icons.circle),
-                //   label: const Text('Start Quiz'),
-                // )
+                SizedBox(
+                  width: 120,
+                  height: 20,
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.orange,
+                      side: const BorderSide(color: Colors.orange),
+                    ),
+                    icon: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    label: const Text('Ongoing'),
+                  ),
+                ),
               ],
             ),
+            const SizedBox(
+              height: 4,
+            )
           ],
         ),
       ),
