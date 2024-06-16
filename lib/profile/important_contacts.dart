@@ -1,75 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/screens/home_screen.dart';
-import 'package:icragee_mobile/screens/profile/important_contacts.dart';
+import 'package:icragee_mobile/screens/profile/emergency.dart';
+import 'package:icragee_mobile/screens/profile/iitg_hospital.dart';
+import 'package:icragee_mobile/screens/profile/profile_page.dart';
+import 'package:icragee_mobile/screens/profile/transport.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ImportantContacts extends StatefulWidget {
+  const ImportantContacts({super.key});
 
   @override
-  State<ProfilePage> createState() => ProfilePageState();
+  State<ImportantContacts> createState() => _ImportantContactsState();
 }
 
-class ProfilePageState extends State<ProfilePage> {
+class _ImportantContactsState extends State<ImportantContacts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title: Text('My profile'),
+        title: Text('Important Contacts'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+                MaterialPageRoute(builder: (context) => const ProfilePage()));
           },
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: MyColors.primaryColor,
-                    borderRadius: BorderRadius.circular(8)),
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      //backgroundImage: AssetImage('assets/profile_picture.jpg'),
-                    ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Abhishek Sinha',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text('ID 2209753728'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 26),
+              SizedBox(height: 36),
               ListTile(
                 tileColor: MyColors.primaryColor,
-                leading: Icon(Icons.contacts),
-                title: Text('Important contacts'),
+                title: Text('Emergency'),
                 trailing: InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ImportantContacts()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Emergency()));
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -86,13 +57,16 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              // SizedBox(height: 16),
               ListTile(
                 tileColor: MyColors.primaryColor,
-                leading: Icon(Icons.feedback),
-                title: Text('Feedback'),
+                title: Text('IITG Hospital'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => IitgHospital()));
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: MyColors.secondaryColor,
@@ -108,13 +82,16 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              //SizedBox(height: 16),
               ListTile(
                 tileColor: MyColors.primaryColor,
-                leading: Icon(Icons.help),
-                title: Text('FAQs'),
+                title: Text('Transport'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Transport()));
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: MyColors.secondaryColor,
