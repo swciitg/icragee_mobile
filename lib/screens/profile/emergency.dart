@@ -39,7 +39,7 @@ class Emergency extends StatelessWidget {
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: ContactsWidget(
             contacts: contacts,
           ),

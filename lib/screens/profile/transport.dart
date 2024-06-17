@@ -24,7 +24,7 @@ class Transport extends StatelessWidget {
             },
           ),
         ),
-        body: Padding(
+        body: const Padding(
           padding: EdgeInsets.all(16),
           child: ContactsWidget(
             contacts: [],

@@ -48,7 +48,7 @@ class IitgHospital extends StatelessWidget {
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Scrollbar(
             child: ContactsWidget(
               contacts: contacts,

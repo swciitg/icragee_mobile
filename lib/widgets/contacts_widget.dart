@@ -7,14 +7,14 @@ class ContactsWidget extends StatelessWidget {
   final List<EmergencyContact> contacts;
 
   const ContactsWidget({
-    Key? key,
+    super.key,
     required this.contacts,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: MyColors.navBarBackgroundColor),
@@ -23,7 +23,7 @@ class ContactsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
                 Expanded(
                   child: Text(
@@ -45,7 +45,7 @@ class ContactsWidget extends StatelessWidget {
             ),
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contact = contacts[index];
