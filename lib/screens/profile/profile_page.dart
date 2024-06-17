@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/screens/home_screen.dart';
+import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/feedback/feedback_page.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
@@ -15,14 +17,15 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title:const Text('My profile'),
-        // leading: IconButton(
-        //   icon:const Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (context) => const HomeScreen()));
-        //   },
-        // ),
+        backgroundColor: MyColors.backgroundColor,
+        title: Text('My profile'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -64,7 +67,12 @@ class ProfilePageState extends State<ProfilePage> {
                 leading:const Icon(Icons.contacts),
                 title: const Text('Important contacts'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ImportantContacts()));
+                  },
                   child: Container(
                     decoration:const BoxDecoration(
                       color: MyColors.secondaryColor,
