@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../shared/colors.dart';
 import '../../shared/tiles.dart';
 import '../profile/profile_page.dart';
+
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -39,8 +39,8 @@ class HomeTab extends StatelessWidget {
           IconButton(
             iconSize: 42,
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()));
+               Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
             icon: const Icon(Icons.account_circle_outlined),
           ),
