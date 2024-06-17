@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
+import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,6 +16,7 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
+        backgroundColor: MyColors.backgroundColor,
         title: Text('My profile'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -64,7 +66,12 @@ class ProfilePageState extends State<ProfilePage> {
                 leading: Icon(Icons.contacts),
                 title: Text('Important contacts'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ImportantContacts()));
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: MyColors.secondaryColor,

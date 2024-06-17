@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/shared/colors.dart';
-import 'package:icragee_mobile/shared/tiles.dart';
+
+import '../../shared/colors.dart';
+import '../../shared/tiles.dart';
+import '../profile/profile_page.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -36,7 +38,10 @@ class HomeTab extends StatelessWidget {
         actions: [
           IconButton(
             iconSize: 42,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
+            },
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],
