@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
+import '../../models/emergency_contact.dart';
 import '../../widgets/contacts_widget.dart';
 
 class IitgHospital extends StatelessWidget {
@@ -32,11 +34,23 @@ class IitgHospital extends StatelessWidget {
     ];
     return Scaffold(
         backgroundColor: MyColors.backgroundColor,
+        appBar: AppBar(
+          title: const Text('IITG Hospital'),
+          backgroundColor: MyColors.backgroundColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ImportantContacts()));
+            },
+          ),
+        ),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Scrollbar(
             child: ContactsWidget(
-              title: 'IITG Hospital',
               contacts: contacts,
             ),
           ),

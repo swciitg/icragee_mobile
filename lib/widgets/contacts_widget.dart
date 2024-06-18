@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
+import '../models/emergency_contact.dart';
+
 class ContactsWidget extends StatelessWidget {
-  final String title;
   final List<EmergencyContact> contacts;
 
   const ContactsWidget({
-    Key? key,
-    required this.title,
+    super.key,
     required this.contacts,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: MyColors.backgroundColor,
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: MyColors.navBarBackgroundColor,
-            padding: const EdgeInsets.all(8.0),
-            child: const Row(
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: MyColors.navBarBackgroundColor),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
               children: [
                 Expanded(
                   child: Text(
@@ -34,6 +33,7 @@ class ContactsWidget extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 90,
+                  height: 30,
                 ),
                 Expanded(
                   child: Text(
@@ -43,36 +43,38 @@ class ContactsWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contact = contacts[index];
-                return ListTile(
-                  tileColor: MyColors.navBarBackgroundColor,
-                  title: Text(
-                    contact.name,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  trailing: Text(contact.contactNumber,
-                      style: TextStyle(fontSize: 18)),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        contact.name,
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 90,
+                      height: 30,
+                    ),
+                    Expanded(
+                      child: Text(
+                        contact.contactNumber,
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-}
-
-class EmergencyContact {
-  final String name;
-  final String contactNumber;
-
-  EmergencyContact({
-    required this.name,
-    required this.contactNumber,
-  });
 }

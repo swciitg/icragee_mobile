@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 import '../../widgets/contacts_widget.dart';
@@ -8,12 +9,24 @@ class Transport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         backgroundColor: MyColors.backgroundColor,
-        body: Padding(
+        appBar: AppBar(
+          title: const Text('Transport'),
+          backgroundColor: MyColors.backgroundColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ImportantContacts()));
+            },
+          ),
+        ),
+        body: const Padding(
           padding: EdgeInsets.all(16),
           child: ContactsWidget(
-            title: 'Transport',
             contacts: [],
           ),
         ));
