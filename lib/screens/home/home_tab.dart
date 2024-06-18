@@ -39,8 +39,8 @@ class HomeTab extends StatelessWidget {
           IconButton(
             iconSize: 42,
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()));
+               Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
             icon: const Icon(Icons.account_circle_outlined),
           ),
