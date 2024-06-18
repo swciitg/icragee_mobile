@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/screens/profile/profile_page.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tiles.dart';
 
@@ -36,7 +38,10 @@ class HomeTab extends StatelessWidget {
         actions: [
           IconButton(
             iconSize: 42,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
+            },
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],

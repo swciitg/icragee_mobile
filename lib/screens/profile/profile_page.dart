@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
+import 'package:icragee_mobile/screens/profile/faq.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -108,7 +109,10 @@ class ProfilePageState extends State<ProfilePage> {
                 leading: Icon(Icons.help),
                 title: Text('FAQs'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FaqScreen()));
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: MyColors.secondaryColor,
