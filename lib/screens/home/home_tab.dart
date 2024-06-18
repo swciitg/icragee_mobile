@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../shared/colors.dart';
-import '../../shared/tiles.dart';
-import '../profile/profile_page.dart';
-
+import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/screens/profile/profile_page.dart';
+import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/tiles.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});

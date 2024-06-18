@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
+import 'package:icragee_mobile/screens/profile/faq.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/feedback/feedback_page.dart';
 import 'package:icragee_mobile/shared/colors.dart';
@@ -118,7 +119,10 @@ class ProfilePageState extends State<ProfilePage> {
                 leading:const Icon(Icons.help),
                 title:const Text('FAQs'),
                 trailing: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FaqScreen()));
+                  },
                   child: Container(
                     decoration:const BoxDecoration(
                       color: MyColors.secondaryColor,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/screens/profile/faq.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class MainTitle extends StatelessWidget {
@@ -167,3 +168,77 @@ class _NotificationTilesState extends State<NotificationTiles> {
   }
 }
 
+class Faqtiles extends StatefulWidget {
+  const Faqtiles({super.key});
+
+  @override
+  State<Faqtiles> createState() => _FaqtilesState();
+}
+
+class _FaqtilesState extends State<Faqtiles> {
+  bool isClicked = false;
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: double.infinity,
+      padding: const EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(vertical: 3.0),
+      decoration: BoxDecoration(
+        color: MyColors.primaryColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "headline 1",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isClicked = !isClicked;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: MyColors.secondaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Icon(
+                      isClicked ? Icons.expand_less : Icons.expand_more,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (isClicked)
+            Column(
+              children: [
+                Divider(color: Colors.grey),  // This is the divider
+                Text(
+                  "This is ans to the question here it goes  df9eronrgoopgrgnrogrngoegreglrnngurgnrgrgnrgreogoirgoregrenirinffrnoojikm",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
