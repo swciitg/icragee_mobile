@@ -8,10 +8,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFF25D2B7),
+    return   Scaffold(
+        backgroundColor: const Color(0xFF25D2B7),
         body:Column(
           children:<Widget>[
             const SizedBox(height: 230),
@@ -24,39 +22,50 @@ class SplashScreen extends StatelessWidget {
 
               ),
             ),
-            buildElevatedButton(context,"Log in as Admin"),
-
+            const LoginButton(buttonName:"Log in as Admin",routePath:'/get-started'),
             const SizedBox(height: 24),
-            buildElevatedButton(context,"Log in as Guest"),],
+            const LoginButton(buttonName:"Log in as Guest",routePath:'/get-started'),
+          ],
         )
 
-      ),
-    );
+      );
   }
 
-  ElevatedButton buildElevatedButton(BuildContext context, String buttonName) {
+}
+
+class LoginButton extends StatelessWidget {
+  final String buttonName;
+  final String routePath;
+  const LoginButton({
+    super.key,
+    required this.buttonName,
+    required this.routePath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ElevatedButton(
-            onPressed: () async {
-               context.go('/get-started');
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor:Colors.white ,
-              //primary: Color(0xFFFF8C40), // Background color
-              backgroundColor: Color(0xFFFF8C40), // Text color
-              minimumSize: Size(310, 51), // Width and height
-              padding: EdgeInsets.symmetric(vertical: 13), // Padding
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Rounded corners
-              ),
-            ),
-            child:Text(
-              buttonName,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          );
+      onPressed: () async {
+        context.go(routePath);
+      },
+      style: ElevatedButton.styleFrom(
+        foregroundColor:Colors.white ,
+        //primary: Color(0xFFFF8C40), // Background color
+        backgroundColor: Color(0xFFFF8C40), // Text color
+        minimumSize: Size(310, 51), // Width and height
+        padding: EdgeInsets.symmetric(vertical: 13), // Padding
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), // Rounded corners
+        ),
+      ),
+      child: Text(
+        buttonName,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
