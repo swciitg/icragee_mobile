@@ -64,7 +64,7 @@ class ContactsWidget extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        contact.contactNumber,
+                        contact.phone,
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
