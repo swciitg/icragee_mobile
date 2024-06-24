@@ -4,11 +4,11 @@ import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/contacts_widget.dart';
 
 import '../../models/emergency_contact.dart';
-import '../../services/contacts_data_service.dart';
+import '../../services/data_service.dart';
 
 class Emergency extends StatelessWidget {
   Emergency({super.key});
-  final ContactsDataService contactsDataService = ContactsDataService();
+  final DataService contactsDataService = DataService();
 
   @override
   Widget build(BuildContext context) {

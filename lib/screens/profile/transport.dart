@@ -3,12 +3,12 @@ import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 import '../../models/emergency_contact.dart';
-import '../../services/contacts_data_service.dart';
+import '../../services/data_service.dart';
 import '../../widgets/contacts_widget.dart';
 
 class Transport extends StatelessWidget {
   Transport({super.key});
-  final ContactsDataService contactsDataService = ContactsDataService();
+  final DataService contactsDataService = DataService();
 
   @override
   Widget build(BuildContext context) {
