@@ -31,7 +31,7 @@ class _FaqScreenState extends State<FaqScreen> {
       body: Container(
         padding: EdgeInsets.all(9),
         child: FutureBuilder<List<Faqs>>(
-          future: faqListFuture,
+          future: DataService().fetchFaqs(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -40,10 +40,10 @@ class _FaqScreenState extends State<FaqScreen> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No FAQs available.'));
             } else {
-              List<Faqs> faqsList = snapshot.data!;
               return SingleChildScrollView(
                 child: Column(
-                  children: faqsList.map((faq) => Faqtiles(faq: faq)).toList(),
+                  children:
+                      snapshot.data!.map((faq) => Faqtiles(faq: faq)).toList(),
                 ),
               );
             }
