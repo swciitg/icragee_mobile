@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/emergency_contact.dart';
+import 'package:icragee_mobile/models/emergency_contact.dart';
 import 'package:icragee_mobile/models/faq.dart';
 
 class DataService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
-  Future<List<Faqs>> fetchFaqs() async {
-    var collectionSnapshot =
+  static Future<List<Faqs>> fetchFaqs() async {
+    final collectionSnapshot =
         await FirebaseFirestore.instance.collection('FAQs').get();
 
     return collectionSnapshot.docs
@@ -14,10 +12,10 @@ class DataService {
         .toList();
   }
 
-  Future<List<EmergencyContact>> fetchContactsByCategory(
+  static Future<List<EmergencyContact>> fetchContactsByCategory(
       String category) async {
     try {
-      QuerySnapshot querySnapshot = await _firestore
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('important_contacts')
           .where('category', isEqualTo: category)
           .get();
@@ -32,7 +30,7 @@ class DataService {
       throw Exception('Error fetching contacts: $e');
     }
   }
-  
+
   static Future<void> submitFeedback({
     required var name,
     required var email,

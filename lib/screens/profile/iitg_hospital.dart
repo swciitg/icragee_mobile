@@ -7,8 +7,7 @@ import '../../services/data_service.dart';
 import '../../widgets/contacts_widget.dart';
 
 class IitgHospital extends StatelessWidget {
-  IitgHospital({super.key});
-  final DataService contactsDataService = DataService();
+  const IitgHospital({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +29,10 @@ class IitgHospital extends StatelessWidget {
         body: Padding(
             padding: const EdgeInsets.all(16),
             child: FutureBuilder<List<EmergencyContact>>(
-              future:
-                  contactsDataService.fetchContactsByCategory('iitgHospital'),
+              future: DataService.fetchContactsByCategory('iitgHospital'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   // If there was an error, show an error message
                   return Center(child: Text('Error: ${snapshot.error}'));
@@ -43,7 +41,7 @@ class IitgHospital extends StatelessWidget {
                   List<EmergencyContact> contacts = snapshot.data!;
                   return ContactsWidget(contacts: contacts);
                 } else {
-                  return Center(child: Text('No contacts found.'));
+                  return const Center(child: Text('No contacts found.'));
                 }
               },
             )));

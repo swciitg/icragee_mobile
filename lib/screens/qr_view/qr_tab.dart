@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/qr_code_widget.dart';
@@ -19,9 +17,6 @@ class _QrTabState extends State<QrTab> {
   void initState() {
     super.initState();
     _updateMeal();
-    Timer.periodic(const Duration(minutes: 1), (timer) {
-      _updateMeal();
-    });
   }
 
   void _updateMeal() {
