@@ -32,4 +32,20 @@ class DataService {
       throw Exception('Error fetching contacts: $e');
     }
   }
+  
+  static Future<void> submitFeedback({
+    required var name,
+    required var email,
+    required var feedback,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection("feedback").add({
+        "name": name,
+        "email": email,
+        "feedback": feedback,
+      });
+    } catch (error) {
+      throw ('Failed to submit feedback: $error');
+    }
+  }
 }
