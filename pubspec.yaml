@@ -43,7 +43,7 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   fluentui_system_icons: ^1.1.241
   cloud_firestore: ^4.17.5
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

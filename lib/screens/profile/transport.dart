@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
+import '../../models/emergency_contact.dart';
+import '../../services/data_service.dart';
 import '../../widgets/contacts_widget.dart';
 
 class Transport extends StatelessWidget {
-  const Transport({super.key});
+  Transport({super.key});
+  final DataService contactsDataService = DataService();
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +27,24 @@ class Transport extends StatelessWidget {
             },
           ),
         ),
-        body: const Padding(
-          padding: EdgeInsets.all(16),
-          child: ContactsWidget(
-            contacts: [],
-          ),
-        ));
+        body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: FutureBuilder<List<EmergencyContact>>(
+              future: contactsDataService.fetchContactsByCategory('transport'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  // If there was an error, show an error message
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  // If data is available, display the list of contacts
+                  List<EmergencyContact> contacts = snapshot.data!;
+                  return ContactsWidget(contacts: contacts);
+                } else {
+                  return Center(child: Text('No contacts found.'));
+                }
+              },
+            )));
   }
 }

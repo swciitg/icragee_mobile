@@ -41,10 +41,8 @@ class _ImportantContactsState extends State<ImportantContacts> {
               title: const Text('Emergency'),
               trailing: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Emergency()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Emergency()));
                 },
                 child: Container(
                   decoration: const BoxDecoration(
@@ -69,10 +67,8 @@ class _ImportantContactsState extends State<ImportantContacts> {
               title: const Text('IITG Hospital'),
               trailing: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const IitgHospital()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => IitgHospital()));
                 },
                 child: Container(
                   decoration: const BoxDecoration(
@@ -97,10 +93,8 @@ class _ImportantContactsState extends State<ImportantContacts> {
               title: const Text('Transport'),
               trailing: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Transport()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Transport()));
                 },
                 child: Container(
                   decoration: const BoxDecoration(
