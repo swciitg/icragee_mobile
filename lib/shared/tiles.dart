@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/models/faq.dart';
 import 'package:icragee_mobile/screens/profile/faq.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
@@ -169,7 +170,8 @@ class _NotificationTilesState extends State<NotificationTiles> {
 }
 
 class Faqtiles extends StatefulWidget {
-  const Faqtiles({super.key});
+  final Faqs faq;
+  const Faqtiles({super.key, required this.faq});
 
   @override
   State<Faqtiles> createState() => _FaqtilesState();
@@ -196,7 +198,7 @@ class _FaqtilesState extends State<Faqtiles> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "headline 1",
+                widget.faq.question,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -227,9 +229,9 @@ class _FaqtilesState extends State<Faqtiles> {
           if (isClicked)
             Column(
               children: [
-                Divider(color: Colors.grey),  // This is the divider
+                Divider(color: Colors.grey), // This is the divider
                 Text(
-                  "This is ans to the question here it goes  df9eronrgoopgrgnrogrngoegreglrnngurgnrgrgnrgreogoirgoregrenirinffrnoojikm",
+                  widget.faq.answer,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
