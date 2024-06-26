@@ -1,9 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../models/emergency_contact.dart';
+import 'package:icragee_mobile/models/faq.dart';
 
 class DataService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  Future<List<Faqs>> fetchFaqs() async {
+    var collectionSnapshot =
+        await FirebaseFirestore.instance.collection('FAQs').get();
+
+    return collectionSnapshot.docs
+        .map((doc) => Faqs.fromJson(doc.data()))
+        .toList();
+  }
 
   Future<List<EmergencyContact>> fetchContactsByCategory(
       String category) async {
