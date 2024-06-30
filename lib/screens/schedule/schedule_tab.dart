@@ -94,10 +94,11 @@ class _ScheduleTabState extends State<ScheduleTab> {
         const SizedBox(height: 16),
         Expanded(
           child: FutureBuilder<List<Schedule>>(
-            future: dataService.getSchedules(selectedDay),
+             future: DataService.getSchedules(selectedDay),
+            //future: dataService.getSchedules(selectedDay),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -123,7 +124,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
                         subtitle: Row(children: [
                           const Icon(Icons.schedule_outlined,size:17),
                           const SizedBox(width: 2),
-                          Text(schedule.time,style: const TextStyle(fontWeight: FontWeight.w500,fontSize:10.2 )),
+                          Text('${schedule.startTiming} - ${schedule.endTiming}',style: const TextStyle(fontWeight: FontWeight.w500,fontSize:10.2 )),
                           const SizedBox(width: 3),
                           const Icon(Icons.location_on_outlined,size:17),
                           Text(schedule.location,style: const TextStyle(fontWeight: FontWeight.w500,fontSize:10.2 ))],),
