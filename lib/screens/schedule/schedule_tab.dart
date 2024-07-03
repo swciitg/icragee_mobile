@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/Schedule_list.dart';
 import '../../dataService.dart';
 import '../../schedule.dart';
 
