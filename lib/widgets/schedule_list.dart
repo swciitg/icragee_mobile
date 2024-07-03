@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:icragee_mobile/models/schedule.dart';
 import 'package:icragee_mobile/widgets/schedule_item.dart';
 
@@ -16,7 +15,7 @@ class SchedulesList extends StatelessWidget {
     return ListView.builder(
         itemCount: schedules.length,
         itemBuilder: (ctx, index) {
-          return ScheduleItem(schedules[index]);
+          return ScheduleItem(schedule: schedules[index]);
         });
   }
 }

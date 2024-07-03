@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/emergency_contact.dart';
 import 'package:icragee_mobile/models/faq.dart';
+import 'package:icragee_mobile/models/schedule.dart';
 
 class DataService {
   static Future<List<Faqs>> fetchFaqs() async {
@@ -45,5 +46,15 @@ class DataService {
     } catch (error) {
       throw ('Failed to submit feedback: $error');
     }
+  }
+
+  static Future<List<Schedule>> getSchedules(int day) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('schedules')
+        .where('day', isEqualTo: day)
+        .get();
+    return querySnapshot.docs.map((doc) {
+      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
   }
 }
