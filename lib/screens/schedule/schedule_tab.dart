@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/schedule_item.dart';
 
 class ScheduleTab extends StatefulWidget {
@@ -16,11 +17,11 @@ class _ScheduleTabState extends State<ScheduleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFC6FCED),
+      backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title: const Text('Time Table',
+        title: const Text('Schedule',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFFC6FCED),
+        backgroundColor: MyColors.backgroundColor,
       ),
       body: Column(
         children: [
@@ -34,8 +35,9 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   });
                 },
                 style: OutlinedButton.styleFrom(
-                  backgroundColor:
-                      selectedDay == 1 ? Colors.white : const Color(0xFFC6FCED),
+                  backgroundColor: selectedDay == 1
+                      ? Colors.white
+                      : MyColors.backgroundColor,
                   side: const BorderSide(color: Colors.black54, width: 2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -57,8 +59,9 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   });
                 },
                 style: OutlinedButton.styleFrom(
-                  backgroundColor:
-                      selectedDay == 2 ? Colors.white : const Color(0xFFC6FCED),
+                  backgroundColor: selectedDay == 2
+                      ? Colors.white
+                      : MyColors.backgroundColor,
                   side: const BorderSide(color: Colors.black54, width: 2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -80,8 +83,9 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   });
                 },
                 style: OutlinedButton.styleFrom(
-                  backgroundColor:
-                      selectedDay == 3 ? Colors.white : const Color(0xFFC6FCED),
+                  backgroundColor: selectedDay == 3
+                      ? Colors.white
+                      : MyColors.backgroundColor,
                   side: const BorderSide(color: Colors.black54, width: 2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/faq.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
-import 'package:icragee_mobile/shared/tiles.dart';
+import 'package:icragee_mobile/widgets/faq_tile.dart';
 
 class FaqScreen extends StatefulWidget {
-  FaqScreen({super.key});
+  const FaqScreen({super.key});
 
   @override
   State<FaqScreen> createState() => _FaqScreenState();
@@ -22,7 +22,7 @@ class _FaqScreenState extends State<FaqScreen> {
       ),
       body: Container(
         padding: const EdgeInsets.all(9),
-        child: FutureBuilder<List<Faqs>>(
+        child: FutureBuilder<List<FaqContent>>(
           future: DataService.fetchFaqs(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,7 +35,7 @@ class _FaqScreenState extends State<FaqScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children:
-                      snapshot.data!.map((faq) => Faqtiles(faq: faq)).toList(),
+                      snapshot.data!.map((faq) => FaqTile(faq: faq)).toList(),
                 ),
               );
             }

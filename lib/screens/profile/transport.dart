@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 import '../../models/emergency_contact.dart';
@@ -16,15 +15,6 @@ class Transport extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Transport'),
           backgroundColor: MyColors.backgroundColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ImportantContacts()));
-            },
-          ),
         ),
         body: Padding(
             padding: const EdgeInsets.all(16),

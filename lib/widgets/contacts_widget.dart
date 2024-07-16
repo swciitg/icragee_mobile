@@ -14,7 +14,7 @@ class ContactsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: MyColors.navBarBackgroundColor),
@@ -23,51 +23,67 @@ class ContactsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Name',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      'Name',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 90,
-                  height: 30,
-                ),
-                Expanded(
-                  child: Text(
-                    'Contact No',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'Contact No',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            const Divider(),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contact = contacts[index];
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                return Column(
                   children: [
-                    Expanded(
-                      child: Text(
-                        contact.name,
-                        style: const TextStyle(fontSize: 18),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              contact.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              contact.phone,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      width: 90,
-                      height: 30,
-                    ),
-                    Expanded(
-                      child: Text(
-                        contact.phone,
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                    ),
+                    const Divider()
                   ],
                 );
               },

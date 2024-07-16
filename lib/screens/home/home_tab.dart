@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/screens/profile/profile_page.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tiles.dart';
@@ -37,43 +36,43 @@ class HomeTab extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            iconSize: 42,
+            iconSize: 32,
             onPressed: () {
-               Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 15),
-              Text(
-                " Upcoming Events",
+              const SizedBox(height: 15),
+              const Text(
+                "Upcoming Events",
                 style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               MainTitle(
                 eventTitle: "Title Lorem Ipsum",
                 speaker: "Speaker",
-                time: "Timing",
+                time: DateTime.now(),
                 location: "Location",
                 description:
                     "Lorem ipsum dolor sit amet. Et repudiandae error est nihil odio et accusantium dolores. Eos voluptas iusto quo totam nostrum et quia laborum qui aliquam quas.",
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
-              Text(
-                " Notifications",
+              const Text(
+                "Notifications",
                 style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
               ),
-              EventTile(totalEvents: 6),
+              const EventTile(totalEvents: 6),
             ],
           ),
         ),

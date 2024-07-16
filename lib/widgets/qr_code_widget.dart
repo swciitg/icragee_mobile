@@ -4,7 +4,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 class QrCodeWidget extends StatelessWidget {
   final String data;
 
-  const QrCodeWidget({Key? key, required this.data}) : super(key: key);
+  const QrCodeWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class QrCodeWidget extends StatelessWidget {
           data: data,
           version: QrVersions.auto,
           size: 300.0,
-          gapless: false,
-          backgroundColor: Color(0xFFFFFFFF),
+          gapless: true,
+          backgroundColor: Colors.white,
         ),
       ),
     );

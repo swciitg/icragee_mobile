@@ -4,12 +4,12 @@ import 'package:icragee_mobile/models/faq.dart';
 import 'package:icragee_mobile/models/schedule.dart';
 
 class DataService {
-  static Future<List<Faqs>> fetchFaqs() async {
+  static Future<List<FaqContent>> fetchFaqs() async {
     final collectionSnapshot =
         await FirebaseFirestore.instance.collection('FAQs').get();
 
     return collectionSnapshot.docs
-        .map((doc) => Faqs.fromJson(doc.data()))
+        .map((doc) => FaqContent.fromJson(doc.data()))
         .toList();
   }
 

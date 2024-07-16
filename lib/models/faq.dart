@@ -1,17 +1,18 @@
-//import 'dart:convert';
-
-class Faqs {
+class FaqContent {
   final String question;
   final String answer;
 
-  Faqs({required this.question, required this.answer});
+  FaqContent({required this.question, required this.answer});
 
-  Faqs.fromJson(Map<String, dynamic> faqs)
-      : question = faqs['Question'],
-        answer = faqs['Answer'];
+  factory FaqContent.fromJson(Map<String, dynamic> json) {
+    return FaqContent(
+      question: json['question'],
+      answer: json['answer'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        'Question': question,
-        'Answer': answer,
+        'question': question,
+        'answer': answer,
       };
 }

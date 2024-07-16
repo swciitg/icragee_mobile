@@ -4,6 +4,7 @@ import 'package:icragee_mobile/shared/colors.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _FeedbackPage();
@@ -15,6 +16,7 @@ class _FeedbackPage extends State<FeedbackPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _feedbackController = TextEditingController();
+
   void _submitFeedback() {
     if (_formKey.currentState!.validate()) {
       String name = _nameController.text;
@@ -69,9 +71,7 @@ class _FeedbackPage extends State<FeedbackPage> {
                   ),
                   child: Image.asset('assets/images/logo.png'),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   cursorHeight: 20,
                   controller: _nameController,
