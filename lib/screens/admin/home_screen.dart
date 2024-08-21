@@ -43,6 +43,36 @@ class _HomeScreenState extends State<AdminScreen> {
     ),
   ];
 
+  final List<Map<String, String>> notifications = [
+    {
+      'sender': 'Prof. Sharma',
+      'priority': 'Important',
+      'time': 'Just now',
+      'message': 'Faucibus purus in massa tempor.'
+    },
+    {
+      'sender': 'Dr Prakash',
+      'priority': 'Important',
+      'time': '10 minutes ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra.'
+    },
+    {
+      'sender': 'Co-Ordinator',
+      'priority': '',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
+    {
+      'sender': 'Admin',
+      'priority': 'Important',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,46 +129,91 @@ class _HomeScreenState extends State<AdminScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  _buildDayButton('Day 1', 1),
-                  SizedBox(width: 10),
-                  _buildDayButton('Day 2', 2),
-                  SizedBox(width: 10),
-                  _buildDayButton('Day 3', 3),
-                ],
-              ),
-              SizedBox(height: 20),
-              ListView.builder(
-                shrinkWrap: true, // This allows ListView to wrap its content
-                physics:
-                    NeverScrollableScrollPhysics(), // Disable ListView scrolling
-                itemCount:
-                    events.where((event) => event.day == _selectedDay).length,
-                itemBuilder: (context, index) {
-                  return _buildEventCard(
-                      index,
-                      events
-                          .where((event) => event.day == _selectedDay)
-                          .elementAt(index));
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Add Events'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.primaryColor,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              if (_eventsSelected) ...[
+                Row(
+                  children: [
+                    _buildDayButton('Day 1', 1),
+                    SizedBox(width: 10),
+                    _buildDayButton('Day 2', 2),
+                    SizedBox(width: 10),
+                    _buildDayButton('Day 3', 3),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true, // This allows ListView to wrap its content
+                  physics:
+                      NeverScrollableScrollPhysics(), // Disable ListView scrolling
+                  itemCount:
+                      events.where((event) => event.day == _selectedDay).length,
+                  itemBuilder: (context, index) {
+                    return _buildEventCard(
+                        index,
+                        events
+                            .where((event) => event.day == _selectedDay)
+                            .elementAt(index));
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Add Events'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MyColors.primaryColor,
+                    minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-              ),
+              ] else ...[
+                // Notifications Page UI
+                _buildNotificationsPage(),
+              ],
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildNotificationsPage() {
+    return Column(
+      children: notifications.map((notification) {
+        return Card(
+          margin: EdgeInsets.symmetric(vertical: 8),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      notification['sender']!,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      notification['time']!,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                if (notification['priority']!.isNotEmpty)
+                  Chip(
+                    label: Text('Important'),
+                    labelStyle: TextStyle(color: Colors.red),
+                    backgroundColor: Colors.red.withOpacity(0.2),
+                  ),
+                SizedBox(height: 8),
+                Text(notification['message']!),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -246,7 +321,7 @@ class _HomeScreenState extends State<AdminScreen> {
     }
     return Chip(
       label: Text(status),
-      backgroundColor: color.withOpacity(0.2),
+      // backgroundColor: color.withOpacity(0.2),
       labelStyle: TextStyle(color: color),
     );
   }
