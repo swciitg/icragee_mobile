@@ -13,7 +13,7 @@ final routeConfig = GoRouter(
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: '/get-started',
+      path: '/admin-screen',
       builder: (context, state) => AdminScreen(),
     ),
     GoRoute(
