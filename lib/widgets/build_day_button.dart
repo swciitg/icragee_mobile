@@ -23,12 +23,12 @@ class DayButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         backgroundColor: isSelected ? MyColors.backgroundColor : Colors.white,
         foregroundColor: isSelected ? MyColors.primaryColor : Colors.black,
-        side: BorderSide(color: Colors.teal),
+        side: const BorderSide(color: Colors.teal),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        minimumSize: Size(100, 45), // Width: 100, Height: 40
-        padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+        minimumSize: const Size(100, 45), // Width: 100, Height: 40
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
       ),
     );
   }

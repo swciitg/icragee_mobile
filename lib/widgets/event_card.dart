@@ -19,7 +19,7 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,42 +27,42 @@ class EventCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(event.title,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 StatusChip(status: event.status),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.access_time, size: 16),
-                SizedBox(width: 4),
+                const Icon(Icons.access_time, size: 16),
+                const SizedBox(width: 4),
                 Text(
                     '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
                     ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w500, fontSize: 13)),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
               ],
             ),
             SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.location_on, size: 16),
-                SizedBox(width: 4),
+                const Icon(Icons.location_on, size: 16),
+                const SizedBox(width: 4),
                 Text(event.location),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             GestureDetector(
               onTap: onToggleDescription,
-              child: Text(
+              child: const Text(
                 'Check Description',
                 style: TextStyle(
                     color: Colors.teal, decoration: TextDecoration.underline),
               ),
             ),
             if (isExpanded) ...[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(event.description),
             ],
           ],

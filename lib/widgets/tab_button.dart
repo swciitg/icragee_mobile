@@ -23,7 +23,7 @@ class TabButton extends StatelessWidget {
         backgroundColor:
             isSelected ? MyColors.primaryColor : MyColors.backgroundColor,
         foregroundColor: isSelected ? Colors.white : MyColors.primaryColor,
-        side: BorderSide(color: Colors.teal),
+        side: const BorderSide(color: Colors.teal),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
