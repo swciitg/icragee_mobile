@@ -122,10 +122,10 @@ class _HomeScreenState extends State<AdminScreen> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                InkWell(onTap: () {}, child: Icon(Icons.arrow_forward)),
+                InkWell(onTap: () {}, child: const Icon(Icons.arrow_forward)),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<AdminScreen> {
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TabButton(
                     text: 'Notification',
@@ -153,18 +153,18 @@ class _HomeScreenState extends State<AdminScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Align(
               alignment: Alignment.center,
               child: InkWell(
                 onTap: () {},
-                child: Text(
+                child: const Text(
                   'Click here to view feedbacks',
                   style: TextStyle(color: Colors.teal),
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_eventsSelected) ...[
               Row(
                 children: [
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<AdminScreen> {
                       });
                     },
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   DayButton(
                     dayNumber: 2,
                     onPressed: (dayNumber) {
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<AdminScreen> {
                     },
                     selectedDay: _selectedDay,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   DayButton(
                     dayNumber: 3,
                     selectedDay: _selectedDay,
@@ -199,7 +199,7 @@ class _HomeScreenState extends State<AdminScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -226,10 +226,10 @@ class _HomeScreenState extends State<AdminScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {},
-                child: Text('Add Events'),
+                child: const Text('Add Events'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.primaryColor,
                   minimumSize: Size(double.infinity, 50),
@@ -252,7 +252,7 @@ class _HomeScreenState extends State<AdminScreen> {
     return Column(
       children: notifications.map((notification) {
         return Card(
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -263,23 +263,23 @@ class _HomeScreenState extends State<AdminScreen> {
                   children: [
                     Text(
                       notification['sender']!,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     if (notification['priority']!.isNotEmpty)
                       Chip(
                         label: Text('Important'),
                         labelStyle: TextStyle(color: Colors.red),
                         backgroundColor: Colors.red.withOpacity(0.2),
                       ),
-                    SizedBox(width: 40),
+                    const SizedBox(width: 40),
                     Text(
                       notification['time']!,
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Text(notification['message']!),
               ],
             ),
