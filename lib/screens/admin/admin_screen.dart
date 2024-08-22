@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
-import '../../widgets/build_day_button.dart';
+import '../../widgets/day_button.dart';
 import '../../widgets/event_card.dart';
 import '../../widgets/tab_button.dart';
 
