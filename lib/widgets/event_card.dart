@@ -23,6 +23,7 @@ class EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Title and Status Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -32,35 +33,74 @@ class EventCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                    '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
-                    ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 13)),
-                const SizedBox(width: 16),
-              ],
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.location_on, size: 16),
-                const SizedBox(width: 4),
-                Text(event.location),
-              ],
-            ),
+
+            // Time and Location based on expansion
+            if (isExpanded)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
+                        ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, size: 16),
+                      const SizedBox(width: 4),
+                      Text(event.location),
+                    ],
+                  ),
+                ],
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
+                        ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, size: 16),
+                      const SizedBox(width: 4),
+                      Text(event.location),
+                    ],
+                  ),
+                ],
+              ),
             const SizedBox(height: 8),
-            GestureDetector(
-              onTap: onToggleDescription,
-              child: const Text(
-                'Check Description',
-                style: TextStyle(
-                    color: Colors.teal, decoration: TextDecoration.underline),
+
+            // Check Description button
+            Center(
+              child: GestureDetector(
+                onTap: onToggleDescription,
+                child: const Text(
+                  'Check Description',
+                  style: TextStyle(
+                      color: Colors.teal, decoration: TextDecoration.underline),
+                ),
               ),
             ),
+
+            // Description Text if expanded
             if (isExpanded) ...[
               const SizedBox(height: 8),
               Text(event.description),

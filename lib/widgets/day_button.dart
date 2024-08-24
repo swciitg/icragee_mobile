@@ -19,11 +19,14 @@ class DayButton extends StatelessWidget {
     bool isSelected = selectedDay == dayNumber;
     return OutlinedButton(
       onPressed: () => onPressed(dayNumber),
-      child: Text('Day ${dayNumber}'),
+      child: Text(
+        'Day ${dayNumber}',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
       style: OutlinedButton.styleFrom(
         backgroundColor: isSelected ? MyColors.backgroundColor : Colors.white,
         foregroundColor: isSelected ? MyColors.primaryColor : Colors.black,
-        side: const BorderSide(color: Colors.teal),
+        side: BorderSide.none,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

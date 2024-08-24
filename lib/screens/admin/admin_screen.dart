@@ -106,27 +106,34 @@ class _HomeScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
+                SizedBox(
+                  height: 44,
+                ),
+                Text(
                   'Welcome Back !',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
+                Spacer(),
                 InkWell(onTap: () {}, child: const Icon(Icons.arrow_forward)),
               ],
             ),
-            const SizedBox(height: 20),
-            Row(
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
               children: [
                 Expanded(
                   child: TabButton(
@@ -153,54 +160,61 @@ class _HomeScreenState extends State<AdminScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.center,
-              child: InkWell(
-                onTap: () {},
-                child: const Text(
-                  'Click here to view feedbacks',
-                  style: TextStyle(color: Colors.teal),
-                ),
+          ),
+          const SizedBox(height: 20),
+          Align(
+            alignment: Alignment.center,
+            child: InkWell(
+              onTap: () {},
+              child: const Text(
+                'Click here to view feedbacks',
+                style:
+                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 10),
-            if (_eventsSelected) ...[
-              Row(
-                children: [
-                  DayButton(
-                    dayNumber: 1,
-                    selectedDay: _selectedDay,
-                    onPressed: (dayNumber) {
-                      setState(() {
-                        _selectedDay = dayNumber;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  DayButton(
-                    dayNumber: 2,
-                    onPressed: (dayNumber) {
-                      setState(() {
-                        _selectedDay = dayNumber;
-                      });
-                    },
-                    selectedDay: _selectedDay,
-                  ),
-                  const SizedBox(width: 10),
-                  DayButton(
-                    dayNumber: 3,
-                    selectedDay: _selectedDay,
-                    onPressed: (dayNumber) {
-                      setState(() {
-                        _selectedDay = dayNumber;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Expanded(
+          ),
+          const SizedBox(height: 20),
+          if (_eventsSelected) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DayButton(
+                  dayNumber: 1,
+                  selectedDay: _selectedDay,
+                  onPressed: (dayNumber) {
+                    setState(() {
+                      _selectedDay = dayNumber;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                DayButton(
+                  dayNumber: 2,
+                  onPressed: (dayNumber) {
+                    setState(() {
+                      _selectedDay = dayNumber;
+                    });
+                  },
+                  selectedDay: _selectedDay,
+                ),
+                const SizedBox(width: 10),
+                DayButton(
+                  dayNumber: 3,
+                  selectedDay: _selectedDay,
+                  onPressed: (dayNumber) {
+                    setState(() {
+                      _selectedDay = dayNumber;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(color: MyColors.backgroundColor),
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount:
@@ -210,82 +224,130 @@ class _HomeScreenState extends State<AdminScreen> {
                         .where((event) => event.day == _selectedDay)
                         .toList();
                     final event = filteredEvents[index];
-                    // final event = events
-                    //     .where((event) => event.day == _selectedDay)
-                    //     .toList()[index];
-                    return EventCard(
-                      event: event,
-                      isExpanded: _expandedDescriptions[event.day] ?? false,
-                      onToggleDescription: () {
-                        setState(() {
-                          _expandedDescriptions[event.day] =
-                              !(_expandedDescriptions[event.day] ?? false);
-                        });
-                      },
+
+                    // Create a unique key for each event
+                    final uniqueKey = index;
+
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      child: EventCard(
+                        event: event,
+                        isExpanded: _expandedDescriptions[uniqueKey] ?? false,
+                        onToggleDescription: () {
+                          setState(() {
+                            _expandedDescriptions[uniqueKey] =
+                                !(_expandedDescriptions[uniqueKey] ?? false);
+                          });
+                        },
+                      ),
                     );
                   },
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Add Events'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.primaryColor,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+            ),
+            SizedBox(
+              height: 46,
+              child: Container(
+                decoration: BoxDecoration(color: MyColors.backgroundColor),
               ),
-            ] else ...[
-              // Notifications Page UI
-              _buildNotificationsPage(),
-            ],
+            )
+          ] else ...[
+            // Notifications Page UI
+            _buildNotificationsPage(),
           ],
+        ],
+      ),
+
+      floatingActionButton: SizedBox(
+        width: 180,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            if (_eventsSelected) {
+              // Action to add an event
+            } else {
+              // Action to add a notification
+            }
+          },
+          label: Text(
+            _eventsSelected ? 'Add Events' : 'Add Notifications',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          backgroundColor: MyColors.primaryColor,
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .centerFloat, // Positioned in the middle at the bottom
     );
   }
 
   Widget _buildNotificationsPage() {
-    return Column(
-      children: notifications.map((notification) {
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      notification['sender']!,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 8),
-                    if (notification['priority']!.isNotEmpty)
-                      Chip(
-                        label: Text('Important'),
-                        labelStyle: TextStyle(color: Colors.red),
-                        backgroundColor: Colors.red.withOpacity(0.2),
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(color: MyColors.backgroundColor),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: notifications.map((notification) {
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            notification['sender']!,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 8),
+                          if (notification['priority']!.isNotEmpty)
+                            Chip(
+                              side: BorderSide.none,
+                              label: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Black dot
+                                  Container(
+                                    width: 8, // Width of the dot
+                                    height: 8, // Height of the dot
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      width:
+                                          4), // Space between the dot and text
+                                  Text(
+                                    'Important',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                              labelStyle: TextStyle(color: Colors.red),
+                            ),
+                          const SizedBox(width: 40),
+                          Text(
+                            notification['time']!,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
-                    const SizedBox(width: 40),
-                    Text(
-                      notification['time']!,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+                      Text(notification['message']!),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 12),
-                Text(notification['message']!),
-              ],
-            ),
+              );
+            }).toList(),
           ),
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 }
