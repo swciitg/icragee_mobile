@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:icragee_mobile/screens/get_started/get_started.dart';
-import 'package:icragee_mobile/screens/home_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+    return Scaffold(
         backgroundColor: const Color(0xFF25D2B7),
-        body:Column(
-          children:<Widget>[
+        body: Column(
+          children: <Widget>[
             const SizedBox(height: 230),
             //Image from widget
             Center(
@@ -19,18 +17,16 @@ class SplashScreen extends StatelessWidget {
                 'assets/images/logo.png',
                 width: 300,
                 height: 350,
-
               ),
             ),
-            const LoginButton(buttonName:"Log in as Admin",routePath:'/get-started'),
+            const LoginButton(
+                buttonName: "Log in as Admin", routePath: '/admin-screen'),
             const SizedBox(height: 24),
-            const LoginButton(buttonName:"Log in as Guest",routePath:'/get-started'),
+            const LoginButton(
+                buttonName: "Log in as Guest", routePath: '/homeScreen'),
           ],
-        )
-
-      );
+        ));
   }
-
 }
 
 class LoginButton extends StatelessWidget {
@@ -49,7 +45,7 @@ class LoginButton extends StatelessWidget {
         context.go(routePath);
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor:Colors.white ,
+        foregroundColor: Colors.white,
         //primary: Color(0xFFFF8C40), // Background color
         backgroundColor: Color(0xFFFF8C40), // Text color
         minimumSize: Size(310, 51), // Width and height

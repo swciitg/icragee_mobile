@@ -1,5 +1,3 @@
-
-
 class Schedule {
   final String title;
   final DateTime startTime;
@@ -7,6 +5,7 @@ class Schedule {
   final String location;
   final String description;
   final int day;
+  final String status;
 
   Schedule(
       {required this.title,
@@ -14,17 +13,18 @@ class Schedule {
       required this.endTime,
       required this.location,
       required this.description,
+      required this.status,
       required this.day});
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
-      title: json['title'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      location: json['location'],
-      description: json['description'],
-      day: json['day'],
-    );
+        title: json['title'],
+        startTime: DateTime.parse(json['startTime']),
+        endTime: DateTime.parse(json['endTime']),
+        location: json['location'],
+        description: json['description'],
+        day: json['day'],
+        status: json['status']);
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +35,7 @@ class Schedule {
       'location': location,
       'description': description,
       'day': day,
+      'status': status
     };
   }
 }
