@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/firebase_options.dart';
 import 'package:icragee_mobile/routing/route_config.dart';
 import 'package:icragee_mobile/services/notification_service.dart';
@@ -22,6 +23,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ICRAGEE',
       routerConfig: routeConfig,
+      theme: ThemeData(
+        // Use Google Fonts for the entire app
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
     );
   }
 }

@@ -17,21 +17,27 @@ class DayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isSelected = selectedDay == dayNumber;
-    return OutlinedButton(
-      onPressed: () => onPressed(dayNumber),
-      child: Text(
-        'Day ${dayNumber}',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? MyColors.backgroundColor : Colors.white,
+        borderRadius: BorderRadius.circular(8),
       ),
-      style: OutlinedButton.styleFrom(
-        backgroundColor: isSelected ? MyColors.backgroundColor : Colors.white,
-        foregroundColor: isSelected ? MyColors.primaryColor : Colors.black,
-        side: BorderSide.none,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+      child: Material(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: () => onPressed(dayNumber),
+          child: Center(
+            child: Text(
+              'Day ${dayNumber}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isSelected ? MyColors.primaryColor : Colors.black,
+              ),
+            ),
+          ),
         ),
-        minimumSize: const Size(100, 45), // Width: 100, Height: 40
-        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
       ),
     );
   }

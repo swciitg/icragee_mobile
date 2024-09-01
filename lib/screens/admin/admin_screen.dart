@@ -106,33 +106,34 @@ class _HomeScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 15,
-          ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  height: 44,
-                ),
-                Text(
-                  'Welcome Back !',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                ),
+                Text('Welcome Back !',
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
                 Spacer(),
-                InkWell(onTap: () {}, child: const Icon(Icons.arrow_forward)),
+                Expanded(
+                  child: GestureDetector(
+                    child: Image.asset(
+                      'assets/icons/Vector.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
@@ -168,8 +169,9 @@ class _HomeScreenState extends State<AdminScreen> {
               onTap: () {},
               child: const Text(
                 'Click here to view feedbacks',
-                style:
-                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: MyColors.primaryTextColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -230,7 +232,7 @@ class _HomeScreenState extends State<AdminScreen> {
 
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                       child: EventCard(
                         event: event,
                         isExpanded: _expandedDescriptions[uniqueKey] ?? false,
@@ -286,14 +288,17 @@ class _HomeScreenState extends State<AdminScreen> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: MyColors.backgroundColor),
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: notifications.map((notification) {
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: notifications.map((notification) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8)),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -302,16 +307,25 @@ class _HomeScreenState extends State<AdminScreen> {
                         children: [
                           Text(
                             notification['sender']!,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
                           ),
                           const SizedBox(width: 8),
                           if (notification['priority']!.isNotEmpty)
-                            Chip(
-                              side: BorderSide.none,
-                              label: Row(
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // Black dot
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+
                                   Container(
                                     width: 8, // Width of the dot
                                     height: 8, // Height of the dot
@@ -327,11 +341,12 @@ class _HomeScreenState extends State<AdminScreen> {
                                     'Important',
                                     style: TextStyle(color: Colors.red),
                                   ),
+                                  const SizedBox(
+                                    width: 2,
+                                  )
                                 ],
                               ),
-                              labelStyle: TextStyle(color: Colors.red),
                             ),
-                          const SizedBox(width: 40),
                           Text(
                             notification['time']!,
                             style: const TextStyle(color: Colors.grey),
@@ -343,9 +358,9 @@ class _HomeScreenState extends State<AdminScreen> {
                     ],
                   ),
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
