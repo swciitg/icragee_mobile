@@ -101,6 +101,20 @@ class _HomeScreenState extends State<AdminScreen> {
       'message':
           'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
     },
+    {
+      'sender': 'Admn',
+      'priority': 'Important',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
+    {
+      'sender': 'Ad',
+      'priority': 'Important',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
   ];
 
   @override
@@ -118,14 +132,11 @@ class _HomeScreenState extends State<AdminScreen> {
                 Text('Welcome Back !',
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.bold)),
-                Spacer(),
-                Expanded(
-                  child: GestureDetector(
-                    child: Image.asset(
-                      'assets/icons/Vector.png',
-                      height: 24.0,
-                      width: 24.0,
-                    ),
+                GestureDetector(
+                  child: Image.asset(
+                    'assets/icons/Vector.png',
+                    height: 24.0,
+                    width: 24.0,
                   ),
                 ),
               ],
@@ -271,10 +282,15 @@ class _HomeScreenState extends State<AdminScreen> {
               // Action to add a notification
             }
           },
-          label: Text(
-            _eventsSelected ? 'Add Events' : 'Add Notifications',
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 43.5),
+            child: Text(
+              _eventsSelected ? 'Add Events' : 'Add Notifications',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
           ),
           backgroundColor: MyColors.primaryColor,
         ),
@@ -285,17 +301,20 @@ class _HomeScreenState extends State<AdminScreen> {
   }
 
   Widget _buildNotificationsPage() {
-    return SingleChildScrollView(
+    return Expanded(
       child: Container(
-        decoration: BoxDecoration(color: MyColors.backgroundColor),
-        child: Column(
-          children: notifications.map((notification) {
+        color: MyColors.backgroundColor,
+        child: ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            final notification = notifications[index];
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -308,42 +327,36 @@ class _HomeScreenState extends State<AdminScreen> {
                           Text(
                             notification['sender']!,
                             style: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12),
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
-                          const SizedBox(width: 8),
                           if (notification['priority']!.isNotEmpty)
                             Container(
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(8)),
+                                color: Colors.white,
+                                border: Border.all(color: Colors.red),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const SizedBox(
-                                    width: 2,
-                                  ),
-
+                                  const SizedBox(width: 2),
                                   Container(
-                                    width: 8, // Width of the dot
-                                    height: 8, // Height of the dot
+                                    width: 8,
+                                    height: 8,
                                     decoration: BoxDecoration(
                                       color: Colors.red,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      width:
-                                          4), // Space between the dot and text
+                                  const SizedBox(width: 4),
                                   Text(
                                     'Important',
                                     style: TextStyle(color: Colors.red),
                                   ),
-                                  const SizedBox(
-                                    width: 2,
-                                  )
+                                  const SizedBox(width: 2),
                                 ],
                               ),
                             ),
@@ -360,7 +373,7 @@ class _HomeScreenState extends State<AdminScreen> {
                 ),
               ),
             );
-          }).toList(),
+          },
         ),
       ),
     );
