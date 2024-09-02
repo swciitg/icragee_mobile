@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/schedule.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
@@ -265,6 +266,7 @@ class _HomeScreenState extends State<AdminScreen> {
           onPressed: () {
             if (_eventsSelected) {
               // Action to add an event
+              context.go('/addEventScreen');
             } else {
               // Action to add a notification
             }
