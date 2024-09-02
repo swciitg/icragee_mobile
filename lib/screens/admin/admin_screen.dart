@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 import '../../widgets/day_button.dart';
@@ -15,63 +16,13 @@ class _HomeScreenState extends State<AdminScreen> {
   bool _eventsSelected = true;
   int _selectedDay = 1;
   Map<int, bool> _expandedDescriptions = {};
+  final DataService _dataService = DataService();
+  List<Schedule> events = [];
 
-  final List<Schedule> events = [
-    Schedule(
-      title: "Cement Preparation Workshop",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 1,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "Concrete Mixing Seminar",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Room 201",
-      status: "Ongoing",
-      description: "Day 2 description...",
-      day: 1,
-    ),
-    Schedule(
-      title: "Construction Safety Training",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Hall B",
-      status: "Upcoming",
-      description: "Day 3 description...",
-      day: 1,
-    ),
-    Schedule(
-      title: "Cement Preparation ",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 1,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "Cement",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 2,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "AutoCAD",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 3,
-      status: "Finished",
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final List<Map<String, String>> notifications = [
     {
@@ -125,7 +76,7 @@ class _HomeScreenState extends State<AdminScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
+            padding: EdgeInsets.only(left: 20, top: 57, right: 20, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -226,45 +177,59 @@ class _HomeScreenState extends State<AdminScreen> {
               height: 10,
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(color: MyColors.backgroundColor),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      events.where((event) => event.day == _selectedDay).length,
-                  itemBuilder: (context, index) {
-                    final filteredEvents = events
+              child: FutureBuilder<List<Schedule>>(
+                future: _dataService.getEvents(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No events found'));
+                  } else {
+                    List<Schedule> events = snapshot.data!;
+                    List<Schedule> filteredEvents = events
                         .where((event) => event.day == _selectedDay)
                         .toList();
-                    final event = filteredEvents[index];
 
-                    // Create a unique key for each event
-                    final uniqueKey = index;
+                    return Container(
+                      decoration:
+                          BoxDecoration(color: MyColors.backgroundColor),
+                      child: ListView.builder(
+                        itemCount: filteredEvents.length,
+                        itemBuilder: (context, index) {
+                          final event = filteredEvents[index];
+                          final uniqueKey = index;
 
-                    return Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                      child: EventCard(
-                        event: event,
-                        isExpanded: _expandedDescriptions[uniqueKey] ?? false,
-                        onToggleDescription: () {
-                          setState(() {
-                            _expandedDescriptions[uniqueKey] =
-                                !(_expandedDescriptions[uniqueKey] ?? false);
-                          });
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 16),
+                            child: EventCard(
+                              event: event,
+                              isExpanded:
+                                  _expandedDescriptions[uniqueKey] ?? false,
+                              onToggleDescription: () {
+                                setState(() {
+                                  _expandedDescriptions[uniqueKey] =
+                                      !(_expandedDescriptions[uniqueKey] ??
+                                          false);
+                                });
+                              },
+                            ),
+                          );
                         },
                       ),
                     );
-                  },
-                ),
+                  }
+                },
               ),
             ),
-            SizedBox(
-              height: 46,
-              child: Container(
-                decoration: BoxDecoration(color: MyColors.backgroundColor),
-              ),
-            )
+            // SizedBox(
+            //   height: 46,
+            //   child: Container(
+            //     decoration: BoxDecoration(color: MyColors.backgroundColor),
+            //   ),
+            // )
           ] else ...[
             // Notifications Page UI
             _buildNotificationsPage(),
@@ -304,76 +269,79 @@ class _HomeScreenState extends State<AdminScreen> {
     return Expanded(
       child: Container(
         color: MyColors.backgroundColor,
-        child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            final notification = notifications[index];
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            notification['sender']!,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                          if (notification['priority']!.isNotEmpty)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Colors.red),
-                                borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 75),
+          child: ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              notification['sender']!,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 2),
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
+                            ),
+                            if (notification['priority']!.isNotEmpty)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 2),
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Important',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  const SizedBox(width: 2),
-                                ],
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Important',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    const SizedBox(width: 2),
+                                  ],
+                                ),
                               ),
+                            Text(
+                              notification['time']!,
+                              style: const TextStyle(color: Colors.grey),
                             ),
-                          Text(
-                            notification['time']!,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(notification['message']!),
-                    ],
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(notification['message']!),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

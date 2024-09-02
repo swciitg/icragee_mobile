@@ -57,4 +57,33 @@ class DataService {
       return Schedule.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
   }
+
+  Future<void> addEvent(Schedule event) async {
+    await FirebaseFirestore.instance.collection('events').add({
+      'title': event.title,
+      'startTime': event.startTime,
+      'endTime': event.endTime,
+      'location': event.location,
+      'description': event.description,
+      'day': event.day,
+      'status': event.status,
+    });
+  }
+
+  Future<List<Schedule>> getEvents() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('events').get();
+    return snapshot.docs.map((doc) {
+      return Schedule(
+        id: doc.id,
+        title: doc['title'],
+        startTime: (doc['startTime'] as Timestamp).toDate(),
+        endTime: (doc['endTime'] as Timestamp).toDate(),
+        location: doc['location'],
+        description: doc['description'],
+        day: doc['day'],
+        status: doc['status'],
+      );
+    }).toList();
+  }
 }
