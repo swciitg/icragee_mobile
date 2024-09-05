@@ -17,9 +17,12 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding:
+            const EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,12 +30,17 @@ class EventCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(event.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: Text(
+                    event.title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
                 StatusChip(status: event.status),
               ],
             ),
-            const SizedBox(height: 8),
 
             // Time and Location based on expansion
             if (isExpanded)
@@ -41,21 +49,27 @@ class EventCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.access_time, size: 16),
+                      const Icon(Icons.access_time, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
                         ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 13),
+                            fontWeight: FontWeight.w500, fontSize: 14),
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 16),
+                      const Icon(Icons.location_on, size: 14),
                       const SizedBox(width: 4),
-                      Text(event.location),
+                      Text(
+                        event.location,
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 ],
@@ -66,36 +80,59 @@ class EventCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.access_time, size: 16),
+                      const Icon(Icons.access_time, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '${DateFormat('kk:mm').format(event.startTime.toLocal())}'
                         ' - ${DateFormat('kk:mm').format(event.endTime.toLocal())}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 13),
+                            fontWeight: FontWeight.w500, fontSize: 14),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 16),
+                      const Icon(Icons.location_on, size: 14),
                       const SizedBox(width: 4),
-                      Text(event.location),
+                      Text(
+                        event.location,
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 ],
               ),
-            const SizedBox(height: 8),
 
             // Check Description button
-            Center(
-              child: GestureDetector(
-                onTap: onToggleDescription,
-                child: const Text(
-                  'Check Description',
-                  style: TextStyle(
-                      color: Colors.teal, decoration: TextDecoration.underline),
+            Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Center(
+                child: GestureDetector(
+                  onTap: onToggleDescription,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Check Description',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.teal,
+                            decoration: TextDecoration.underline),
+                      ),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Image.asset(
+                        "assets/icons/check_description.png",
+                        height: 18,
+                        width: 18,
+                        color: Colors.teal,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

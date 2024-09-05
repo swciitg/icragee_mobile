@@ -27,8 +27,8 @@ class TabButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor:
               isSelected ? MyColors.primaryColor : MyColors.backgroundColor,
-          foregroundColor: isSelected ? Colors.white : MyColors.primaryColor,
-          side: const BorderSide(color: Colors.teal),
+          foregroundColor:
+              isSelected ? Colors.white : MyColors.primaryTextColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),

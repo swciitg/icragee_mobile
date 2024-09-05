@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 import '../../widgets/day_button.dart';
@@ -15,63 +16,13 @@ class _HomeScreenState extends State<AdminScreen> {
   bool _eventsSelected = true;
   int _selectedDay = 1;
   Map<int, bool> _expandedDescriptions = {};
+  final DataService _dataService = DataService();
+  List<Schedule> events = [];
 
-  final List<Schedule> events = [
-    Schedule(
-      title: "Cement Preparation Workshop",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 1,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "Concrete Mixing Seminar",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Room 201",
-      status: "Ongoing",
-      description: "Day 2 description...",
-      day: 1,
-    ),
-    Schedule(
-      title: "Construction Safety Training",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Hall B",
-      status: "Upcoming",
-      description: "Day 3 description...",
-      day: 1,
-    ),
-    Schedule(
-      title: "Cement Preparation ",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 1,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "Cement",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 2,
-      status: "Finished",
-    ),
-    Schedule(
-      title: "AutoCAD",
-      startTime: DateTime(2024, 07, 1, 0),
-      endTime: DateTime(2024, 07, 2, 0),
-      location: "Auditorium",
-      description: "Day 1 description...",
-      day: 3,
-      status: "Finished",
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final List<Map<String, String>> notifications = [
     {
@@ -101,38 +52,50 @@ class _HomeScreenState extends State<AdminScreen> {
       'message':
           'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
     },
+    {
+      'sender': 'Admn',
+      'priority': 'Important',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
+    {
+      'sender': 'Ad',
+      'priority': 'Important',
+      'time': '1 hour ago',
+      'message':
+          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 15,
-          ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  height: 44,
+                Text('Welcome Back !',
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
+                GestureDetector(
+                  child: Image.asset(
+                    'assets/icons/Vector.png',
+                    height: 24.0,
+                    width: 24.0,
+                  ),
                 ),
-                Text(
-                  'Welcome Back !',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                ),
-                Spacer(),
-                InkWell(onTap: () {}, child: const Icon(Icons.arrow_forward)),
               ],
             ),
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
@@ -168,8 +131,9 @@ class _HomeScreenState extends State<AdminScreen> {
               onTap: () {},
               child: const Text(
                 'Click here to view feedbacks',
-                style:
-                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: MyColors.primaryTextColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -213,45 +177,59 @@ class _HomeScreenState extends State<AdminScreen> {
               height: 10,
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(color: MyColors.backgroundColor),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      events.where((event) => event.day == _selectedDay).length,
-                  itemBuilder: (context, index) {
-                    final filteredEvents = events
+              child: FutureBuilder<List<Schedule>>(
+                future: _dataService.getEvents(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No events found'));
+                  } else {
+                    List<Schedule> events = snapshot.data!;
+                    List<Schedule> filteredEvents = events
                         .where((event) => event.day == _selectedDay)
                         .toList();
-                    final event = filteredEvents[index];
 
-                    // Create a unique key for each event
-                    final uniqueKey = index;
+                    return Container(
+                      decoration:
+                          BoxDecoration(color: MyColors.backgroundColor),
+                      child: ListView.builder(
+                        itemCount: filteredEvents.length,
+                        itemBuilder: (context, index) {
+                          final event = filteredEvents[index];
+                          final uniqueKey = index;
 
-                    return Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      child: EventCard(
-                        event: event,
-                        isExpanded: _expandedDescriptions[uniqueKey] ?? false,
-                        onToggleDescription: () {
-                          setState(() {
-                            _expandedDescriptions[uniqueKey] =
-                                !(_expandedDescriptions[uniqueKey] ?? false);
-                          });
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 16),
+                            child: EventCard(
+                              event: event,
+                              isExpanded:
+                                  _expandedDescriptions[uniqueKey] ?? false,
+                              onToggleDescription: () {
+                                setState(() {
+                                  _expandedDescriptions[uniqueKey] =
+                                      !(_expandedDescriptions[uniqueKey] ??
+                                          false);
+                                });
+                              },
+                            ),
+                          );
                         },
                       ),
                     );
-                  },
-                ),
+                  }
+                },
               ),
             ),
-            SizedBox(
-              height: 46,
-              child: Container(
-                decoration: BoxDecoration(color: MyColors.backgroundColor),
-              ),
-            )
+            // SizedBox(
+            //   height: 46,
+            //   child: Container(
+            //     decoration: BoxDecoration(color: MyColors.backgroundColor),
+            //   ),
+            // )
           ] else ...[
             // Notifications Page UI
             _buildNotificationsPage(),
@@ -269,10 +247,15 @@ class _HomeScreenState extends State<AdminScreen> {
               // Action to add a notification
             }
           },
-          label: Text(
-            _eventsSelected ? 'Add Events' : 'Add Notifications',
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 43.5),
+            child: Text(
+              _eventsSelected ? 'Add Events' : 'Add Notifications',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
           ),
           backgroundColor: MyColors.primaryColor,
         ),
@@ -283,68 +266,81 @@ class _HomeScreenState extends State<AdminScreen> {
   }
 
   Widget _buildNotificationsPage() {
-    return SingleChildScrollView(
+    return Expanded(
       child: Container(
-        decoration: BoxDecoration(color: MyColors.backgroundColor),
+        color: MyColors.backgroundColor,
         child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: notifications.map((notification) {
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            notification['sender']!,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: 8),
-                          if (notification['priority']!.isNotEmpty)
-                            Chip(
-                              side: BorderSide.none,
-                              label: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Black dot
-                                  Container(
-                                    width: 8, // Width of the dot
-                                    height: 8, // Height of the dot
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                      width:
-                                          4), // Space between the dot and text
-                                  Text(
-                                    'Important',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ],
+          padding: const EdgeInsets.only(bottom: 75),
+          child: ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              notification['sender']!,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
-                              labelStyle: TextStyle(color: Colors.red),
                             ),
-                          const SizedBox(width: 40),
-                          Text(
-                            notification['time']!,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(notification['message']!),
-                    ],
+                            if (notification['priority']!.isNotEmpty)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 2),
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Important',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    const SizedBox(width: 2),
+                                  ],
+                                ),
+                              ),
+                            Text(
+                              notification['time']!,
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(notification['message']!),
+                      ],
+                    ),
                   ),
                 ),
               );
-            }).toList(),
+            },
           ),
         ),
       ),

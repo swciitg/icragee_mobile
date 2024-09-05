@@ -1,4 +1,5 @@
 class Schedule {
+  final String? id;
   final String title;
   final DateTime startTime;
   final DateTime endTime;
@@ -8,7 +9,8 @@ class Schedule {
   final String status;
 
   Schedule(
-      {required this.title,
+      {this.id,
+      required this.title,
       required this.startTime,
       required this.endTime,
       required this.location,
