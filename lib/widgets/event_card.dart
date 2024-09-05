@@ -9,12 +9,12 @@ class EventCard extends StatefulWidget {
   final Schedule event;
 
   const EventCard({
-    Key? key,
+    super.key,
     required this.event,
-  }) : super(key: key);
+  });
 
   @override
-  _EventCardState createState() => _EventCardState();
+  State<EventCard> createState() => _EventCardState();
 }
 
 class _EventCardState extends State<EventCard> {
@@ -28,7 +28,7 @@ class _EventCardState extends State<EventCard> {
     super.initState();
     _currentStatus = _getEventStatus();
     // Update status every minute
-    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       setState(() {
         _currentStatus = _getEventStatus();
       });
@@ -102,14 +102,14 @@ class _EventCardState extends State<EventCard> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 14),
                     const SizedBox(width: 4),
                     Text(
                       widget.event.location,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -118,7 +118,7 @@ class _EventCardState extends State<EventCard> {
 
             // Check Description button
             Padding(
-              padding: EdgeInsets.only(top: 12, bottom: 12),
+              padding: const EdgeInsets.only(top: 12, bottom: 12),
               child: Center(
                 child: GestureDetector(
                   onTap: _toggleDescription,
@@ -132,7 +132,7 @@ class _EventCardState extends State<EventCard> {
                             color: Colors.teal,
                             decoration: TextDecoration.underline),
                       ),
-                      SizedBox(width: 2),
+                      const SizedBox(width: 2),
                       Image.asset(
                         "assets/icons/check_description.png",
                         height: 18,

@@ -14,7 +14,7 @@ final routeConfig = GoRouter(
     ),
     GoRoute(
       path: '/admin-screen',
-      builder: (context, state) => AdminScreen(),
+      builder: (context, state) => const AdminScreen(),
     ),
     GoRoute(
       path: '/homeScreen',

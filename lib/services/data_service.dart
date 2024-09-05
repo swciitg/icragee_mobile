@@ -5,16 +5,12 @@ import 'package:icragee_mobile/models/schedule.dart';
 
 class DataService {
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot =
-        await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
 
-    return collectionSnapshot.docs
-        .map((doc) => FaqContent.fromJson(doc.data()))
-        .toList();
+    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
   }
 
-  static Future<List<EmergencyContact>> fetchContactsByCategory(
-      String category) async {
+  static Future<List<EmergencyContact>> fetchContactsByCategory(String category) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('important_contacts')
@@ -48,11 +44,9 @@ class DataService {
     }
   }
 
-  static Future<List<Schedule>> getSchedules(int day) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('schedules')
-        .where('day', isEqualTo: day)
-        .get();
+  static Future<List<Schedule>> getEvents(int day) async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
     return querySnapshot.docs.map((doc) {
       return Schedule.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
@@ -69,9 +63,8 @@ class DataService {
     });
   }
 
-  Future<List<Schedule>> getEvents() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('events').get();
+  Future<List<Schedule>> getUserEvents() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
       return Schedule(
         id: doc.id,

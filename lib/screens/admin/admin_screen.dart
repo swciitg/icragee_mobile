@@ -8,6 +8,7 @@ import '../../widgets/event_card.dart';
 import '../../widgets/tab_button.dart';
 
 class AdminScreen extends StatefulWidget {
+  const AdminScreen({super.key});
   @override
   State<AdminScreen> createState() => _HomeScreenState();
 }
@@ -15,7 +16,7 @@ class AdminScreen extends StatefulWidget {
 class _HomeScreenState extends State<AdminScreen> {
   bool _eventsSelected = true;
   int _selectedDay = 1;
-  Map<int, bool> _expandedDescriptions = {};
+  final Map<int, bool> _expandedDescriptions = {};
   final DataService _dataService = DataService();
   List<Schedule> events = [];
 
@@ -35,8 +36,7 @@ class _HomeScreenState extends State<AdminScreen> {
       'sender': 'Dr Prakash',
       'priority': 'Important',
       'time': '10 minutes ago',
-      'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra.'
+      'message': 'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra.'
     },
     {
       'sender': 'Co-Ordinator',
@@ -76,13 +76,12 @@ class _HomeScreenState extends State<AdminScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
+            padding: const EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Welcome Back !',
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
+                const Text('Welcome Back !',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 GestureDetector(
                   child: Image.asset(
                     'assets/icons/Vector.png',
@@ -95,7 +94,7 @@ class _HomeScreenState extends State<AdminScreen> {
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
@@ -131,9 +130,7 @@ class _HomeScreenState extends State<AdminScreen> {
               onTap: () {},
               child: const Text(
                 'Click here to view feedbacks',
-                style: TextStyle(
-                    color: MyColors.primaryTextColor,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(color: MyColors.primaryTextColor, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -173,28 +170,26 @@ class _HomeScreenState extends State<AdminScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Expanded(
               child: FutureBuilder<List<Schedule>>(
-                future: _dataService.getEvents(),
+                future: _dataService.getUserEvents(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No events found'));
+                    return const Center(child: Text('No events found'));
                   } else {
                     List<Schedule> events = snapshot.data!;
-                    List<Schedule> filteredEvents = events
-                        .where((event) => event.day == _selectedDay)
-                        .toList();
+                    List<Schedule> filteredEvents =
+                        events.where((event) => event.day == _selectedDay).toList();
 
                     return Container(
-                      decoration:
-                          BoxDecoration(color: MyColors.backgroundColor),
+                      decoration: const BoxDecoration(color: MyColors.backgroundColor),
                       child: ListView.builder(
                         itemCount: filteredEvents.length,
                         itemBuilder: (context, index) {
@@ -202,8 +197,7 @@ class _HomeScreenState extends State<AdminScreen> {
                           final uniqueKey = index;
 
                           return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                             child: EventCard(
                               event: event,
                             ),
@@ -236,17 +230,15 @@ class _HomeScreenState extends State<AdminScreen> {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 43.5),
             child: Text(
               _eventsSelected ? 'Add Events' : 'Add Notifications',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
+              style:
+                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
           backgroundColor: MyColors.primaryColor,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation
-          .centerFloat, // Positioned in the middle at the bottom
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerFloat, // Positioned in the middle at the bottom
     );
   }
 
@@ -261,15 +253,14 @@ class _HomeScreenState extends State<AdminScreen> {
             itemBuilder: (context, index) {
               final notification = notifications[index];
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -298,13 +289,13 @@ class _HomeScreenState extends State<AdminScreen> {
                                     Container(
                                       width: 8,
                                       height: 8,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         color: Colors.red,
                                         shape: BoxShape.circle,
                                       ),
                                     ),
                                     const SizedBox(width: 4),
-                                    Text(
+                                    const Text(
                                       'Important',
                                       style: TextStyle(color: Colors.red),
                                     ),

@@ -47,9 +47,9 @@ class LoginButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
         //primary: Color(0xFFFF8C40), // Background color
-        backgroundColor: Color(0xFFFF8C40), // Text color
-        minimumSize: Size(310, 51), // Width and height
-        padding: EdgeInsets.symmetric(vertical: 13), // Padding
+        backgroundColor: const Color(0xFFFF8C40), // Text color
+        minimumSize: const Size(310, 51), // Width and height
+        padding: const EdgeInsets.symmetric(vertical: 13), // Padding
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10), // Rounded corners
         ),
