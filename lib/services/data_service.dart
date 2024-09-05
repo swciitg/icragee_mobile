@@ -44,7 +44,7 @@ class DataService {
     }
   }
 
-  static Future<List<Schedule>> getEvents(int day) async {
+  static Future<List<Schedule>> getDayWiseEvents(int day) async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
     return querySnapshot.docs.map((doc) {
@@ -63,18 +63,38 @@ class DataService {
     });
   }
 
-  Future<List<Schedule>> getUserEvents() async {
+  Future<List<Schedule>> getEvents() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
-      return Schedule(
-        id: doc.id,
-        title: doc['title'],
-        startTime: (doc['startTime'] as Timestamp).toDate(),
-        endTime: (doc['endTime'] as Timestamp).toDate(),
-        location: doc['location'],
-        description: doc['description'],
-        day: doc['day'],
-      );
+      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
+  }
+
+  static Stream<List<String>> getUserEventIds(String email) {
+    return FirebaseFirestore.instance.collection('users').doc(email).snapshots().map((doc) {
+      return List<String>.from(doc['events']);
+    });
+  }
+
+  static Stream<Schedule> getEventById(String id) {
+    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
+      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
+    });
+  }
+
+  static Future<void> addEventToUser(String email, String eventId) async {
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(email);
+    DocumentSnapshot userSnapshot = await userDoc.get();
+
+    if (userSnapshot.exists) {
+      List<String> events = List<String>.from(userSnapshot['events']);
+      if (events.contains(eventId)) return;
+      events.add(eventId);
+      await userDoc.update({'events': events});
+    } else {
+      await userDoc.set({
+        'events': [eventId]
+      });
+    }
   }
 }

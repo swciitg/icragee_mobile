@@ -175,7 +175,7 @@ class _HomeScreenState extends State<AdminScreen> {
             ),
             Expanded(
               child: FutureBuilder<List<Schedule>>(
-                future: _dataService.getUserEvents(),
+                future: _dataService.getEvents(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

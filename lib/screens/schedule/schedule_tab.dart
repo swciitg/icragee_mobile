@@ -97,7 +97,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
           const SizedBox(height: 16),
           Expanded(
             child: FutureBuilder<List<Schedule>>(
-              future: DataService.getEvents(selectedDay),
+              future: DataService.getDayWiseEvents(selectedDay),
               //future: dataService.getSchedules(selectedDay),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

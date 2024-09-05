@@ -22,3 +22,4 @@ final routeConfig = GoRouter(
     ),
   ],
 );
+
