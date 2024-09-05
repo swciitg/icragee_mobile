@@ -18,8 +18,6 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 162,
-      width: 390,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -109,29 +107,32 @@ class EventCard extends StatelessWidget {
               ),
 
             // Check Description button
-            Center(
-              child: GestureDetector(
-                onTap: onToggleDescription,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Check Description',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.teal,
-                          decoration: TextDecoration.underline),
-                    ),
-                    SizedBox(
-                      width: 2,
-                    ),
-                    Image.asset(
-                      "assets/icons/check_description.png",
-                      height: 18,
-                      width: 18,
-                      color: Colors.teal,
-                    )
-                  ],
+            Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Center(
+                child: GestureDetector(
+                  onTap: onToggleDescription,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Check Description',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.teal,
+                            decoration: TextDecoration.underline),
+                      ),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Image.asset(
+                        "assets/icons/check_description.png",
+                        height: 18,
+                        width: 18,
+                        color: Colors.teal,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

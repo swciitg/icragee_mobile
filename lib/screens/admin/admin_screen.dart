@@ -76,7 +76,7 @@ class _HomeScreenState extends State<AdminScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 20, top: 57, right: 20, bottom: 4),
+            padding: EdgeInsets.only(left: 20, top: 16, right: 20, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
