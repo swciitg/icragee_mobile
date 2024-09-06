@@ -6,7 +6,6 @@ class Schedule {
   final String location;
   final String description;
   final int day;
-  final String status;
 
   Schedule(
       {this.id,
@@ -15,7 +14,6 @@ class Schedule {
       required this.endTime,
       required this.location,
       required this.description,
-      required this.status,
       required this.day});
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
@@ -25,8 +23,7 @@ class Schedule {
         endTime: DateTime.parse(json['endTime']),
         location: json['location'],
         description: json['description'],
-        day: json['day'],
-        status: json['status']);
+        day: json['day']);
   }
 
   Map<String, dynamic> toJson() {
@@ -36,8 +33,7 @@ class Schedule {
       'endTime': endTime.toIso8601String(),
       'location': location,
       'description': description,
-      'day': day,
-      'status': status
+      'day': day
     };
   }
 }

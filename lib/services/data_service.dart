@@ -66,7 +66,6 @@ class DataService {
       'location': event.location,
       'description': event.description,
       'day': event.day,
-      'status': event.status,
     });
   }
 
@@ -82,7 +81,6 @@ class DataService {
         location: doc['location'],
         description: doc['description'],
         day: doc['day'],
-        status: doc['status'],
       );
     }).toList();
   }

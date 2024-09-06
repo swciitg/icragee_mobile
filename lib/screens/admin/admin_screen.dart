@@ -206,15 +206,6 @@ class _HomeScreenState extends State<AdminScreen> {
                                 vertical: 5, horizontal: 16),
                             child: EventCard(
                               event: event,
-                              isExpanded:
-                                  _expandedDescriptions[uniqueKey] ?? false,
-                              onToggleDescription: () {
-                                setState(() {
-                                  _expandedDescriptions[uniqueKey] =
-                                      !(_expandedDescriptions[uniqueKey] ??
-                                          false);
-                                });
-                              },
                             ),
                           );
                         },
@@ -224,12 +215,6 @@ class _HomeScreenState extends State<AdminScreen> {
                 },
               ),
             ),
-            // SizedBox(
-            //   height: 46,
-            //   child: Container(
-            //     decoration: BoxDecoration(color: MyColors.backgroundColor),
-            //   ),
-            // )
           ] else ...[
             // Notifications Page UI
             _buildNotificationsPage(),
