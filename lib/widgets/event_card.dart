@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
@@ -43,6 +42,7 @@ class _EventCardState extends State<EventCard> {
 
   String _getEventStatus() {
     final now = DateTime.now();
+
     if (now.isBefore(widget.event.startTime)) {
       return 'Upcoming';
     } else if (now.isAfter(widget.event.startTime) &&

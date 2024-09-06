@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/models/user_event_details.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:intl/intl.dart';
 
-class HomeCarouselTile extends StatelessWidget {
+class HomeCarouselTile extends StatefulWidget {
   final Schedule event;
+  final UserEventDetails userEventDetails;
 
   const HomeCarouselTile({
     super.key,
     required this.event,
+    required this.userEventDetails,
   });
+
+  @override
+  State<HomeCarouselTile> createState() => _HomeCarouselTileState();
+}
+
+class _HomeCarouselTileState extends State<HomeCarouselTile> {
+  void _updateUserEventDetails() {
+    if (widget.userEventDetails.lastUpdated.isBefore(widget.event.lastUpdated)) {
+      // TODO: remove hardcoded email once auth is implemented
+      DataService.updateUserEvent("venkylm10@gmail.com", widget.event);
+    }
+  }
+
+  @override
+  void initState() {
+    _updateUserEventDetails();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.sizeOf(context).width - 16,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      width: MediaQuery.sizeOf(context).width - 24,
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: MyColors.navBarBackgroundColor,
         borderRadius: BorderRadius.circular(15),
@@ -25,22 +47,22 @@ class HomeCarouselTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            event.title,
+            widget.event.title,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 10),
-          Text(
+          const Text(
             "Speaker Name: Speaker",
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w300,
             ),
           ),
           Text(
-            event.description,
+            widget.event.description,
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w300,
@@ -54,7 +76,7 @@ class HomeCarouselTile extends StatelessWidget {
                 const Icon(Icons.access_time_outlined),
                 const SizedBox(width: 5),
                 Text(
-                  DateFormat('k:mm').format(event.startTime),
+                  DateFormat('k:mm').format(widget.event.startTime),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
@@ -64,7 +86,7 @@ class HomeCarouselTile extends StatelessWidget {
                 const Icon(Icons.location_on_outlined),
                 const SizedBox(width: 5),
                 Text(
-                  event.location,
+                  widget.event.location,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
