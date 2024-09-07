@@ -4,7 +4,7 @@ import 'package:icragee_mobile/shared/colors.dart';
 class StatusChip extends StatelessWidget {
   final String status;
 
-  const StatusChip({Key? key, required this.status}) : super(key: key);
+  const StatusChip({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +22,38 @@ class StatusChip extends StatelessWidget {
       default:
         color = Colors.grey;
     }
-    return Chip(
-      side: BorderSide.none,
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Black dot
-          Container(
-            width: 8, // Width of the dot
-            height: 8, // Height of the dot
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: color),
+            borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 2,
             ),
-          ),
-          const SizedBox(width: 4), // Space between the dot and text
-          Text(
-            status,
-            style: TextStyle(color: color),
-          ),
-        ],
+            // Black dot
+            Container(
+              width: 8, // Width of the dot
+              height: 8, // Height of the dot
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 4), // Space between the dot and text
+            Text(
+              status,
+              style: TextStyle(color: color),
+            ),
+            const SizedBox(
+              width: 2,
+            )
+          ],
+        ),
       ),
-      //backgroundColor: color.withOpacity(0.2),
-      labelStyle: TextStyle(color: color),
     );
   }
 }

@@ -8,30 +8,30 @@ class TabButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const TabButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.isSelected,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 46,
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
         style: ElevatedButton.styleFrom(
           backgroundColor:
               isSelected ? MyColors.primaryColor : MyColors.backgroundColor,
-          foregroundColor: isSelected ? Colors.white : MyColors.primaryColor,
-          side: const BorderSide(color: Colors.teal),
+          foregroundColor:
+              isSelected ? Colors.white : MyColors.primaryTextColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

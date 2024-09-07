@@ -5,7 +5,7 @@ class Swipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SwipePage());
+    return const MaterialApp(home: SwipePage());
   }
 }
 
@@ -18,9 +18,9 @@ class SwipePage extends StatefulWidget {
 
 class _SwipePageState extends State<SwipePage> {
   int _currentPage = 0;
-  PageController _pageController = PageController(initialPage: 0);
+  final _pageController = PageController(initialPage: 0);
 
-  List<String> _pageContents=[
+  final _pageContents=[
     'Page 1 Content',
     'Page 2 Content',
     'Page 3 Content',
@@ -45,7 +45,7 @@ class _SwipePageState extends State<SwipePage> {
                 return Center(
                   child: Text(
                     _pageContents[index],
-                    style: TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24),
                   ),
                 );
               },
@@ -59,12 +59,12 @@ class _SwipePageState extends State<SwipePage> {
                 onTap: () {
                   _pageController.animateToPage(
                     index,
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   width: 12,
                   height: 12,
                   decoration: BoxDecoration(
