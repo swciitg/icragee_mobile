@@ -7,8 +7,7 @@ class NotificationTile extends StatefulWidget {
   final String body;
   final DateTime time;
 
-  const NotificationTile(
-      {required this.title, required this.body, required this.time, super.key});
+  const NotificationTile({required this.title, required this.body, required this.time, super.key});
 
   @override
   State createState() => _NotificationTileState();
@@ -34,7 +33,7 @@ class _NotificationTileState extends State<NotificationTile> {
         padding: const EdgeInsets.all(10.0),
         margin: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
-          color: MyColors.navBarBackgroundColor,
+          color: MyColors.whiteColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(

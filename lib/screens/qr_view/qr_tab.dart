@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/qr_code_widget.dart';
 
@@ -15,11 +16,21 @@ class _QrTabState extends State<QrTab> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'Scan the QR',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        scrolledUnderElevation: 0,
+        backgroundColor: MyColors.primaryColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
         ),
-        backgroundColor: MyColors.backgroundColor,
+        title: Text(
+          "Food Coupon",
+          style: GoogleFonts.poppins(
+            fontSize: 22,
+            color: MyColors.whiteColor,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: const Center(
         child: SizedBox(

@@ -39,7 +39,7 @@ class _HomeCarouselTileState extends State<HomeCarouselTile> {
       width: MediaQuery.sizeOf(context).width - 24,
       margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: MyColors.navBarBackgroundColor,
+        color: MyColors.whiteColor,
         borderRadius: BorderRadius.circular(15),
       ),
       padding: const EdgeInsets.all(10.0),
