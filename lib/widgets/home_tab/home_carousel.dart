@@ -11,6 +11,7 @@ class HomeCarousel extends StatefulWidget {
 
 class _HomeCarouselState extends State<HomeCarousel> {
   late final PageController _pageController;
+
   @override
   void initState() {
     _pageController = PageController(initialPage: 0);
@@ -25,8 +26,8 @@ class _HomeCarouselState extends State<HomeCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: DataService.getUserEventIds("venkylm10@gmail.com"),
+    return FutureBuilder(
+      future: DataService.getUserEventIds("venkylm10@gmail.com"),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -34,14 +35,14 @@ class _HomeCarouselState extends State<HomeCarousel> {
         if (snapshot.hasError) {
           return const Center(child: Text('An error occurred'));
         }
-        var userEvents = snapshot.data!;
+        List<String> userEvents = snapshot.data!;
         if (userEvents.isEmpty) {
           return const Center(child: Text('No events lined up'));
         }
         if (userEvents.length > 5) {
           userEvents = userEvents.sublist(0, 5);
         }
-        userEvents.sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
+        // userEvents.sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
         return Column(
           children: [
             SingleChildScrollView(
@@ -52,18 +53,19 @@ class _HomeCarouselState extends State<HomeCarousel> {
                 children: List.generate(
                   userEvents.length,
                   (index) => StreamBuilder(
-                    stream: DataService.getEventById(userEvents[index].eventId),
+                    stream: DataService.getEventById(userEvents[index]),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return const Center(child: Text('Something went wrong!'));
+                        return const Center(
+                            child: Text('Something went wrong!'));
                       }
                       final event = snapshot.data!;
                       return HomeCarouselTile(
                         event: event,
-                        userEventDetails: userEvents[index],
+                        // userEventDetails: userEvents[index],
                       );
                     },
                   ),

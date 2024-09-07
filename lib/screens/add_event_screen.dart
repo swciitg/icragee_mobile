@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:icragee_mobile/models/event.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -13,7 +13,7 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   // State variables for selected venue and date
   String? selectedVenue;
-  String? selectedDate;
+  int? selectedDay;
 
   // Lists for dropdown values
   final dates = ['Day 1', 'Day 2', 'Day 3'];
@@ -114,7 +114,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               const SizedBox(height: 16),
               // Dropdown for Date Selection
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<int>(
                 decoration: InputDecoration(
                   labelText: 'Add Date',
                   labelStyle: const TextStyle(
@@ -127,17 +127,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   focusedBorder: _buildInputBorder(),
                   prefixIcon: const Icon(Icons.calendar_today),
                 ),
-                value: selectedDate,
+                value: selectedDay,
                 hint: const Text('Select day'),
                 items: dates.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
+                  return DropdownMenuItem<int>(
+                    value: dates.indexOf(value) + 1,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (newValue) {
                   setState(() {
-                    selectedDate = newValue;
+                    selectedDay = newValue;
                   });
                 },
               ),
@@ -168,7 +168,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         selectedVenue == null ||
-        selectedDate == null) {
+        selectedDay == null) {
       Fluttertoast.showToast(
         msg: "Please fill all fields",
         toastLength: Toast.LENGTH_SHORT,
@@ -179,16 +179,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
       return;
     }
 
-    // Create a new event object
-    Event newEvent = Event(
-      title: _titleController.text,
-      description: _descriptionController.text,
-      venue: selectedVenue!,
-      date: DateTime.now(), // Replace with a proper date based on selectedDate
-    );
+    final nav = GoRouter.of(context);
 
     try {
-      await DataService.addEvent(newEvent);
+      await DataService.addEvent({
+        'title': _titleController.text,
+        'description': _descriptionController.text,
+        'venue': selectedVenue!,
+        'day': selectedDay!,
+        // TODO: Add Start time nd End time properties
+        // Convert DateTime to Iso8601 string to
+        // prevent storage as Timestamp Object in Firestore
+        'startTime': DateTime.now().toIso8601String(),
+        'endTime': DateTime.now().toIso8601String(),
+      });
       Fluttertoast.showToast(
         msg: "Event added successfully",
         toastLength: Toast.LENGTH_SHORT,
@@ -196,14 +200,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
-
-      _clearFormFields();
-
-      Future.delayed(const Duration(milliseconds: 500), () {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const AddEventScreen()),
-        );
-      });
     } catch (e) {
       Fluttertoast.showToast(
         msg: "Failed to add event. Please try again.",
@@ -212,6 +208,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
+    } finally {
+      nav.pop();
     }
   }
 
@@ -227,7 +225,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       _titleController.clear();
       _descriptionController.clear();
       selectedVenue = null;
-      selectedDate = null;
+      selectedDay = null;
     });
   }
 }

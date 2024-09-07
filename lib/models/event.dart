@@ -6,7 +6,6 @@ class Event {
   final String venue;
   final String description;
   final int day;
-  final DateTime lastUpdated;
 
   Event({
     required this.id,
@@ -16,7 +15,6 @@ class Event {
     required this.venue,
     required this.description,
     required this.day,
-    required this.lastUpdated,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -28,7 +26,6 @@ class Event {
       venue: json['venue'],
       description: json['description'],
       day: json['day'],
-      lastUpdated: DateTime.parse(json['lastUpdated']),
     );
   }
 
@@ -41,7 +38,6 @@ class Event {
       'venue': venue,
       'description': description,
       'day': day,
-      'lastUpdated': lastUpdated,
     };
   }
 }

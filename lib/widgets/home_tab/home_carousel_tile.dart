@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
-import 'package:icragee_mobile/models/user_event_details.dart';
-import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:intl/intl.dart';
 
 class HomeCarouselTile extends StatefulWidget {
   final Event event;
-  final UserEventDetails userEventDetails;
+
+  // final UserDetails userEventDetails;
 
   const HomeCarouselTile({
     super.key,
     required this.event,
-    required this.userEventDetails,
+    // required this.userEventDetails,
   });
 
   @override
@@ -21,11 +20,11 @@ class HomeCarouselTile extends StatefulWidget {
 
 class _HomeCarouselTileState extends State<HomeCarouselTile> {
   void _updateUserEventDetails() {
-    if (widget.userEventDetails.lastUpdated
-        .isBefore(widget.event.lastUpdated)) {
-      // TODO: remove hardcoded email once auth is implemented
-      DataService.updateUserEvent("venkylm10@gmail.com", widget.event);
-    }
+    //   if (widget.userEventDetails.lastUpdated
+    //       .isBefore(widget.event.lastUpdated)) {
+    //     // TODO: remove hardcoded email once auth is implemented
+    //     DataService.updateUserEvent("venkylm10@gmail.com", widget.event);
+    //   }
   }
 
   @override
