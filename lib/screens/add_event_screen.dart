@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -49,9 +50,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 controller: _titleController, // Bind controller
                 decoration: InputDecoration(
                   labelText: 'Add Event Title',
-                  labelStyle: const TextStyle(
-                      color: Colors.black87,
-                      backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle:
+                      const TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
                   hintText: 'Enter event title',
                   filled: true,
                   fillColor: Colors.white,
@@ -67,9 +67,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 controller: _descriptionController, // Bind controller
                 decoration: InputDecoration(
                   labelText: 'Add Event Description',
-                  labelStyle: const TextStyle(
-                      color: Colors.black87,
-                      backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle:
+                      const TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
                   hintText: 'Enter event description',
                   filled: true,
                   fillColor: Colors.white,
@@ -84,17 +83,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: 'Add Venue',
-                  labelStyle: const TextStyle(
-                      color: Colors.black87,
-                      backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle:
+                      const TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
                   filled: true,
                   fillColor: Colors.white,
                   border: _buildInputBorder(),
                   enabledBorder: _buildInputBorder(),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide:
-                        const BorderSide(color: Colors.teal, width: 2.0),
+                    borderSide: const BorderSide(color: Colors.teal, width: 2.0),
                   ),
                   prefixIcon: const Icon(Icons.place),
                 ),
@@ -117,9 +114,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DropdownButtonFormField<int>(
                 decoration: InputDecoration(
                   labelText: 'Add Date',
-                  labelStyle: const TextStyle(
-                      color: Colors.black87,
-                      backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle:
+                      const TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
                   filled: true,
                   fillColor: Colors.white,
                   border: _buildInputBorder(),
@@ -152,8 +148,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ), // Call the add event method
-                child: const Text('Add',
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
+                child: const Text('Add', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -182,17 +177,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
     final nav = GoRouter.of(context);
 
     try {
-      await DataService.addEvent({
-        'title': _titleController.text,
-        'description': _descriptionController.text,
-        'venue': selectedVenue!,
-        'day': selectedDay!,
-        // TODO: Add Start time nd End time properties
-        // Convert DateTime to Iso8601 string to
-        // prevent storage as Timestamp Object in Firestore
-        'startTime': DateTime.now().toIso8601String(),
-        'endTime': DateTime.now().toIso8601String(),
-      });
+      final newEvent = Event(
+          title: _titleController.text.trim(),
+          startTime: DateTime.now(),
+          endTime: DateTime.now(),
+          venue: selectedVenue!,
+          description: _descriptionController.text.trim(),
+          day: selectedDay!);
+      await DataService.addEvent(newEvent);
       Fluttertoast.showToast(
         msg: "Event added successfully",
         toastLength: Toast.LENGTH_SHORT,

@@ -33,6 +33,7 @@ class _MapTabState extends State<MapTab> {
           ),
         ),
       ),
+      extendBodyBehindAppBar: true,
       body: GoogleMap(
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
           Factory<OneSequenceGestureRecognizer>(() {

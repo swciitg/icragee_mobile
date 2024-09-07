@@ -8,7 +8,7 @@ class Event {
   final int day;
 
   Event({
-    required this.id,
+    this.id = "",
     required this.title,
     required this.startTime,
     required this.endTime,
@@ -39,5 +39,25 @@ class Event {
       'description': description,
       'day': day,
     };
+  }
+
+  Event copyWith({
+    String? id,
+    String? title,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? venue,
+    String? description,
+    int? day,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      venue: venue ?? this.venue,
+      description: description ?? this.description,
+      day: day ?? this.day,
+    );
   }
 }

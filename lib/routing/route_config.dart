@@ -3,10 +3,12 @@ import 'package:icragee_mobile/routing/app_routes.dart';
 import 'package:icragee_mobile/screens/admin/admin_screen.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
 import 'package:icragee_mobile/screens/splash.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 
 import '../screens/add_event_screen.dart';
 
 final routeConfig = GoRouter(
+  navigatorKey: navigatorKey,
   initialLocation: '/',
   routes: [
     GoRoute(
@@ -28,4 +30,3 @@ final routeConfig = GoRouter(
     ),
   ],
 );
-

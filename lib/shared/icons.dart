@@ -9,4 +9,7 @@ class MyIcons {
   static const mapSelected = '${prefix}map_selected.svg';
   static const foodSelected = '${prefix}food_selected.svg';
   static const homeProfile = '${prefix}home_profile.png';
+  static const location = '${prefix}location.svg';
+  static const toggleDown = '${prefix}toggle_down.svg';
+  static const addToList = '${prefix}add_to_list.svg';
 }

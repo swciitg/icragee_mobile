@@ -35,13 +35,11 @@ class _HomeCarouselState extends State<HomeCarousel> {
         if (snapshot.hasError) {
           return const Center(child: Text('An error occurred'));
         }
-        List<String> userEvents = snapshot.data!;
-        if (userEvents.isEmpty) {
+        List<String> eventIds = snapshot.data!;
+        if (eventIds.isEmpty) {
           return const Center(child: Text('No events lined up'));
         }
-        if (userEvents.length > 5) {
-          userEvents = userEvents.sublist(0, 5);
-        }
+        
         // userEvents.sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
         return Column(
           children: [
@@ -51,22 +49,18 @@ class _HomeCarouselState extends State<HomeCarousel> {
               physics: const PageScrollPhysics(),
               child: Row(
                 children: List.generate(
-                  userEvents.length,
+                  eventIds.length,
                   (index) => StreamBuilder(
-                    stream: DataService.getEventById(userEvents[index]),
+                    stream: DataService.getEventById(eventIds[index]),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return const Center(
-                            child: Text('Something went wrong!'));
+                        return const Center(child: Text('Something went wrong!'));
                       }
                       final event = snapshot.data!;
-                      return HomeCarouselTile(
-                        event: event,
-                        // userEventDetails: userEvents[index],
-                      );
+                      return HomeCarouselTile(event: event);
                     },
                   ),
                 ),

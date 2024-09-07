@@ -1,4 +1,4 @@
-import 'package:icragee_mobile/shared/assets.dart';
+import 'package:icragee_mobile/shared/icons.dart';
 
 enum HomeTabs{
   home,

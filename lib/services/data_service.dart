@@ -6,17 +6,13 @@ import 'package:icragee_mobile/models/faq.dart';
 class DataService {
   // Method to fetch FAQs from Firestore
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot =
-        await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
 
-    return collectionSnapshot.docs
-        .map((doc) => FaqContent.fromJson(doc.data()))
-        .toList();
+    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
   }
 
   // Method to fetch emergency contacts by category from Firestore
-  static Future<List<EmergencyContact>> fetchContactsByCategory(
-      String category) async {
+  static Future<List<EmergencyContact>> fetchContactsByCategory(String category) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('important_contacts')
@@ -52,50 +48,29 @@ class DataService {
   }
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('events')
-        .where('day', isEqualTo: day)
-        .get();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
     return querySnapshot.docs.map((doc) {
-      return Event.fromJson(
-          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
-  static Future<void> addEvent(Map<String, dynamic> event) async {
-    await FirebaseFirestore.instance.collection('events').add(event);
+  static Future<void> addEvent(Event event) async {
+    final collectionRef = FirebaseFirestore.instance.collection('events');
+    final doc = collectionRef.doc();
+    event = event.copyWith(id: doc.id);
+    await doc.set(event.toJson());
   }
 
   static Future<List<Event>> getEvents() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('events').get();
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
-      print(doc.data());
-      return Event.fromJson(
-          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
-  // static Stream<List<UserDetails>> getUserEventIds(String email) {
-  //   return FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(email)
-  //       .collection("events")
-  //       .orderBy('startTime')
-  //       .snapshots()
-  //       .map((snapshot) {
-  //     return snapshot.docs.map((doc) {
-  //       return UserDetails.fromJson(doc.data());
-  //     }).toList();
-  //   });
-  // }
-
   static Stream<Event> getEventById(String id) {
-    return FirebaseFirestore.instance
-        .collection('events')
-        .doc(id)
-        .snapshots()
-        .map((doc) {
+    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
       return Event.fromJson(doc.data() as Map<String, dynamic>);
     });
   }
@@ -108,8 +83,7 @@ class DataService {
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
-      List<String> eventList =
-          List<String>.from(userDoc.data()['eventList'] ?? []);
+      List<String> eventList = List<String>.from(userDoc.data()['eventList'] ?? []);
       return eventList;
     } else {
       throw Exception('User not found!');
@@ -131,19 +105,4 @@ class DataService {
       throw Exception('User not found!');
     }
   }
-
-// static getUserEventIds(String s) {}
-
-// static Future<void> updateUserEvent(String email, Event event) async {
-//   final collection = FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(email)
-//       .collection("events");
-//   final doc = collection.doc(event.id);
-//   await doc.update(UserDetails(
-//     eventId: event.id,
-//     startTime: event.startTime,
-//     lastUpdated: event.lastUpdated,
-//   ).toJson());
-// }
 }
