@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../models/event_model.dart';
-import '../services/firestore_service.dart';
+import '../services/data_service.dart';
+
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -25,7 +26,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   // Instance of FirestoreService
-  final FirestoreService _firestoreService = FirestoreService();
+  final DataService _dataService = DataService();
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +181,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
 
     try {
-      await _firestoreService.addEvent(newEvent);
+      await _dataService.addEvent(newEvent);
       Fluttertoast.showToast(
         msg: "Event added successfully",
         toastLength: Toast.LENGTH_SHORT,
