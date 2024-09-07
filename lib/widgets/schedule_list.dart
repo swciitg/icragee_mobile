@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/widgets/schedule_item.dart';
 
 class SchedulesList extends StatelessWidget {
@@ -8,7 +8,7 @@ class SchedulesList extends StatelessWidget {
     required this.schedules,
   });
 
-  final List<Schedule> schedules;
+  final List<Event> schedules;
 
   @override
   Widget build(BuildContext context) {

@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
 class EventCard extends StatefulWidget {
-  final Schedule event;
+  final Event event;
 
   const EventCard({
     super.key,
@@ -108,7 +109,7 @@ class _EventCardState extends State<EventCard> {
                     const Icon(Icons.location_on, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      widget.event.location,
+                      widget.event.venue,
                       style: const TextStyle(fontSize: 14),
                     ),
                   ],

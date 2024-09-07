@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../models/event_model.dart';
-import '../services/data_service.dart';
-
+import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
 
   @override
-  _AddEventScreenState createState() => _AddEventScreenState();
+  State<AddEventScreen> createState() => _AddEventScreenState();
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
@@ -18,40 +16,42 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String? selectedDate;
 
   // Lists for dropdown values
-  final List<String> dates = ['Day 1', 'Day 2', 'Day 3'];
-  final List<String> venues = ['Venue 1', 'Venue 2', 'Venue 3'];
+  final dates = ['Day 1', 'Day 2', 'Day 3'];
+  final venues = ['Venue 1', 'Venue 2', 'Venue 3'];
 
   // Text editing controllers for event title and description
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-
-  // Instance of FirestoreService
-  final DataService _dataService = DataService();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC6FCED),
+      backgroundColor: const Color(0xFFC6FCED),
       appBar: AppBar(
-        title: const Text('Add Event'),leading: IconButton( // Add leading icon for back navigation
-        icon: Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () {
-          Navigator.of(context).pop(); // Handle back navigation
-        },
-      ),
+        title: const Text('Add Event'),
+        leading: IconButton(
+          // Add leading icon for back navigation
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop(); // Handle back navigation
+          },
+        ),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Align all elements to the left
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // Align all elements to the left
             children: [
               // TextField for Event Title
               TextField(
                 controller: _titleController, // Bind controller
                 decoration: InputDecoration(
                   labelText: 'Add Event Title',
-                  labelStyle: TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle: const TextStyle(
+                      color: Colors.black87,
+                      backgroundColor: Color(0xFFC7F7EF)),
                   hintText: 'Enter event title',
                   filled: true,
                   fillColor: Colors.white,
@@ -67,7 +67,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 controller: _descriptionController, // Bind controller
                 decoration: InputDecoration(
                   labelText: 'Add Event Description',
-                  labelStyle: TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle: const TextStyle(
+                      color: Colors.black87,
+                      backgroundColor: Color(0xFFC7F7EF)),
                   hintText: 'Enter event description',
                   filled: true,
                   fillColor: Colors.white,
@@ -82,19 +84,22 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: 'Add Venue',
-                  labelStyle: TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle: const TextStyle(
+                      color: Colors.black87,
+                      backgroundColor: Color(0xFFC7F7EF)),
                   filled: true,
                   fillColor: Colors.white,
                   border: _buildInputBorder(),
                   enabledBorder: _buildInputBorder(),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: Colors.teal, width: 2.0),
+                    borderSide:
+                        const BorderSide(color: Colors.teal, width: 2.0),
                   ),
-                  prefixIcon: Icon(Icons.place),
+                  prefixIcon: const Icon(Icons.place),
                 ),
                 value: selectedVenue,
-                hint: Text('Select venue'),
+                hint: const Text('Select venue'),
                 items: venues.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -112,16 +117,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: 'Add Date',
-                  labelStyle: TextStyle(color: Colors.black87, backgroundColor: Color(0xFFC7F7EF)),
+                  labelStyle: const TextStyle(
+                      color: Colors.black87,
+                      backgroundColor: Color(0xFFC7F7EF)),
                   filled: true,
                   fillColor: Colors.white,
                   border: _buildInputBorder(),
                   enabledBorder: _buildInputBorder(),
                   focusedBorder: _buildInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today),
+                  prefixIcon: const Icon(Icons.calendar_today),
                 ),
                 value: selectedDate,
-                hint: Text('Select day'),
+                hint: const Text('Select day'),
                 items: dates.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -137,15 +144,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
               const Spacer(),
               // Add Button
               ElevatedButton(
-                onPressed: _addEvent, // Call the add event method
-                child: const Text('Add', style: TextStyle(fontSize: 18, color: Colors.white)),
+                onPressed: _addEvent,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF40E0D0),
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                ),
+                ), // Call the add event method
+                child: const Text('Add',
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -179,9 +187,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
       date: DateTime.now(), // Replace with a proper date based on selectedDate
     );
 
-
     try {
-      await _dataService.addEvent(newEvent);
+      await DataService.addEvent(newEvent);
       Fluttertoast.showToast(
         msg: "Event added successfully",
         toastLength: Toast.LENGTH_SHORT,
@@ -190,17 +197,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
         textColor: Colors.white,
       );
 
-
       _clearFormFields();
 
-
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => AddEventScreen()),
+          MaterialPageRoute(builder: (context) => const AddEventScreen()),
         );
       });
     } catch (e) {
-
       Fluttertoast.showToast(
         msg: "Failed to add event. Please try again.",
         toastLength: Toast.LENGTH_SHORT,
@@ -214,9 +218,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
   OutlineInputBorder _buildInputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(color: Colors.black),
+      borderSide: const BorderSide(color: Colors.black),
     );
   }
+
   void _clearFormFields() {
     setState(() {
       _titleController.clear();
@@ -226,5 +231,3 @@ class _AddEventScreenState extends State<AddEventScreen> {
     });
   }
 }
-
-

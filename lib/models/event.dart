@@ -1,31 +1,31 @@
-class Schedule {
+class Event {
   final String id;
   final String title;
   final DateTime startTime;
   final DateTime endTime;
-  final String location;
+  final String venue;
   final String description;
   final int day;
   final DateTime lastUpdated;
 
-  Schedule({
+  Event({
     required this.id,
     required this.title,
     required this.startTime,
     required this.endTime,
-    required this.location,
+    required this.venue,
     required this.description,
     required this.day,
     required this.lastUpdated,
   });
 
-  factory Schedule.fromJson(Map<String, dynamic> json) {
-    return Schedule(
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
       id: json['id'],
       title: json['title'],
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
-      location: json['location'],
+      venue: json['venue'],
       description: json['description'],
       day: json['day'],
       lastUpdated: DateTime.parse(json['lastUpdated']),
@@ -38,7 +38,7 @@ class Schedule {
       'title': title,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
-      'location': location,
+      'venue': venue,
       'description': description,
       'day': day,
       'lastUpdated': lastUpdated,

@@ -1,41 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/emergency_contact.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
-import 'package:icragee_mobile/models/schedule.dart';
-import '../models/event_model.dart';
 import 'package:icragee_mobile/models/user_event_details.dart';
 
 class DataService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  // Method to add an event to Firestore
-  Future<void> addEvent(Event event) async {
-    try {
-      await _firestore.collection('events').add(event.toJson());
-      print('Event added successfully!');
-    } catch (e) {
-      print('Failed to add event: $e');
-    }
-  }
-
-  // Method to fetch all events from Firestore
-  Future<List<Event>> getEvents() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('events').get();
-      return querySnapshot.docs
-          .map((doc) => Event.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
-      print('Failed to fetch events: $e');
-      return [];
-    }
-  }
-
   // Method to fetch FAQs from Firestore
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot =
+        await FirebaseFirestore.instance.collection('FAQs').get();
 
-    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
+    return collectionSnapshot.docs
+        .map((doc) => FaqContent.fromJson(doc.data()))
+        .toList();
   }
 
   // Method to fetch emergency contacts by category from Firestore
@@ -75,23 +52,25 @@ class DataService {
     }
   }
 
-
-  static Future<List<Schedule>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+  static Future<List<Event>> getDayWiseEvents(int day) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('day', isEqualTo: day)
+        .get();
     return querySnapshot.docs.map((doc) {
-      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
+      return Event.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
   }
 
-  Future<void> addEvent(Schedule event) async {
-    await FirebaseFirestore.instance.collection('events').add(event.toJson());
+  static Future<void> addEvent(Map<String, dynamic> event) async {
+    await FirebaseFirestore.instance.collection('events').add(event);
   }
 
-  Future<List<Schedule>> getEvents() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
+  static Future<List<Event>> getEvents() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
-      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
+      return Event.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
   }
 
@@ -109,15 +88,21 @@ class DataService {
     });
   }
 
-  static Stream<Schedule> getEventById(String id) {
-    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
-      return Schedule.fromJson(doc.data() as Map<String, dynamic>);
+  static Stream<Event> getEventById(String id) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .doc(id)
+        .snapshots()
+        .map((doc) {
+      return Event.fromJson(doc.data() as Map<String, dynamic>);
     });
   }
 
-  static Future<void> addEventToUser(String email, Schedule event) async {
-    final collection =
-        FirebaseFirestore.instance.collection('users').doc(email).collection("events");
+  static Future<void> addEventToUser(String email, Event event) async {
+    final collection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(email)
+        .collection("events");
     final newDoc = collection.doc(event.id);
     if (await newDoc.get().then((doc) => doc.exists)) {
       return;
@@ -129,9 +114,11 @@ class DataService {
     ).toJson());
   }
 
-  static Future<void> updateUserEvent(String email, Schedule event) async {
-    final collection =
-        FirebaseFirestore.instance.collection('users').doc(email).collection("events");
+  static Future<void> updateUserEvent(String email, Event event) async {
+    final collection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(email)
+        .collection("events");
     final doc = collection.doc(event.id);
     await doc.update(UserEventDetails(
       eventId: event.id,

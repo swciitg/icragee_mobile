@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/user_event_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:intl/intl.dart';
 
 class HomeCarouselTile extends StatefulWidget {
-  final Schedule event;
+  final Event event;
   final UserEventDetails userEventDetails;
 
   const HomeCarouselTile({
@@ -21,7 +21,8 @@ class HomeCarouselTile extends StatefulWidget {
 
 class _HomeCarouselTileState extends State<HomeCarouselTile> {
   void _updateUserEventDetails() {
-    if (widget.userEventDetails.lastUpdated.isBefore(widget.event.lastUpdated)) {
+    if (widget.userEventDetails.lastUpdated
+        .isBefore(widget.event.lastUpdated)) {
       // TODO: remove hardcoded email once auth is implemented
       DataService.updateUserEvent("venkylm10@gmail.com", widget.event);
     }
@@ -86,7 +87,7 @@ class _HomeCarouselTileState extends State<HomeCarouselTile> {
                 const Icon(Icons.location_on_outlined),
                 const SizedBox(width: 5),
                 Text(
-                  widget.event.location,
+                  widget.event.venue,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,

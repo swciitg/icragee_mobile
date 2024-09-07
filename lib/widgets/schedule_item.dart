@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/models/schedule.dart';
+import 'package:icragee_mobile/models/event.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleItem extends StatelessWidget {
-  final Schedule schedule;
+  final Event schedule;
 
   const ScheduleItem({required this.schedule, super.key});
 
@@ -28,7 +28,7 @@ class ScheduleItem extends StatelessWidget {
                     fontWeight: FontWeight.w500, fontSize: 10.2)),
             const SizedBox(width: 3),
             const Icon(Icons.location_on_outlined, size: 17),
-            Text(schedule.location,
+            Text(schedule.venue,
                 style: const TextStyle(
                     fontWeight: FontWeight.w500, fontSize: 10.2))
           ],
