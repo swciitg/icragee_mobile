@@ -4,6 +4,8 @@ import 'package:icragee_mobile/screens/admin/admin_screen.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
 import 'package:icragee_mobile/screens/splash.dart';
 
+import '../screens/add_event_screen.dart';
+
 final routeConfig = GoRouter(
   initialLocation: '/',
   routes: [
@@ -19,6 +21,10 @@ final routeConfig = GoRouter(
     GoRoute(
       path: '/homeScreen',
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/addEventScreen',
+      builder: (context, state) => const AddEventScreen(),
     ),
   ],
 );
