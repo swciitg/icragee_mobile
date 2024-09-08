@@ -26,7 +26,7 @@ final routeConfig = GoRouter(
     ),
     GoRoute(
       path: '/addEventScreen',
-      builder: (context, state) => const AddEventScreen(),
+      builder: (context, state) =>  AddEventScreen(),
     ),
   ],
 );
