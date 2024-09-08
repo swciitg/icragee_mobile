@@ -76,9 +76,9 @@ class DataService {
       return Schedule(
         id: doc.id,
         title: doc['title'],
-        startTime: (doc['startTime'] as Timestamp).toDate(),
-        endTime: (doc['endTime'] as Timestamp).toDate(),
-        location: doc['location'],
+        startTime: DateTime.parse(doc['startTime']), // Parse String to DateTime
+        endTime: DateTime.parse(doc['endTime']),
+        location: doc['venue'],
         description: doc['description'],
         day: doc['day'],
       );

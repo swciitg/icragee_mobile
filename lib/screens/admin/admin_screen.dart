@@ -195,20 +195,23 @@ class _HomeScreenState extends State<AdminScreen> {
                     return Container(
                       decoration:
                           BoxDecoration(color: MyColors.backgroundColor),
-                      child: ListView.builder(
-                        itemCount: filteredEvents.length,
-                        itemBuilder: (context, index) {
-                          final event = filteredEvents[index];
-                          final uniqueKey = index;
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 80),
+                        child: ListView.builder(
+                          itemCount: filteredEvents.length,
+                          itemBuilder: (context, index) {
+                            final event = filteredEvents[index];
+                            final uniqueKey = index;
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 16),
-                            child: EventCard(
-                              event: event,
-                            ),
-                          );
-                        },
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 16),
+                              child: EventCard(
+                                event: event,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     );
                   }
