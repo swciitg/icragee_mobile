@@ -170,7 +170,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           GestureDetector(
             onTap: () {
               if (_currentPage == 3) {
-                context.go('/login-screen');
+                context.push('/login-screen');
                 return;
               }
               _pageController.nextPage(

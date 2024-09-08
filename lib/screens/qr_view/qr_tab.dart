@@ -16,6 +16,7 @@ class _QrTabState extends State<QrTab> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         scrolledUnderElevation: 0,
         backgroundColor: MyColors.primaryColor,
         shape: const RoundedRectangleBorder(

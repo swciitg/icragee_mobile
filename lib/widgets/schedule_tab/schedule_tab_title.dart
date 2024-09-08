@@ -36,6 +36,7 @@ class _ScheduleTabTitleState extends State<ScheduleTabTitle> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: MyColors.primaryColor,
       title: Text(
         'Schedule',

@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         () {
           setState(() {});
           if (controller.status == AnimationStatus.completed) {
-            final goRouter = context.go;
+            final goRouter = context.replace;
             goRouter('/get-started');
           }
         },

@@ -17,6 +17,7 @@ class _MapTabState extends State<MapTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         scrolledUnderElevation: 0,
         backgroundColor: MyColors.primaryColor,
         shape: const RoundedRectangleBorder(

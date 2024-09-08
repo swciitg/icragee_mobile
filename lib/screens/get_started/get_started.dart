@@ -45,7 +45,6 @@ class _GetStartedState extends State<GetStarted> {
             ),
           ),
           _nextButton(),
-          _backButton()
         ],
       ),
     );
@@ -80,7 +79,7 @@ class _GetStartedState extends State<GetStarted> {
             const SizedBox(height: 16),
             GestureDetector(
               onTap: () {
-                context.go('/admin-screen');
+                context.push('admin-screen');
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
@@ -102,7 +101,7 @@ class _GetStartedState extends State<GetStarted> {
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () {
-                context.go('/onboarding');
+                context.push('/onboarding');
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
@@ -122,21 +121,6 @@ class _GetStartedState extends State<GetStarted> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Positioned _backButton() {
-    return Positioned(
-      top: kToolbarHeight,
-      child: IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: MyColors.whiteColor,
         ),
       ),
     );
