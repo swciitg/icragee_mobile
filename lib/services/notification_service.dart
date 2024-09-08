@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:icragee_mobile/utility/auth_helpers.dart';
 
 @pragma('vm:entry-point')
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
@@ -87,6 +88,7 @@ class NotificationService {
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
     print("FCM Token: $fcmToken");
+    if (fcmToken != null) await AuthHelpers.setFCMToken(fcmToken);
     await initPushNotifications();
     await initLocalNotifications();
   }

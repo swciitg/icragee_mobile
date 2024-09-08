@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/screens/profile/profile_page.dart';
-import 'package:icragee_mobile/shared/icons.dart';
+import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tiles.dart';
 import 'package:icragee_mobile/widgets/home_tab/home_carousel.dart';

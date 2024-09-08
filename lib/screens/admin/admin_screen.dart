@@ -217,7 +217,7 @@ class _HomeScreenState extends State<AdminScreen> {
           onPressed: () {
             if (_eventsSelected) {
               // Action to add an event
-              context.push('/addEventScreen');
+              context.go('/addEventScreen');
             } else {
               // Action to add a notification
             }

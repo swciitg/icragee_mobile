@@ -1,74 +1,144 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/shared/assets.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 
-class GetStarted extends StatelessWidget {
+class GetStarted extends StatefulWidget {
   const GetStarted({super.key});
 
   @override
+  State<GetStarted> createState() => _GetStartedState();
+}
+
+class _GetStartedState extends State<GetStarted> {
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
-        body: Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        Image.asset(
-          'assets/images/get_started_image.png',
-          // Replace with your image path
-          fit: BoxFit.cover, // Cover the entire screen with the image
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 560),
-            const Text(
-              "Lorem ipsum dolor",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Image.asset(
+              MyImages.getStartedImage,
             ),
-            const Text(
-              '''consectetur adipiscing elit, sed do  
-             eiusmod tempor incididunt ut labore et dolore
-                magna aliqua''',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: size.height * 0.6,
+              width: size.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    MyColors.primaryColor,
+                    Colors.transparent,
+                  ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  stops: [0.3, 1],
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                context.go('/homeScreen');
+          ),
+          _nextButton(),
+          _backButton()
+        ],
+      ),
+    );
+  }
+
+  Positioned _nextButton() {
+    return Positioned(
+      bottom: 16,
+      left: 16,
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width - 32,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Get Started",
+              style: GoogleFonts.poppins(
+                fontSize: 32,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Welcome to IIT Guwahati !!, We’re excited to have you with us. We hope you have an amazing time exploring the conference!",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () {
+                context.go('/admin-screen');
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF8C40),
-                // Background color
-                foregroundColor: Colors.white,
-                // Text color
-                minimumSize: const Size(310, 51),
-                // Width and height
-                padding: const EdgeInsets.symmetric(vertical: 13),
-                // Padding
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Rounded corners
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: Text(
+                    "Login as Admin",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ),
-              child: const Text(
-                "Get Started",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                context.go('/onboarding');
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                textAlign: TextAlign.center,
+                child: Center(
+                  child: Text(
+                    "Login as Guest",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
-        )
-      ],
-    ));
+        ),
+      ),
+    );
+  }
+
+  Positioned _backButton() {
+    return Positioned(
+      top: kToolbarHeight,
+      child: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: MyColors.whiteColor,
+        ),
+      ),
+    );
   }
 }

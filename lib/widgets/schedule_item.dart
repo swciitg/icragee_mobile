@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
-import 'package:icragee_mobile/shared/icons.dart';
+import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 
 class AddEventScreen extends StatefulWidget {
-  AddEventScreen({super.key});
+  const AddEventScreen({super.key});
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -345,7 +344,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary:Color(0xFF40E0D0) , // Set primary color to green
               onSurface: Color(0xFF121515) ,// Set the text color to green
             ),
