@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
-import '../models/schedule.dart'; // Make sure you import the intl package
+import '../models/schedule.dart';
 
 class EventCard extends StatefulWidget {
   final Schedule event;
