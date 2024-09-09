@@ -192,6 +192,10 @@ class _HomeScreenState extends State<AdminScreen> {
                         .where((event) => event.day == _selectedDay)
                         .toList();
 
+                    filteredEvents.sort((a, b) {
+                      return a.startTime.compareTo(b.startTime);
+                    });
+
                     return Container(
                       decoration:
                           BoxDecoration(color: MyColors.backgroundColor),
