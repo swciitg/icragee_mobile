@@ -187,17 +187,30 @@ class _HomeScreenState extends State<AdminScreen> {
                     List<Event> events = snapshot.data!;
                     List<Event> filteredEvents =
                         events.where((event) => event.day == _selectedDay).toList();
+                        
+                    filteredEvents.sort((a, b) {
+                      return a.startTime.compareTo(b.startTime);
+                    });
                     return Container(
-                      decoration: const BoxDecoration(color: MyColors.backgroundColor),
-                      child: ListView.builder(
-                        itemCount: filteredEvents.length,
-                        itemBuilder: (context, index) {
-                          final event = filteredEvents[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                            child: EventCard(event: event),
-                          );
-                        },
+                      decoration:
+                          BoxDecoration(color: MyColors.backgroundColor),
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 80),
+                        child: ListView.builder(
+                          itemCount: filteredEvents.length,
+                          itemBuilder: (context, index) {
+                            final event = filteredEvents[index];
+                            final uniqueKey = index;
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 16),
+                              child: EventCard(
+                                event: event,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     );
                   }

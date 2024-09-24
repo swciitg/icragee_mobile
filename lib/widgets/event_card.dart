@@ -96,8 +96,8 @@ class _EventCardState extends State<EventCard> {
                     const Icon(Icons.access_time, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      '${DateFormat('kk:mm').format(widget.event.startTime.toLocal())}'
-                      ' - ${DateFormat('kk:mm').format(widget.event.endTime.toLocal())}',
+                      '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                      ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 14),
                     ),
