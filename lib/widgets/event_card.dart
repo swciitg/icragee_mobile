@@ -5,6 +5,8 @@ import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
+import '../shared/globals.dart';
+
 class EventCard extends StatefulWidget {
   final Event event;
 
@@ -43,11 +45,18 @@ class _EventCardState extends State<EventCard> {
 
   String _getEventStatus() {
     final now = DateTime.now();
+    final currDate = dayOneDate.add(Duration(days: widget.event.day - 1));
 
-    if (now.isBefore(widget.event.startTime)) {
+    final eventStart = currDate.copyWith(
+        hour: widget.event.startTime.hour,
+        minute: widget.event.startTime.minute);
+
+    final eventEnd = currDate.copyWith(
+        hour: widget.event.endTime.hour, minute: widget.event.endTime.minute);
+
+    if (now.isBefore(eventStart)) {
       return 'Upcoming';
-    } else if (now.isAfter(widget.event.startTime) &&
-        now.isBefore(widget.event.endTime)) {
+    } else if (now.isAfter(eventStart) && now.isBefore(eventEnd)) {
       return 'Ongoing';
     } else {
       return 'Finished';
