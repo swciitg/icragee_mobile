@@ -24,7 +24,7 @@ class _ImportantContactsState extends State<ImportantContacts> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: MyColors.navBarBackgroundColor,
+            color: MyColors.whiteColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -34,11 +34,8 @@ class _ImportantContactsState extends State<ImportantContacts> {
                 title: const Text('Emergency'),
                 trailing: InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const EmergencyContactsPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const EmergencyContactsPage()));
                   },
                   child: Container(
                     decoration: const BoxDecoration(
@@ -60,9 +57,7 @@ class _ImportantContactsState extends State<ImportantContacts> {
                 trailing: InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const IitgHospital()));
+                        context, MaterialPageRoute(builder: (context) => const IitgHospital()));
                   },
                   child: Container(
                     decoration: const BoxDecoration(
@@ -84,9 +79,7 @@ class _ImportantContactsState extends State<ImportantContacts> {
                 trailing: InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Transport()));
+                        context, MaterialPageRoute(builder: (context) => const Transport()));
                   },
                   child: Container(
                     decoration: const BoxDecoration(

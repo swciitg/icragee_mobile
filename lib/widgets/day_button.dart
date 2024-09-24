@@ -8,11 +8,11 @@ class DayButton extends StatelessWidget {
   final Function(int) onPressed;
 
   const DayButton({
-    Key? key,
+    super.key,
     required this.dayNumber,
     required this.selectedDay,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class DayButton extends StatelessWidget {
           onTap: () => onPressed(dayNumber),
           child: Center(
             child: Text(
-              'Day ${dayNumber}',
+              'Day $dayNumber',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

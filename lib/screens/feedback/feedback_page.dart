@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -28,18 +29,13 @@ class _FeedbackPage extends State<FeedbackPage> {
         email: email,
         feedback: feedback,
       ).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Feedback submitted successfully')),
-        );
-
+        showSnackBar("Feedback submitted successfully");
         _formKey.currentState!.reset();
         _nameController.clear();
         _emailController.clear();
         _feedbackController.clear();
       }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to submit feedback: $error')),
-        );
+        showSnackBar("Failed to submit feedback: $error");
       });
     }
   }
@@ -114,9 +110,7 @@ class _FeedbackPage extends State<FeedbackPage> {
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !value.contains('@')) {
+                    if (value == null || value.isEmpty || !value.contains('@')) {
                       return 'Please enter your email address';
                     }
 
@@ -160,15 +154,12 @@ class _FeedbackPage extends State<FeedbackPage> {
                     GestureDetector(
                       onTap: _submitFeedback,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: MyColors.secondaryColor),
+                            borderRadius: BorderRadius.circular(8), color: MyColors.secondaryColor),
                         child: const Text(
                           'Submit',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 16),
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                       ),
                     )

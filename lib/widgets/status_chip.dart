@@ -4,7 +4,7 @@ import 'package:icragee_mobile/shared/colors.dart';
 class StatusChip extends StatelessWidget {
   final String status;
 
-  const StatusChip({Key? key, required this.status}) : super(key: key);
+  const StatusChip({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class StatusChip extends StatelessWidget {
         color = Colors.grey;
     }
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(color: color),

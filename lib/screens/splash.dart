@@ -1,66 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late Animation animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    animation = Tween<double>(begin: 0, end: 1).animate(controller)
+      ..addListener(
+        () {
+          setState(() {});
+          if (controller.status == AnimationStatus.completed) {
+            final goRouter = context.replace;
+            goRouter('/get-started');
+          }
+        },
+      );
+    controller.forward();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF25D2B7),
-        body: Column(
-          children: <Widget>[
-            const SizedBox(height: 230),
-            //Image from widget
-            Center(
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: 300,
-                height: 350,
+      backgroundColor: const Color(0xFF25D2B7),
+      body: Column(
+        children: [
+          const SizedBox(height: 230),
+          Center(
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 300,
+              height: 350,
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: LinearProgressIndicator(
+              value: controller.value,
+              backgroundColor: Colors.white,
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                MyColors.secondaryColor,
               ),
             ),
-            const LoginButton(
-                buttonName: "Log in as Admin", routePath: '/admin-screen'),
-            const SizedBox(height: 24),
-            const LoginButton(
-                buttonName: "Log in as Guest", routePath: '/homeScreen'),
-          ],
-        ));
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  final String buttonName;
-  final String routePath;
-  const LoginButton({
-    super.key,
-    required this.buttonName,
-    required this.routePath,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () async {
-        context.go(routePath);
-      },
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        //primary: Color(0xFFFF8C40), // Background color
-        backgroundColor: Color(0xFFFF8C40), // Text color
-        minimumSize: Size(310, 51), // Width and height
-        padding: EdgeInsets.symmetric(vertical: 13), // Padding
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Rounded corners
-        ),
-      ),
-      child: Text(
-        buttonName,
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
-        textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+        ],
       ),
     );
   }
