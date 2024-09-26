@@ -126,7 +126,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) =>
-                        ScheduleItem(schedule: schedules[index]),
+                        EventScheduleTile(event: schedules[index]),
                   );
                 }
               },

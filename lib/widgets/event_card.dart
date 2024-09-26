@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 
 import '../screens/edit_event_screen.dart';
-import '../shared/globals.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
@@ -35,14 +35,9 @@ class _EventCardState extends State<EventCard> {
 
   String _getEventStatus() {
     final now = DateTime.now();
-    final currDate = dayOneDate.add(Duration(days: widget.event.day - 1));
-
-    final eventStart = currDate.copyWith(
-        hour: widget.event.startTime.hour,
-        minute: widget.event.startTime.minute);
-
-    final eventEnd = currDate.copyWith(
-        hour: widget.event.endTime.hour, minute: widget.event.endTime.minute);
+    final eventStart =
+        getActualEventTime(widget.event.startTime, widget.event.day);
+    final eventEnd = getActualEventTime(widget.event.endTime, widget.event.day);
 
     if (now.isBefore(eventStart)) {
       return 'Upcoming';
