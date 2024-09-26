@@ -6,6 +6,8 @@ import 'package:icragee_mobile/routing/route_config.dart';
 import 'package:icragee_mobile/services/notification_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [Locale('en', 'US')],
       scaffoldMessengerKey: scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       title: 'ICRAGEE',
