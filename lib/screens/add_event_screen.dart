@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -21,7 +24,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   // Lists for dropdown values
   final dates = ['Day 1', 'Day 2', 'Day 3'];
-  final venues = ['Venue 1', 'Venue 2', 'Venue 3'];
+  final venues = ['Hall 1', 'Hall 2', 'Hall 3', 'Hall 4'];
 
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
@@ -42,199 +45,179 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFC6FCED),
-      appBar: AppBar(
-        title: const Text('Add Event'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            GoRouter.of(context).go('/admin-screen'); // Back navigation
-          },
-        ),
-      ),
+      backgroundColor: MyColors.backgroundColor,
+      appBar: AppBar(title: const Text('Add Event')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Event Title TextField
-             if(isLoading)...[const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF40E0D0))))]
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Add Event Title',
+                  labelStyle: const TextStyle(color: Colors.black87),
+                  hintText: 'Enter event title',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: _buildInputBorder(),
+                  enabledBorder: _buildInputBorder(),
+                  focusedBorder: _buildInputBorder(),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+              ),
+              const SizedBox(height: 16),
 
-              else...[ TextField(
-               controller: _titleController,
-               decoration: InputDecoration(
-                 labelText: 'Add Event Title',
-                 labelStyle: const TextStyle(
-                   color: Colors.black87,
-                   backgroundColor: Color(0xFFC7F7EF),
-                 ),
-                 hintText: 'Enter event title',
-                 filled: true,
-                 fillColor: Colors.white,
-                 border: _buildInputBorder(),
-                 enabledBorder: _buildInputBorder(),
-                 focusedBorder: _buildInputBorder(),
-                 floatingLabelBehavior: FloatingLabelBehavior.always,
-               ),
-             ),
-               const SizedBox(height: 16),
+              // Event Description TextField
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Add Event Description',
+                  labelStyle: const TextStyle(color: Colors.black87),
+                  hintText: 'Enter event description',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: _buildInputBorder(),
+                  enabledBorder: _buildInputBorder(),
+                  focusedBorder: _buildInputBorder(),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+              ),
+              const SizedBox(height: 16),
 
-               // Event Description TextField
-               TextField(
-                 controller: _descriptionController,
-                 decoration: InputDecoration(
-                   labelText: 'Add Event Description',
-                   labelStyle: const TextStyle(
-                     color: Colors.black87,
-                     backgroundColor: Color(0xFFC7F7EF),
-                   ),
-                   hintText: 'Enter event description',
-                   filled: true,
-                   fillColor: Colors.white,
-                   border: _buildInputBorder(),
-                   enabledBorder: _buildInputBorder(),
-                   focusedBorder: _buildInputBorder(),
-                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                 ),
-               ),
-               const SizedBox(height: 16),
+              // Venue and Date Dropdowns in a Row
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'Add Venue',
+                        labelStyle: const TextStyle(color: Colors.black87),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: _buildInputBorder(),
+                        enabledBorder: _buildInputBorder(),
+                        focusedBorder: _buildInputBorder(),
+                        prefixIcon: const Icon(Icons.place),
+                      ),
+                      value: selectedVenue,
+                      hint: const Text('Venue'),
+                      items: venues.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedVenue = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<int>(
+                      decoration: InputDecoration(
+                        labelText: 'Add Date',
+                        labelStyle: const TextStyle(color: Colors.black87),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: _buildInputBorder(),
+                        enabledBorder: _buildInputBorder(),
+                        focusedBorder: _buildInputBorder(),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                      ),
+                      value: selectedDay,
+                      hint: const Text('Day'),
+                      items: dates.map((String value) {
+                        return DropdownMenuItem<int>(
+                          value: dates.indexOf(value) + 1,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedDay = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
 
-               // Venue and Date Dropdowns in a Row
-               Row(
-                 children: [
-                   Expanded(
-                     child: DropdownButtonFormField<String>(
-                       decoration: InputDecoration(
-                         labelText: 'Add Venue',
-                         labelStyle: const TextStyle(
-                           color: Colors.black87,
-                           backgroundColor: Color(0xFFC7F7EF),
-                         ),
-                         filled: true,
-                         fillColor: Colors.white,
-                         border: _buildInputBorder(),
-                         enabledBorder: _buildInputBorder(),
-                         focusedBorder: _buildInputBorder(),
-                         prefixIcon: const Icon(Icons.place),
-                       ),
-                       value: selectedVenue,
-                       hint: const Text('Venue'),
-                       items: venues.map((String value) {
-                         return DropdownMenuItem<String>(
-                           value: value,
-                           child: Text(value),
-                         );
-                       }).toList(),
-                       onChanged: (newValue) {
-                         setState(() {
-                           selectedVenue = newValue;
-                         });
-                       },
-                     ),
-                   ),
-                   const SizedBox(width: 16),
-                   Expanded(
-                     child: DropdownButtonFormField<int>(
-                       decoration: InputDecoration(
-                         labelText: 'Add Date',
-                         labelStyle: const TextStyle(
-                           color: Colors.black87,
-                           backgroundColor: Color(0xFFC7F7EF),
-                         ),
-                         filled: true,
-                         fillColor: Colors.white,
-                         border: _buildInputBorder(),
-                         enabledBorder: _buildInputBorder(),
-                         focusedBorder: _buildInputBorder(),
-                         prefixIcon: const Icon(Icons.calendar_today),
-                       ),
-                       value: selectedDay,
-                       hint: const Text('Day'),
-                       items: dates.map((String value) {
-                         return DropdownMenuItem<int>(
-                           value: dates.indexOf(value) + 1,
-                           child: Text(value),
-                         );
-                       }).toList(),
-                       onChanged: (newValue) {
-                         setState(() {
-                           selectedDay = newValue;
-                         });
-                       },
-                     ),
-                   ),
-                 ],
-               ),
-               const SizedBox(height: 16),
+              // Start Time and End Time in a Row
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _startTimeController,
+                      readOnly: true, // Disable manual input
+                      decoration: InputDecoration(
+                        labelText: 'Start Time',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                          // backgroundColor: Color(0xFFC7F7EF),
+                        ),
+                        hintText: 'Start time',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: _buildInputBorder(),
+                        enabledBorder: _buildInputBorder(),
+                        focusedBorder: _buildInputBorder(),
+                      ),
+                      onTap: () async {
+                        await _selectTime(
+                            context, true); // Open time picker for start time
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: _endTimeController,
+                      readOnly: true, // Disable manual input
+                      decoration: InputDecoration(
+                        labelText: 'End Time',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                          //backgroundColor: Color(0xFFC7F7EF),
+                        ),
+                        hintText: 'End time',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: _buildInputBorder(),
+                        enabledBorder: _buildInputBorder(),
+                        focusedBorder: _buildInputBorder(),
+                      ),
+                      onTap: () async {
+                        await _selectTime(
+                            context, false); // Open time picker for end time
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
 
-               // Start Time and End Time in a Row
-               Row(
-                 children: [
-                   Expanded(
-                     child: TextField(
-                       controller: _startTimeController,
-                       readOnly: true, // Disable manual input
-                       decoration: InputDecoration(
-                         labelText: 'Start Time',
-                         labelStyle: const TextStyle(
-                           color: Colors.black87,
-                           // backgroundColor: Color(0xFFC7F7EF),
-                         ),
-                         hintText: 'Start time',
-                         filled: true,
-                         fillColor: Colors.white,
-                         border: _buildInputBorder(),
-                         enabledBorder: _buildInputBorder(),
-                         focusedBorder: _buildInputBorder(),
-                       ),
-                       onTap: () async {
-                         await _selectTime(
-                             context, true); // Open time picker for start time
-                       },
-                     ),
-                   ),
-                   const SizedBox(width: 16),
-                   Expanded(
-                     child: TextField(
-                       controller: _endTimeController,
-                       readOnly: true, // Disable manual input
-                       decoration: InputDecoration(
-                         labelText: 'End Time',
-                         labelStyle: const TextStyle(
-                           color: Colors.black87,
-                           //backgroundColor: Color(0xFFC7F7EF),
-                         ),
-                         hintText: 'End time',
-                         filled: true,
-                         fillColor: Colors.white,
-                         border: _buildInputBorder(),
-                         enabledBorder: _buildInputBorder(),
-                         focusedBorder: _buildInputBorder(),
-                       ),
-                       onTap: () async {
-                         await _selectTime(
-                             context, false); // Open time picker for end time
-                       },
-                     ),
-                   ),
-                 ],
-               ),
-               const Spacer(),
-
-               // Add Button
-               ElevatedButton(
-                 onPressed: _addEvent,
-                 style: ElevatedButton.styleFrom(
-                   backgroundColor: const Color(0xFF40E0D0),
-                   minimumSize: const Size(double.infinity, 50),
-                   shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(8.0),
-                   ),
-                 ),
-                 child: const Text(
-                     'Add', style: TextStyle(fontSize: 18, color: Colors.white)),
-               ),]
+              // Add Button
+              ElevatedButton(
+                onPressed: _addEvent,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: MyColors.primaryColor,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: isLoading
+                    ? LoadingAnimationWidget.waveDots(
+                        color: Colors.white, size: 32)
+                    : const Text('Submit',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
+              ),
             ],
           ),
         ),
@@ -243,21 +226,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   // Method to handle adding an event
-  void _addEvent() async {
+  Future<void> _addEvent() async {
     if (isLoading) return;
+    final goRouter = GoRouter.of(context);
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         selectedVenue == null ||
         selectedDay == null ||
         startTime == null ||
         endTime == null) {
-      Fluttertoast.showToast(
-        msg: "Please fill all fields",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showSnackBar("Please fill all fields");
       return;
     }
     setState(() {
@@ -266,29 +244,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     try {
       final startTimeDateTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
+        dayOneDate.year,
+        dayOneDate.month,
+        dayOneDate.day,
         startTime!.hour,
         startTime!.minute,
       );
 
       final endTimeDateTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
+        dayOneDate.year,
+        dayOneDate.month,
+        dayOneDate.day,
         endTime!.hour,
         endTime!.minute,
       );
       // Check if the start time is before the end time
       if (!startTimeDateTime.isBefore(endTimeDateTime)) {
-        Fluttertoast.showToast(
-          msg: "Start time must be before end time",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
+        showSnackBar("Start time must be before end time");
         setState(() {
           isLoading = false; // Hide loader
         });
@@ -304,26 +276,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
       );
 
       await DataService.addEvent(newEvent);
-      Fluttertoast.showToast(
-        msg: "Event added successfully",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showSnackBar("Event added successfully");
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Failed to add event. Please try again.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showSnackBar("Failed to add event. Please try again.");
     } finally {
       setState(() {
         isLoading = false; // Hide loader when done
       });
-      GoRouter.of(context).go('/admin-screen');
+      goRouter.pop();
     }
   }
 
@@ -333,7 +293,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
           child: Theme(
             data: ThemeData.light().copyWith(
               colorScheme: const ColorScheme.light(
@@ -351,10 +311,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text = pickedTime.format(context); // Update the start time field
+          _startTimeController.text =
+              pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text = pickedTime.format(context); // Update the end time field
+          _endTimeController.text =
+              pickedTime.format(context); // Update the end time field
         }
       });
     }
@@ -367,10 +329,3 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 }
-
-
-
-
-
-
-

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EditEventScreen extends StatefulWidget {
   final Event event;
+
   const EditEventScreen({super.key, required this.event});
 
   @override
@@ -12,6 +15,8 @@ class EditEventScreen extends StatefulWidget {
 }
 
 class _EditEventScreenState extends State<EditEventScreen> {
+  bool isLoading = false;
+
   // State variables for selected venue, date, and time
   String? selectedVenue;
   int? selectedDay;
@@ -20,7 +25,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   // Lists for dropdown values
   final dates = ['Day 1', 'Day 2', 'Day 3'];
-  final venues = ['Venue 1', 'Venue 2', 'Venue 3'];
+  final venues = ['Hall 1', 'Hall 2', 'Hall 3', 'Hall 4'];
 
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
@@ -84,10 +89,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Add Event Title',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                    backgroundColor: Color(0xFFC7F7EF),
-                  ),
+                  labelStyle: const TextStyle(color: Colors.black87),
                   hintText: 'Enter event title',
                   filled: true,
                   fillColor: Colors.white,
@@ -104,10 +106,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Add Event Description',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                    backgroundColor: Color(0xFFC7F7EF),
-                  ),
+                  labelStyle: const TextStyle(color: Colors.black87),
                   hintText: 'Enter event description',
                   filled: true,
                   fillColor: Colors.white,
@@ -126,10 +125,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Add Venue',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          backgroundColor: Color(0xFFC7F7EF),
-                        ),
+                        labelStyle: const TextStyle(color: Colors.black87),
                         filled: true,
                         fillColor: Colors.white,
                         border: _buildInputBorder(),
@@ -157,10 +153,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     child: DropdownButtonFormField<int>(
                       decoration: InputDecoration(
                         labelText: 'Add Date',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          backgroundColor: Color(0xFFC7F7EF),
-                        ),
+                        labelStyle: const TextStyle(color: Colors.black87),
                         filled: true,
                         fillColor: Colors.white,
                         border: _buildInputBorder(),
@@ -251,8 +244,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: const Text('Edit',
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
+                child: isLoading
+                    ? LoadingAnimationWidget.waveDots(
+                        color: Colors.white, size: 32)
+                    : const Text('Submit',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -263,21 +259,20 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   // Method to handle adding an event
   void _editEvent() async {
+    if (isLoading) return;
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         selectedVenue == null ||
         selectedDay == null ||
         startTime == null ||
         endTime == null) {
-      Fluttertoast.showToast(
-        msg: "Please fill all fields",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showSnackBar("Please fill all fields");
       return;
     }
+    setState(() {
+      isLoading = true;
+    });
+    final goRouter = GoRouter.of(context);
 
     try {
       final startTimeDateTime = DateTime(
@@ -306,61 +301,33 @@ class _EditEventScreenState extends State<EditEventScreen> {
       );
 
       await DataService.editEvent(widget.event.id, updatedEvent);
-      Fluttertoast.showToast(
-        msg: "Event edited successfully",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showSnackBar("Event edited successfully");
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Failed to edit event. Please try again.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showSnackBar("Failed to edit event. Please try again.");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+      goRouter.pop();
     }
-    Navigator.of(context).pop();
   }
 
-  // Function to select time using TimePicker
-
-  // Function to select time using TimePicker
-  // Future<void> _selectTime(BuildContext context, bool isStartTime) async {
-  //   final TimeOfDay? pickedTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay.now(), // Use current time as the initial value
-  //   );
-  //
-  //   if (pickedTime != null) {
-  //     setState(() {
-  //       if (isStartTime) {
-  //         startTime = pickedTime;
-  //         _startTimeController.text =
-  //             pickedTime.format(context); // Update the start time field
-  //       } else {
-  //         endTime = pickedTime;
-  //         _endTimeController.text =
-  //             pickedTime.format(context); // Update the end time field
-  //       }
-  //     });
-  //   }
-  // }
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF40E0D0), // Set primary color to green
-              onSurface: Color(0xFF121515), // Set the text color to green
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Color(0xFF40E0D0), // Set primary color
+                onSurface: Color(0xFF121515), // Set text color
+              ),
             ),
+            child: child!,
           ),
-          child: child!,
         );
       },
     );

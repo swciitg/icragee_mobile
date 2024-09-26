@@ -54,6 +54,7 @@ dependencies:
   go_router: ^14.2.7
   dio: ^5.7.0
   syncfusion_flutter_calendar: ^27.1.50
+  loading_animation_widget: ^1.2.1
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
-import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
 import '../screens/edit_event_screen.dart';
@@ -82,7 +82,7 @@ class _EventCardState extends State<EventCard> {
                     overflow: TextOverflow.visible,
                   ),
                 ),
-                StatusChip(status: _currentStatus),
+                EventStatusChip(eventStatus: _currentStatus),
               ],
             ),
 

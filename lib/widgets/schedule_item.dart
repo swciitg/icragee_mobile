@@ -5,8 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
-import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/assets.dart';
+import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,7 @@ class ScheduleItem extends StatefulWidget {
 
 class _ScheduleItemState extends State<ScheduleItem> {
   var showDescription = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -162,43 +164,14 @@ class _ScheduleItemState extends State<ScheduleItem> {
 
   Widget _buildStatus() {
     var status = "";
-    late Color color;
     if (widget.schedule.endTime.isBefore(DateTime.now())) {
       status = "Finished";
-      color = Colors.black;
     } else if (widget.schedule.startTime.isBefore(DateTime.now()) &&
         widget.schedule.endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
-      color = const Color(0xffFF8C40);
     } else {
       status = "Upcoming";
-      color = MyColors.primaryColor;
     }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: color),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 10,
-            width: 10,
-            margin: const EdgeInsets.only(right: 4),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-          ),
-          Text(
-            status,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
+    return EventStatusChip(eventStatus: status);
   }
 }
