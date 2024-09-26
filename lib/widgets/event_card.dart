@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
+import '../screens/edit_event_screen.dart';
 import '../shared/globals.dart';
 
 class EventCard extends StatefulWidget {
@@ -60,6 +62,23 @@ class _EventCardState extends State<EventCard> {
       return 'Ongoing';
     } else {
       return 'Finished';
+    }
+  }
+
+  // Delete event from Firestore
+  Future<void> _deleteEvent() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('events')
+          .doc(widget.event.id) // Assuming event has an 'id' field
+          .delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Event deleted successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete event: $e')),
+      );
     }
   }
 
@@ -148,7 +167,37 @@ class _EventCardState extends State<EventCard> {
                         height: 18,
                         width: 18,
                         color: Colors.teal,
-                      )
+                      ),
+                      const SizedBox(width: 130),
+                      PopupMenuButton<String>(
+                        onSelected: (value) {
+                          if (value == 'Edit Event') {
+                            // Navigate to the Edit Event Screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditEventScreen(
+                                  event: widget.event,
+                                ),
+                              ),
+                            );
+                          } else if (value == 'Delete Event') {
+                            // Call delete event function
+                            _deleteEvent();
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => [
+                          const PopupMenuItem(
+                            value: 'Edit Event',
+                            child: Text('Edit Event'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Delete Event',
+                            child: Text('Delete Event'),
+                          ),
+                        ],
+                        icon: const Icon(Icons.more_vert),
+                      ),
                     ],
                   ),
                 ),
