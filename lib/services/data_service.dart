@@ -111,6 +111,10 @@ class DataService {
     }
   }
 
+  static Future<void> deleteEvent(String eventId) async {
+    await FirebaseFirestore.instance.collection('events').doc(eventId).delete();
+  }
+
   // TODO: Email should come from Shared Prefs after Authentication is integrated
   static Future<void> addEventToUser(String email, String eventId) async {
     final querySnapshot = await FirebaseFirestore.instance

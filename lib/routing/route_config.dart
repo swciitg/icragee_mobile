@@ -6,6 +6,7 @@ import 'package:icragee_mobile/screens/home_screen.dart';
 import 'package:icragee_mobile/screens/onboarding/onboarding_screen.dart';
 import 'package:icragee_mobile/screens/splash.dart';
 import 'package:icragee_mobile/widgets/onboarding/login_screen.dart';
+
 import '../screens/add_event_screen.dart';
 
 final routeConfig = GoRouter(

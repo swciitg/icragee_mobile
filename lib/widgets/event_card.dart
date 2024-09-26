@@ -1,8 +1,7 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
@@ -11,9 +10,11 @@ import '../shared/globals.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
+  final Function() onChange;
 
   const EventCard({
     super.key,
+    required this.onChange,
     required this.event,
   });
 
@@ -22,7 +23,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  late Timer _timer;
   bool _isExpanded = false;
 
   late String _currentStatus;
@@ -31,18 +31,6 @@ class _EventCardState extends State<EventCard> {
   void initState() {
     super.initState();
     _currentStatus = _getEventStatus();
-    // Update status every minute
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      setState(() {
-        _currentStatus = _getEventStatus();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   String _getEventStatus() {
@@ -62,23 +50,6 @@ class _EventCardState extends State<EventCard> {
       return 'Ongoing';
     } else {
       return 'Finished';
-    }
-  }
-
-  // Delete event from Firestore
-  Future<void> _deleteEvent() async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('events')
-          .doc(widget.event.id) // Assuming event has an 'id' field
-          .delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Event deleted successfully')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete event: $e')),
-      );
     }
   }
 
@@ -168,12 +139,12 @@ class _EventCardState extends State<EventCard> {
                         width: 18,
                         color: Colors.teal,
                       ),
-                      const SizedBox(width: 130),
+                      Expanded(child: Container()),
                       PopupMenuButton<String>(
-                        onSelected: (value) {
+                        onSelected: (value) async {
                           if (value == 'Edit Event') {
                             // Navigate to the Edit Event Screen
-                            Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditEventScreen(
@@ -182,9 +153,14 @@ class _EventCardState extends State<EventCard> {
                               ),
                             );
                           } else if (value == 'Delete Event') {
-                            // Call delete event function
-                            _deleteEvent();
+                            try {
+                              await DataService.deleteEvent(widget.event.id);
+                              showSnackBar('Event deleted successfully!');
+                            } catch (e) {
+                              showSnackBar('Some error occurred!');
+                            }
                           }
+                          widget.onChange();
                         },
                         itemBuilder: (BuildContext context) => [
                           const PopupMenuItem(
