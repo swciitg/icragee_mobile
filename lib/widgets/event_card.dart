@@ -1,17 +1,20 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:icragee_mobile/widgets/status_chip.dart';
 import 'package:intl/intl.dart';
 
+import '../screens/edit_event_screen.dart';
 import '../shared/globals.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
+  final Function() onChange;
 
   const EventCard({
     super.key,
+    required this.onChange,
     required this.event,
   });
 
@@ -20,7 +23,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  late Timer _timer;
   bool _isExpanded = false;
 
   late String _currentStatus;
@@ -29,18 +31,6 @@ class _EventCardState extends State<EventCard> {
   void initState() {
     super.initState();
     _currentStatus = _getEventStatus();
-    // Update status every minute
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      setState(() {
-        _currentStatus = _getEventStatus();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   String _getEventStatus() {
@@ -148,7 +138,42 @@ class _EventCardState extends State<EventCard> {
                         height: 18,
                         width: 18,
                         color: Colors.teal,
-                      )
+                      ),
+                      Expanded(child: Container()),
+                      PopupMenuButton<String>(
+                        onSelected: (value) async {
+                          if (value == 'Edit Event') {
+                            // Navigate to the Edit Event Screen
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditEventScreen(
+                                  event: widget.event,
+                                ),
+                              ),
+                            );
+                          } else if (value == 'Delete Event') {
+                            try {
+                              await DataService.deleteEvent(widget.event.id);
+                              showSnackBar('Event deleted successfully!');
+                            } catch (e) {
+                              showSnackBar('Some error occurred!');
+                            }
+                          }
+                          widget.onChange();
+                        },
+                        itemBuilder: (BuildContext context) => [
+                          const PopupMenuItem(
+                            value: 'Edit Event',
+                            child: Text('Edit Event'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Delete Event',
+                            child: Text('Delete Event'),
+                          ),
+                        ],
+                        icon: const Icon(Icons.more_vert),
+                      ),
                     ],
                   ),
                 ),

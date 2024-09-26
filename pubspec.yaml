@@ -53,6 +53,7 @@ dependencies:
   shared_preferences: ^2.3.2
   go_router: ^14.2.7
   dio: ^5.7.0
+  syncfusion_flutter_calendar: ^27.1.50
 
 dev_dependencies:
   flutter_test:

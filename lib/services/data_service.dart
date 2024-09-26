@@ -6,13 +6,17 @@ import 'package:icragee_mobile/models/faq.dart';
 class DataService {
   // Method to fetch FAQs from Firestore
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot =
+        await FirebaseFirestore.instance.collection('FAQs').get();
 
-    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
+    return collectionSnapshot.docs
+        .map((doc) => FaqContent.fromJson(doc.data()))
+        .toList();
   }
 
   // Method to fetch emergency contacts by category from Firestore
-  static Future<List<EmergencyContact>> fetchContactsByCategory(String category) async {
+  static Future<List<EmergencyContact>> fetchContactsByCategory(
+      String category) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('important_contacts')
@@ -48,10 +52,13 @@ class DataService {
   }
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('day', isEqualTo: day)
+        .get();
     return querySnapshot.docs.map((doc) {
-      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson(
+          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
@@ -62,15 +69,28 @@ class DataService {
     await doc.set(event.toJson());
   }
 
+  static Future<void> editEvent(String eventId, Event updatedEvent) async {
+    final collectionRef = FirebaseFirestore.instance.collection('events');
+    final doc = collectionRef.doc(eventId);
+
+    await doc.update(updatedEvent.toJson());
+  }
+
   static Future<List<Event>> getEvents() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
-      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson(
+          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
   static Stream<Event> getEventById(String id) {
-    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .doc(id)
+        .snapshots()
+        .map((doc) {
       return Event.fromJson(doc.data() as Map<String, dynamic>);
     });
   }
@@ -83,11 +103,16 @@ class DataService {
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
-      List<String> eventList = List<String>.from(userDoc.data()['eventList'] ?? []);
+      List<String> eventList =
+          List<String>.from(userDoc.data()['eventList'] ?? []);
       return eventList;
     } else {
       throw Exception('User not found!');
     }
+  }
+
+  static Future<void> deleteEvent(String eventId) async {
+    await FirebaseFirestore.instance.collection('events').doc(eventId).delete();
   }
 
   // TODO: Email should come from Shared Prefs after Authentication is integrated
