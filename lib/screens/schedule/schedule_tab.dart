@@ -17,6 +17,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
   int selectedDay = 1;
 
   late ScrollController scrollController;
+
   @override
   void initState() {
     scrollController = ScrollController();
@@ -63,7 +64,8 @@ class _ScheduleTabState extends State<ScheduleTab> {
                             });
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             decoration: ShapeDecoration(
                               color: selectedDay == index + 1
                                   ? MyColors.whiteColor
@@ -115,13 +117,16 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   );
                 } else {
                   List<Event> schedules = snapshot.data!;
+
                   return ListView.separated(
                     itemCount: schedules.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
-                    separatorBuilder: (context, index) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) => ScheduleItem(schedule: schedules[index]),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
+                    itemBuilder: (context, index) =>
+                        ScheduleItem(schedule: schedules[index]),
                   );
                 }
               },
@@ -151,7 +156,8 @@ class _PinnedRowDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => maxHeight > minHeight ? maxHeight : minHeight;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return SizedBox.expand(child: child);
   }
 

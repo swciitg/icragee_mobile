@@ -182,20 +182,25 @@ class _HomeScreenState extends State<AdminScreen> {
               ),
               Expanded(
                 child: FutureBuilder<List<Event>>(
-                  future: DataService.getEvents(),
+                  future: DataService.getDayWiseEvents(_selectedDay),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Container(
+                          color: MyColors.backgroundColor,
+                          child: const Center(
+                              child: CircularProgressIndicator(
+                            color: MyColors.primaryColor,
+                          )));
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No events found'));
+                      return Container(
+                          color: MyColors.backgroundColor,
+                          child: const Center(child: Text('No events found')));
                     } else {
                       List<Event> events = snapshot.data!;
-                      List<Event> filteredEvents = events
-                          .where((event) => event.day == _selectedDay)
-                          .toList();
-                      filteredEvents.sort((a, b) {
+
+                      events.sort((a, b) {
                         final currDate =
                             dayOneDate.add(Duration(days: _selectedDay - 1));
                         final startTimeA = currDate.copyWith(
@@ -209,18 +214,16 @@ class _HomeScreenState extends State<AdminScreen> {
                         decoration: const BoxDecoration(
                             color: MyColors.backgroundColor),
                         child: ListView.builder(
-                          itemCount: filteredEvents.length,
+                          itemCount: events.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: EdgeInsets.fromLTRB(
                                   15,
                                   index == 0 ? 15 : 0,
                                   15,
-                                  index == filteredEvents.length - 1
-                                      ? 100
-                                      : 12),
+                                  index == events.length - 1 ? 100 : 12),
                               child: EventCard(
-                                  event: filteredEvents[index],
+                                  event: events[index],
                                   onChange: () {
                                     setState(() {});
                                   }),
