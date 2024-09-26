@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 
@@ -12,6 +13,7 @@ class AddEventScreen extends StatefulWidget {
 
 class _AddEventScreenState extends State<AddEventScreen> {
   // State variables for selected venue, date, and time
+  bool isLoading = false;
   String? selectedVenue;
   int? selectedDay;
   TimeOfDay? startTime;
@@ -46,7 +48,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop(); // Back navigation
+            GoRouter.of(context).go('/admin-screen'); // Back navigation
           },
         ),
       ),
@@ -57,180 +59,182 @@ class _AddEventScreenState extends State<AddEventScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Event Title TextField
-              TextField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: 'Add Event Title',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                    backgroundColor: Color(0xFFC7F7EF),
-                  ),
-                  hintText: 'Enter event title',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: _buildInputBorder(),
-                  enabledBorder: _buildInputBorder(),
-                  focusedBorder: _buildInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-              ),
-              const SizedBox(height: 16),
+             if(isLoading)...[const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF40E0D0))))]
 
-              // Event Description TextField
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Add Event Description',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                    backgroundColor: Color(0xFFC7F7EF),
-                  ),
-                  hintText: 'Enter event description',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: _buildInputBorder(),
-                  enabledBorder: _buildInputBorder(),
-                  focusedBorder: _buildInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-              ),
-              const SizedBox(height: 16),
+              else...[ TextField(
+               controller: _titleController,
+               decoration: InputDecoration(
+                 labelText: 'Add Event Title',
+                 labelStyle: const TextStyle(
+                   color: Colors.black87,
+                   backgroundColor: Color(0xFFC7F7EF),
+                 ),
+                 hintText: 'Enter event title',
+                 filled: true,
+                 fillColor: Colors.white,
+                 border: _buildInputBorder(),
+                 enabledBorder: _buildInputBorder(),
+                 focusedBorder: _buildInputBorder(),
+                 floatingLabelBehavior: FloatingLabelBehavior.always,
+               ),
+             ),
+               const SizedBox(height: 16),
 
-              // Venue and Date Dropdowns in a Row
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Add Venue',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          backgroundColor: Color(0xFFC7F7EF),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                        prefixIcon: const Icon(Icons.place),
-                      ),
-                      value: selectedVenue,
-                      hint: const Text('Venue'),
-                      items: venues.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedVenue = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<int>(
-                      decoration: InputDecoration(
-                        labelText: 'Add Date',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          backgroundColor: Color(0xFFC7F7EF),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                        prefixIcon: const Icon(Icons.calendar_today),
-                      ),
-                      value: selectedDay,
-                      hint: const Text('Day'),
-                      items: dates.map((String value) {
-                        return DropdownMenuItem<int>(
-                          value: dates.indexOf(value) + 1,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedDay = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
+               // Event Description TextField
+               TextField(
+                 controller: _descriptionController,
+                 decoration: InputDecoration(
+                   labelText: 'Add Event Description',
+                   labelStyle: const TextStyle(
+                     color: Colors.black87,
+                     backgroundColor: Color(0xFFC7F7EF),
+                   ),
+                   hintText: 'Enter event description',
+                   filled: true,
+                   fillColor: Colors.white,
+                   border: _buildInputBorder(),
+                   enabledBorder: _buildInputBorder(),
+                   focusedBorder: _buildInputBorder(),
+                   floatingLabelBehavior: FloatingLabelBehavior.always,
+                 ),
+               ),
+               const SizedBox(height: 16),
 
-              // Start Time and End Time in a Row
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _startTimeController,
-                      readOnly: true, // Disable manual input
-                      decoration: InputDecoration(
-                        labelText: 'Start Time',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          // backgroundColor: Color(0xFFC7F7EF),
-                        ),
-                        hintText: 'Start time',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                      ),
-                      onTap: () async {
-                        await _selectTime(
-                            context, true); // Open time picker for start time
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextField(
-                      controller: _endTimeController,
-                      readOnly: true, // Disable manual input
-                      decoration: InputDecoration(
-                        labelText: 'End Time',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                          //backgroundColor: Color(0xFFC7F7EF),
-                        ),
-                        hintText: 'End time',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                      ),
-                      onTap: () async {
-                        await _selectTime(
-                            context, false); // Open time picker for end time
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
+               // Venue and Date Dropdowns in a Row
+               Row(
+                 children: [
+                   Expanded(
+                     child: DropdownButtonFormField<String>(
+                       decoration: InputDecoration(
+                         labelText: 'Add Venue',
+                         labelStyle: const TextStyle(
+                           color: Colors.black87,
+                           backgroundColor: Color(0xFFC7F7EF),
+                         ),
+                         filled: true,
+                         fillColor: Colors.white,
+                         border: _buildInputBorder(),
+                         enabledBorder: _buildInputBorder(),
+                         focusedBorder: _buildInputBorder(),
+                         prefixIcon: const Icon(Icons.place),
+                       ),
+                       value: selectedVenue,
+                       hint: const Text('Venue'),
+                       items: venues.map((String value) {
+                         return DropdownMenuItem<String>(
+                           value: value,
+                           child: Text(value),
+                         );
+                       }).toList(),
+                       onChanged: (newValue) {
+                         setState(() {
+                           selectedVenue = newValue;
+                         });
+                       },
+                     ),
+                   ),
+                   const SizedBox(width: 16),
+                   Expanded(
+                     child: DropdownButtonFormField<int>(
+                       decoration: InputDecoration(
+                         labelText: 'Add Date',
+                         labelStyle: const TextStyle(
+                           color: Colors.black87,
+                           backgroundColor: Color(0xFFC7F7EF),
+                         ),
+                         filled: true,
+                         fillColor: Colors.white,
+                         border: _buildInputBorder(),
+                         enabledBorder: _buildInputBorder(),
+                         focusedBorder: _buildInputBorder(),
+                         prefixIcon: const Icon(Icons.calendar_today),
+                       ),
+                       value: selectedDay,
+                       hint: const Text('Day'),
+                       items: dates.map((String value) {
+                         return DropdownMenuItem<int>(
+                           value: dates.indexOf(value) + 1,
+                           child: Text(value),
+                         );
+                       }).toList(),
+                       onChanged: (newValue) {
+                         setState(() {
+                           selectedDay = newValue;
+                         });
+                       },
+                     ),
+                   ),
+                 ],
+               ),
+               const SizedBox(height: 16),
 
-              // Add Button
-              ElevatedButton(
-                onPressed: _addEvent,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF40E0D0),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                child: const Text(
-                    'Add', style: TextStyle(fontSize: 18, color: Colors.white)),
-              ),
+               // Start Time and End Time in a Row
+               Row(
+                 children: [
+                   Expanded(
+                     child: TextField(
+                       controller: _startTimeController,
+                       readOnly: true, // Disable manual input
+                       decoration: InputDecoration(
+                         labelText: 'Start Time',
+                         labelStyle: const TextStyle(
+                           color: Colors.black87,
+                           // backgroundColor: Color(0xFFC7F7EF),
+                         ),
+                         hintText: 'Start time',
+                         filled: true,
+                         fillColor: Colors.white,
+                         border: _buildInputBorder(),
+                         enabledBorder: _buildInputBorder(),
+                         focusedBorder: _buildInputBorder(),
+                       ),
+                       onTap: () async {
+                         await _selectTime(
+                             context, true); // Open time picker for start time
+                       },
+                     ),
+                   ),
+                   const SizedBox(width: 16),
+                   Expanded(
+                     child: TextField(
+                       controller: _endTimeController,
+                       readOnly: true, // Disable manual input
+                       decoration: InputDecoration(
+                         labelText: 'End Time',
+                         labelStyle: const TextStyle(
+                           color: Colors.black87,
+                           //backgroundColor: Color(0xFFC7F7EF),
+                         ),
+                         hintText: 'End time',
+                         filled: true,
+                         fillColor: Colors.white,
+                         border: _buildInputBorder(),
+                         enabledBorder: _buildInputBorder(),
+                         focusedBorder: _buildInputBorder(),
+                       ),
+                       onTap: () async {
+                         await _selectTime(
+                             context, false); // Open time picker for end time
+                       },
+                     ),
+                   ),
+                 ],
+               ),
+               const Spacer(),
+
+               // Add Button
+               ElevatedButton(
+                 onPressed: _addEvent,
+                 style: ElevatedButton.styleFrom(
+                   backgroundColor: const Color(0xFF40E0D0),
+                   minimumSize: const Size(double.infinity, 50),
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(8.0),
+                   ),
+                 ),
+                 child: const Text(
+                     'Add', style: TextStyle(fontSize: 18, color: Colors.white)),
+               ),]
             ],
           ),
         ),
@@ -240,6 +244,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   // Method to handle adding an event
   void _addEvent() async {
+    if (isLoading) return;
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         selectedVenue == null ||
@@ -255,36 +260,40 @@ class _AddEventScreenState extends State<AddEventScreen> {
       );
       return;
     }
+    setState(() {
+      isLoading = true; // Show loader
+    });
 
     try {
       final startTimeDateTime = DateTime(
-        DateTime
-            .now()
-            .year,
-        DateTime
-            .now()
-            .month,
-        DateTime
-            .now()
-            .day,
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
         startTime!.hour,
         startTime!.minute,
       );
 
       final endTimeDateTime = DateTime(
-        DateTime
-            .now()
-            .year,
-        DateTime
-            .now()
-            .month,
-        DateTime
-            .now()
-            .day,
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
         endTime!.hour,
         endTime!.minute,
       );
-
+      // Check if the start time is before the end time
+      if (!startTimeDateTime.isBefore(endTimeDateTime)) {
+        Fluttertoast.showToast(
+          msg: "Start time must be before end time",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+        setState(() {
+          isLoading = false; // Hide loader
+        });
+        return;
+      }
       final newEvent = Event(
         title: _titleController.text.trim(),
         startTime: startTimeDateTime,
@@ -310,46 +319,30 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
+    } finally {
+      setState(() {
+        isLoading = false; // Hide loader when done
+      });
+      GoRouter.of(context).go('/admin-screen');
     }
-    Navigator.of(context).pop();
   }
 
-  // Function to select time using TimePicker
-
-  // Function to select time using TimePicker
-  // Future<void> _selectTime(BuildContext context, bool isStartTime) async {
-  //   final TimeOfDay? pickedTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay.now(), // Use current time as the initial value
-  //   );
-  //
-  //   if (pickedTime != null) {
-  //     setState(() {
-  //       if (isStartTime) {
-  //         startTime = pickedTime;
-  //         _startTimeController.text =
-  //             pickedTime.format(context); // Update the start time field
-  //       } else {
-  //         endTime = pickedTime;
-  //         _endTimeController.text =
-  //             pickedTime.format(context); // Update the end time field
-  //       }
-  //     });
-  //   }
-  // }
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary:Color(0xFF40E0D0) , // Set primary color to green
-              onSurface: Color(0xFF121515) ,// Set the text color to green
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Color(0xFF40E0D0), // Set primary color
+                onSurface: Color(0xFF121515), // Set text color
+              ),
             ),
+            child: child!,
           ),
-          child: child!,
         );
       },
     );
@@ -374,4 +367,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 }
+
+
+
+
+
+
 
