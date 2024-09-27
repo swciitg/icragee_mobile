@@ -19,6 +19,11 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: emailController,
       keyboardType: keyboardType,
+      style: GoogleFonts.poppins(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: MyColors.whiteColor,
+      ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.poppins(

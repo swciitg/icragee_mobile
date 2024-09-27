@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:icragee_mobile/services/api_service.dart';
+import 'package:icragee_mobile/providers/user_provider.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +33,18 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _otpController.dispose();
     super.dispose();
+  }
+
+  void _sendOTP() async {
+    // ApiService().sendOTP(_emailController.text.trim());
+    // TODO: Remove once Auth API is ready
+    final userDetails = await DataService.getUserDetails("venkylm10@gmail.com");
+    Provider.of<UserProvider>(navigatorKey.currentContext!, listen: false)
+        .setUserDetails(userDetails);
+    while (navigatorKey.currentContext!.canPop()) {
+      navigatorKey.currentContext!.pop();
+    }
+    navigatorKey.currentContext!.push('/homeScreen');
   }
 
   @override
@@ -94,13 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: () {
-                // ApiService().sendOTP(_emailController.text.trim());
-                while (context.canPop()) {
-                  context.pop();
-                }
-                context.push('/homeScreen');
-              },
+              onTap: _sendOTP,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                 decoration: BoxDecoration(
