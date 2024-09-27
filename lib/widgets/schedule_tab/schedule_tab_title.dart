@@ -6,9 +6,13 @@ class ScheduleTabTitle extends StatefulWidget {
   const ScheduleTabTitle({
     super.key,
     required this.scrollController,
+    required this.calendarView,
+    required this.onCalendarViewChanged,
   });
 
   final ScrollController scrollController;
+  final bool calendarView;
+  final VoidCallback onCalendarViewChanged;
 
   @override
   State<ScheduleTabTitle> createState() => _ScheduleTabTitleState();
@@ -54,6 +58,16 @@ class _ScheduleTabTitleState extends State<ScheduleTabTitle> {
           bottom: Radius.circular(widget.scrollController.offset > 30 ? 24 : 0),
         ),
       ),
+      actions: [
+        IconButton(
+          onPressed: widget.onCalendarViewChanged,
+          icon: Icon(
+            widget.calendarView ? Icons.list : Icons.calendar_today,
+            color: MyColors.whiteColor,
+          ),
+        ),
+        const SizedBox(width: 4),
+      ],
     );
   }
 }
