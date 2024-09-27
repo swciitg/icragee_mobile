@@ -17,7 +17,7 @@ class ScheduleTab extends StatefulWidget {
 
 class _ScheduleTabState extends State<ScheduleTab> {
   int selectedDay = 1;
-  bool calendarView = true;
+  bool calendarView = false;
   late CalendarController calendarController;
   late ScrollController scrollController;
 
@@ -101,7 +101,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: MediaQuery.sizeOf(context).height,
+        height: MediaQuery.sizeOf(context).height - 64,
         child: SfCalendar(
           view: CalendarView.timelineDay,
           dataSource: EventDataSource(schedules),
@@ -132,28 +132,25 @@ class _ScheduleTabState extends State<ScheduleTab> {
             });
           },
           appointmentBuilder: (context, calendarAppointmentDetails) {
+            print(calendarAppointmentDetails.bounds.height);
             final events = (calendarAppointmentDetails.appointments).toList();
-            return Column(
-              children: events.map((e) {
-                final event = e as Event;
-                return Expanded(
-                    child: Container(
-                  padding: const EdgeInsets.all(4),
-                  margin: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: MyColors.primaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    event.title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: MyColors.whiteColor,
-                    ),
-                  ),
-                ));
-              }).toList(),
+            final event = events.first as Event;
+            return Container(
+              padding: const EdgeInsets.all(4),
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: MyColors.primaryColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                event.title,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: MyColors.whiteColor,
+                ),
+                overflow: TextOverflow.clip,
+              ),
             );
           },
         ),
