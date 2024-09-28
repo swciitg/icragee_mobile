@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/schedule_item.dart';
 import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_days.dart';
 import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_title.dart';
@@ -26,7 +27,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
     scrollController = ScrollController();
     calendarController = CalendarController();
     super.initState();
-    calendarController.displayDate = DateTime.now();
+    calendarController.displayDate = dayOneDate;
     setState(() {});
   }
 
@@ -58,7 +59,8 @@ class _ScheduleTabState extends State<ScheduleTab> {
             onDaySelected: (val) {
               setState(() {
                 selectedDay = val;
-                calendarController.displayDate = DateTime(2024, 09, 07 + val);
+                calendarController.displayDate =
+                    dayOneDate.add(Duration(days: val - 1));
               });
             },
           ),
