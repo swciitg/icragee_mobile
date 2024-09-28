@@ -26,8 +26,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
     scrollController = ScrollController();
     calendarController = CalendarController();
     super.initState();
-    // TODO: Change this with the actual date
-    calendarController.displayDate = DateTime(2024, 09, 08);
+    calendarController.displayDate = DateTime.now();
     setState(() {});
   }
 
@@ -87,7 +86,9 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   );
                 } else {
                   List<Event> schedules = snapshot.data!;
-                  return calendarView ? _buildCalendarView(schedules) : _buildListView(schedules);
+                  return calendarView
+                      ? _buildCalendarView(schedules)
+                      : _buildListView(schedules);
                 }
               },
             ),
@@ -128,7 +129,8 @@ class _ScheduleTabState extends State<ScheduleTab> {
             if (details.draggingTime == null) return;
             setState(() {
               selectedDay = details.draggingTime!.day - 7;
-              calendarController.displayDate = DateTime(2024, 09, 07 + selectedDay);
+              calendarController.displayDate =
+                  DateTime(2024, 09, 07 + selectedDay);
             });
           },
           appointmentBuilder: (context, calendarAppointmentDetails) {
@@ -165,7 +167,8 @@ class _ScheduleTabState extends State<ScheduleTab> {
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) => EventScheduleTile(event: schedules[index]),
+      itemBuilder: (context, index) =>
+          EventScheduleTile(event: schedules[index]),
     );
   }
 }

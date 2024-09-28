@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
-import 'package:icragee_mobile/shared/globals.dart';
 
 import '../../widgets/day_button.dart';
 import '../../widgets/event_card.dart';
@@ -199,17 +198,6 @@ class _HomeScreenState extends State<AdminScreen> {
                           child: const Center(child: Text('No events found')));
                     } else {
                       List<Event> events = snapshot.data!;
-
-                      events.sort((a, b) {
-                        final currDate =
-                            dayOneDate.add(Duration(days: _selectedDay - 1));
-                        final startTimeA = currDate.copyWith(
-                            hour: a.startTime.hour, minute: a.startTime.minute);
-                        final startTimeB = currDate.copyWith(
-                            hour: b.startTime.hour, minute: b.startTime.minute);
-                        return startTimeA.compareTo(startTimeB);
-                      });
-
                       return Container(
                         decoration: const BoxDecoration(
                             color: MyColors.backgroundColor),
