@@ -136,7 +136,6 @@ class _ScheduleTabState extends State<ScheduleTab> {
             });
           },
           appointmentBuilder: (context, calendarAppointmentDetails) {
-            print(calendarAppointmentDetails.bounds.height);
             final events = (calendarAppointmentDetails.appointments).toList();
             final event = events.first as Event;
             return Container(

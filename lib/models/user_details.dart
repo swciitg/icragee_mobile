@@ -25,10 +25,10 @@ class UserDetails {
     return {'eventList': eventList, 'email': email, 'fcmToken': fcmToken};
   }
 
-  void saveToSharedPreferences() {
-    final prefs = SharedPreferences.getInstance();
+  Future<void> saveToSharedPreferences() async{
+    final prefs = await SharedPreferences.getInstance();
     final userDetails = jsonEncode(toJson());
-    prefs.then((value) => value.setString('userDetails', userDetails));
+    prefs.setString('userDetails', userDetails);
   }
 
   static Future<UserDetails?> getFromSharedPreferences() async {

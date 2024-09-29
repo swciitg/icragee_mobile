@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/providers/user_provider.dart';
+import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/custom_text_field.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _otpController;
   var otpSent = false;
+  var loading = false;
 
   @override
   void initState() {
@@ -36,15 +39,51 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _sendOTP() async {
-    // ApiService().sendOTP(_emailController.text.trim());
-    // TODO: Remove once Auth API is ready
-    final userDetails = await DataService.getUserDetails("venkylm10@gmail.com");
-    Provider.of<UserProvider>(navigatorKey.currentContext!, listen: false)
-        .setUserDetails(userDetails);
-    while (navigatorKey.currentContext!.canPop()) {
-      navigatorKey.currentContext!.pop();
+    setState(() {
+      loading = true;
+    });
+    try {
+      await ApiService().sendOTP(_emailController.text.trim());
+      showSnackBar("OTP sent successfully to: ${_emailController.text.trim()}");
+      setState(() {
+        otpSent = true;
+      });
+    } catch (e) {
+      showSnackBar("Sending OTP failed, Please try again");
     }
-    navigatorKey.currentContext!.push('/homeScreen');
+    setState(() {
+      loading = false;
+    });
+  }
+
+  void _verifyOTP() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      final val =
+          await ApiService().verifyOTP(_emailController.text.trim(), _otpController.text.trim());
+      if (!val) {
+        showSnackBar("Invalid OTP, Please try again");
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+      final userDetails = await DataService.getUserDetails(_emailController.text.trim());
+      Provider.of<UserProvider>(navigatorKey.currentContext!, listen: false)
+          .setUserDetails(userDetails);
+      while (navigatorKey.currentContext!.canPop()) {
+        navigatorKey.currentContext!.pop();
+      }
+      navigatorKey.currentContext!.push('/homeScreen');
+      return;
+    } catch (e) {
+      showSnackBar("Something went wrong, Please try again");
+    }
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -80,7 +119,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           _form(),
-          _backButton()
+          _backButton(),
+          if (loading)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(color: MyColors.primaryColor),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -94,22 +142,22 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         children: [
           CustomTextField(
-            emailController: _emailController,
+            controller: _emailController,
             label: 'Username',
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 16),
           if (otpSent)
             CustomTextField(
-              emailController: _otpController,
-              label: 'Username',
+              controller: _otpController,
+              label: 'OTP',
               keyboardType: TextInputType.number,
             ),
           if (otpSent) const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: _sendOTP,
+              onTap: otpSent ? _verifyOTP : _sendOTP,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                 decoration: BoxDecoration(
@@ -117,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  !otpSent ? "Next" : "Send OTP",
+                  otpSent ? "Next" : "Send OTP",
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,

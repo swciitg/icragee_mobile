@@ -7,6 +7,9 @@ class UserProvider extends ChangeNotifier {
 
   void setUserDetails(UserDetails? userDetails) {
     _userDetails = userDetails;
+    if (_userDetails != null) {
+      _userDetails!.saveToSharedPreferences();
+    }
     notifyListeners();
   }
 
