@@ -56,40 +56,36 @@ class HomeTab extends StatelessWidget {
           const SizedBox(width: 4)
         ],
       ),
-      body: const SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                children: [
-                  SizedBox(height: 8),
-                  Text(
-                    "Upcoming Events",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
+      body: ListView(
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(
+              top: 8,
+              bottom: 10,
             ),
-            HomeCarousel(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 8),
-                  Text(
-                    "Notifications",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
-                  ),
-                  EventTile(totalEvents: 6),
-                ],
-              ),
+            child: const Text(
+              "Upcoming Events",
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
-          ],
-        ),
+          ),
+          const HomeCarousel(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8),
+                Text(
+                  "Notifications",
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+                ),
+                EventTile(totalEvents: 6),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

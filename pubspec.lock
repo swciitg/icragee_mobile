@@ -246,6 +246,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.2.0"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -416,6 +421,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  loading_animation_widget:
+    dependency: "direct main"
+    description:
+      name: loading_animation_widget
+      sha256: ee3659035528d19145d50cf0107632bf647e7306c88b6a32f35f3bed63f6d728
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   logging:
     dependency: transitive
     description:
@@ -553,7 +566,7 @@ packages:
     source: hosted
     version: "2.1.8"
   provider:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: provider
       sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
@@ -693,6 +706,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_calendar:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_calendar
+      sha256: "992d51b58453362df5ef789f3ffc89ede1f52e6788fe71e342c2ef5c2a6b58eb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.1.50"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: efbc44bdef33bf8f469c5ac7830df9631972721e157021db14bd78cdb1047fe1
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.1.50"
+  syncfusion_flutter_datepicker:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_datepicker
+      sha256: c54e0f4a56e713f68b4bdcac36f23c68cf35f3b0a02f0a9abb230c42ab64b3c6
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.1.50"
   term_glyph:
     dependency: transitive
     description:
@@ -761,10 +798,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "3923c89304b715fb1eb6423f017651664a03bf5f4b29983627c4da791f74a4ec"
+      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.1"
+    version: "14.2.4"
   web:
     dependency: transitive
     description:

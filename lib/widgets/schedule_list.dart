@@ -15,7 +15,7 @@ class SchedulesList extends StatelessWidget {
     return ListView.builder(
         itemCount: schedules.length,
         itemBuilder: (ctx, index) {
-          return ScheduleItem(schedule: schedules[index]);
+          return EventScheduleTile(event: schedules[index]);
         });
   }
 }

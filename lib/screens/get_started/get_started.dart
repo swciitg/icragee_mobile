@@ -79,10 +79,11 @@ class _GetStartedState extends State<GetStarted> {
             const SizedBox(height: 16),
             GestureDetector(
               onTap: () {
-                context.push('admin-screen');
+                context.push('/admin-screen');
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -104,7 +105,8 @@ class _GetStartedState extends State<GetStarted> {
                 context.push('/onboarding');
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),

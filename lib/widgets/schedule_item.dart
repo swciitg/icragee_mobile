@@ -5,22 +5,25 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
-import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/assets.dart';
+import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/utility/functions.dart';
+import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 
-class ScheduleItem extends StatefulWidget {
-  final Event schedule;
+class EventScheduleTile extends StatefulWidget {
+  final Event event;
 
-  const ScheduleItem({required this.schedule, super.key});
+  const EventScheduleTile({required this.event, super.key});
 
   @override
-  State<ScheduleItem> createState() => _ScheduleItemState();
+  State<EventScheduleTile> createState() => _EventScheduleTileState();
 }
 
-class _ScheduleItemState extends State<ScheduleItem> {
+class _EventScheduleTileState extends State<EventScheduleTile> {
   var showDescription = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +40,7 @@ class _ScheduleItemState extends State<ScheduleItem> {
             children: [
               Expanded(
                 child: Text(
-                  widget.schedule.title,
+                  widget.event.title,
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -54,8 +57,8 @@ class _ScheduleItemState extends State<ScheduleItem> {
               const SizedBox(width: 2),
               Expanded(
                 child: Text(
-                  '${DateFormat('kk:mm').format(widget.schedule.startTime.toLocal())}'
-                  ' - ${DateFormat('kk:mm').format(widget.schedule.endTime.toLocal())}',
+                  '${DateFormat('kk:mm').format(widget.event.startTime.toLocal())}'
+                  ' - ${DateFormat('kk:mm').format(widget.event.endTime.toLocal())}',
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -70,7 +73,7 @@ class _ScheduleItemState extends State<ScheduleItem> {
               const Icon(Icons.location_on_outlined, size: 17),
               Expanded(
                 child: Text(
-                  widget.schedule.venue,
+                  widget.event.venue,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -107,7 +110,7 @@ class _ScheduleItemState extends State<ScheduleItem> {
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
-                widget.schedule.description,
+                widget.event.description,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -151,7 +154,7 @@ class _ScheduleItemState extends State<ScheduleItem> {
       // TODO: remove email hardcoding
       await DataService.addEventToUser(
         "venkylm10@gmail.com",
-        widget.schedule.id,
+        widget.event.id,
       );
       showSnackBar("Added to your schedule");
     } catch (e) {
@@ -162,43 +165,15 @@ class _ScheduleItemState extends State<ScheduleItem> {
 
   Widget _buildStatus() {
     var status = "";
-    late Color color;
-    if (widget.schedule.endTime.isBefore(DateTime.now())) {
+    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
+    final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
+    if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-      color = Colors.black;
-    } else if (widget.schedule.startTime.isBefore(DateTime.now()) &&
-        widget.schedule.endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
-      color = const Color(0xffFF8C40);
     } else {
       status = "Upcoming";
-      color = MyColors.primaryColor;
     }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: color),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 10,
-            width: 10,
-            margin: const EdgeInsets.only(right: 4),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-          ),
-          Text(
-            status,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
+    return EventStatusChip(eventStatus: status);
   }
 }

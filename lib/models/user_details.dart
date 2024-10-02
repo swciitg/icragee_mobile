@@ -4,31 +4,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDetails {
   final String email;
-  final List<String> eventsList;
-  final String fcmToken;
+  final List<String> eventList;
+  final String? fcmToken;
 
   const UserDetails({
     required this.email,
-    required this.eventsList,
-    required this.fcmToken,
+    required this.eventList,
+    this.fcmToken,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
     return UserDetails(
-      eventsList: json['eventsList'] ?? [],
+      eventList: (json['eventList'] as List? ?? []).map((e) => e.toString()).toList(),
       email: json['email'],
       fcmToken: json['fcmToken'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'eventsList': eventsList, 'email': email, 'fcmToken': fcmToken};
+    return {'eventList': eventList, 'email': email, 'fcmToken': fcmToken};
   }
 
-  void saveToSharedPreferences() {
-    final prefs = SharedPreferences.getInstance();
+  Future<void> saveToSharedPreferences() async{
+    final prefs = await SharedPreferences.getInstance();
     final userDetails = jsonEncode(toJson());
-    prefs.then((value) => value.setString('userDetails', userDetails));
+    prefs.setString('userDetails', userDetails);
   }
 
   static Future<UserDetails?> getFromSharedPreferences() async {
@@ -36,5 +36,17 @@ class UserDetails {
     final userDetails = prefs.getString('userDetails');
     if (userDetails == null) return null;
     return UserDetails.fromJson(jsonDecode(userDetails));
+  }
+
+  UserDetails copyWith({
+    String? email,
+    List<String>? eventList,
+    String? fcmToken,
+  }) {
+    return UserDetails(
+      email: email ?? this.email,
+      eventList: eventList ?? this.eventList,
+      fcmToken: fcmToken ?? this.fcmToken,
+    );
   }
 }
