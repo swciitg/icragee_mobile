@@ -5,6 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 class MapTab extends StatefulWidget {
   const MapTab({super.key});
 
@@ -13,6 +20,48 @@ class MapTab extends StatefulWidget {
 }
 
 class _MapTabState extends State<MapTab> {
+  GoogleMapController? _mapController;
+  String _selectedLocation = "Auditorium";
+  Set<Marker> _markers = {};
+  Map<String, CameraPosition> _locations = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLocationsFromFirebase();
+  }
+
+  Future<void> _fetchLocationsFromFirebase() async {
+    try {
+      CollectionReference locationsRef = FirebaseFirestore.instance.collection('locations');
+      QuerySnapshot querySnapshot = await locationsRef.get();
+
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        String locationName = data['name'];
+        GeoPoint geoPoint = data['coordinate'];
+
+        double latitude = geoPoint.latitude;
+        double longitude = geoPoint.longitude;
+
+        _locations[locationName] = CameraPosition(
+          target: LatLng(latitude, longitude),
+          zoom: 17,
+        );
+      }
+
+      if (_locations.isNotEmpty) {
+        setState(() {
+          _selectedLocation = _locations.keys.first;
+          _addMarker(_selectedLocation);
+        });
+      }
+    } catch (e) {
+      print("Error fetching locations: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +84,102 @@ class _MapTabState extends State<MapTab> {
         ),
       ),
       extendBodyBehindAppBar: true,
-      body: GoogleMap(
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-          Factory<OneSequenceGestureRecognizer>(() {
-            return EagerGestureRecognizer();
-          })
-        },
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(26.192613073419974, 91.69907177061708),
-          zoom: 15,
+      body: _locations.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : Stack(
+        children: <Widget>[
+
+          GoogleMap(
+            markers: _markers,
+            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+              Factory<OneSequenceGestureRecognizer>(() {
+                return EagerGestureRecognizer();
+              })
+            },
+            initialCameraPosition: _locations[_selectedLocation]!,
+            onMapCreated: (GoogleMapController controller) {
+              _mapController = controller;
+              _addMarker(_selectedLocation);
+            },
+          ),
+
+          Positioned(
+            top: 89,
+            left: 1,
+            right: 1,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _locations.keys.map((location) {
+                    int index = _locations.keys.toList().indexOf(location);
+                    bool isFirst = index == 0;
+                    bool isLast = index == _locations.keys.length - 1;
+
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left: isFirst ? 16.0 : 5.0,
+                        right: isLast ? 16.0 : 5.0,
+                      ),
+                      child: _buildTile(location, isSelected: _selectedLocation == location),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper function to build the tile
+  Widget _buildTile(String text, {bool isSelected = false}) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedLocation = text;
+          _addMarker(_selectedLocation);
+        });
+        _mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(_locations[text]!),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4.0),
+        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.0),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : MyColors.backgroundColor,
+          borderRadius: BorderRadius.circular(24.0),
+          boxShadow: isSelected
+              ? [BoxShadow(color: Colors.grey, blurRadius: 6.0, offset: Offset(0, 2))]
+              : [],
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: isSelected ? MyColors.primaryColor : MyColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 10.0,
+          ),
         ),
       ),
     );
+  }
+
+
+  void _addMarker(String location) {
+    final position = _locations[location]!.target;
+    setState(() {
+      _markers = {
+        Marker(
+          markerId: MarkerId(location),
+          position: position,
+          infoWindow: InfoWindow(title: location),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        ),
+      };
+    });
   }
 }
