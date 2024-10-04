@@ -1,16 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:icragee_mobile/shared/colors.dart';
-
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class MapTab extends StatefulWidget {
   const MapTab({super.key});
@@ -23,7 +17,7 @@ class _MapTabState extends State<MapTab> {
   GoogleMapController? _mapController;
   String _selectedLocation = "Auditorium";
   Set<Marker> _markers = {};
-  Map<String, CameraPosition> _locations = {};
+  final Map<String, CameraPosition> _locations = {};
 
   @override
   void initState() {
@@ -33,7 +27,8 @@ class _MapTabState extends State<MapTab> {
 
   Future<void> _fetchLocationsFromFirebase() async {
     try {
-      CollectionReference locationsRef = FirebaseFirestore.instance.collection('locations');
+      CollectionReference locationsRef =
+          FirebaseFirestore.instance.collection('locations');
       QuerySnapshot querySnapshot = await locationsRef.get();
 
       for (var doc in querySnapshot.docs) {
@@ -85,52 +80,52 @@ class _MapTabState extends State<MapTab> {
       ),
       extendBodyBehindAppBar: true,
       body: _locations.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Stack(
-        children: <Widget>[
-
-          GoogleMap(
-            markers: _markers,
-            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-              Factory<OneSequenceGestureRecognizer>(() {
-                return EagerGestureRecognizer();
-              })
-            },
-            initialCameraPosition: _locations[_selectedLocation]!,
-            onMapCreated: (GoogleMapController controller) {
-              _mapController = controller;
-              _addMarker(_selectedLocation);
-            },
-          ),
-
-          Positioned(
-            top: 89,
-            left: 1,
-            right: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _locations.keys.map((location) {
-                    int index = _locations.keys.toList().indexOf(location);
-                    bool isFirst = index == 0;
-                    bool isLast = index == _locations.keys.length - 1;
-
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: isFirst ? 16.0 : 5.0,
-                        right: isLast ? 16.0 : 5.0,
-                      ),
-                      child: _buildTile(location, isSelected: _selectedLocation == location),
-                    );
-                  }).toList(),
+              children: <Widget>[
+                GoogleMap(
+                  markers: _markers,
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(() {
+                      return EagerGestureRecognizer();
+                    })
+                  },
+                  initialCameraPosition: _locations[_selectedLocation]!,
+                  onMapCreated: (GoogleMapController controller) {
+                    _mapController = controller;
+                    _addMarker(_selectedLocation);
+                  },
                 ),
-              ),
+                Positioned(
+                  top: 75,
+                  left: 1,
+                  right: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _locations.keys.map((location) {
+                          int index =
+                              _locations.keys.toList().indexOf(location);
+                          bool isFirst = index == 0;
+                          bool isLast = index == _locations.keys.length - 1;
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: isFirst ? 16 : 5,
+                              right: isLast ? 16 : 5,
+                            ),
+                            child: _buildTile(location,
+                                isSelected: _selectedLocation == location),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -147,13 +142,19 @@ class _MapTabState extends State<MapTab> {
         );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4.0),
-        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.0),
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : MyColors.backgroundColor,
-          borderRadius: BorderRadius.circular(24.0),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: isSelected
-              ? [BoxShadow(color: Colors.grey, blurRadius: 6.0, offset: Offset(0, 2))]
+              ? const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 6.0,
+                    offset: Offset(0, 2),
+                  ),
+                ]
               : [],
         ),
         child: Text(
@@ -161,13 +162,12 @@ class _MapTabState extends State<MapTab> {
           style: TextStyle(
             color: isSelected ? MyColors.primaryColor : MyColors.primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: 10.0,
+            fontSize: 14,
           ),
         ),
       ),
     );
   }
-
 
   void _addMarker(String location) {
     final position = _locations[location]!.target;
