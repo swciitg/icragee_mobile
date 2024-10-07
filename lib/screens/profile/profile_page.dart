@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:icragee_mobile/screens/feedback/feedback_page.dart';
 import 'package:icragee_mobile/screens/profile/faq_screen.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
+import 'package:icragee_mobile/screens/profile/lost_and_found_screen.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,7 +28,8 @@ class ProfilePageState extends State<ProfilePage> {
           children: [
             Container(
               decoration: BoxDecoration(
-                  color: MyColors.whiteColor, borderRadius: BorderRadius.circular(10)),
+                  color: MyColors.whiteColor,
+                  borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.all(16),
               child: const Row(
                 children: [
@@ -65,8 +67,11 @@ class ProfilePageState extends State<ProfilePage> {
                     title: const Text('Important contacts'),
                     trailing: InkWell(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const ImportantContacts()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ImportantContacts()));
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -90,7 +95,9 @@ class ProfilePageState extends State<ProfilePage> {
                     trailing: InkWell(
                       onTap: () {
                         Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => const FeedbackPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FeedbackPage()));
                       },
                       child: Container(
                         decoration: const BoxDecoration(
@@ -114,7 +121,34 @@ class ProfilePageState extends State<ProfilePage> {
                     trailing: InkWell(
                       onTap: () {
                         Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => const FaqScreen()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FaqScreen()));
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: MyColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(6.0),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.help),
+                    title: const Text('Lost/Found items'),
+                    trailing: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LostAndFoundScreen()));
                       },
                       child: Container(
                         decoration: const BoxDecoration(
