@@ -21,8 +21,8 @@ class Event {
     return Event(
       id: json['id'],
       title: json['title'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
+      startTime: DateTime.parse(json['startTime']).toLocal(),
+      endTime: DateTime.parse(json['endTime']).toLocal(),
       venue: json['venue'],
       description: json['description'],
       day: json['day'],
@@ -33,8 +33,8 @@ class Event {
     return {
       'id': id,
       'title': title,
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime.toIso8601String(),
+      'startTime': startTime.toUtc().toString(),
+      'endTime': endTime.toUtc().toString(),
       'venue': venue,
       'description': description,
       'day': day,

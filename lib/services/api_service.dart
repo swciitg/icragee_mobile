@@ -22,9 +22,23 @@ class ApiService {
       });
       final data = res.data as Map<String, dynamic>;
       final message = data['message'] as String;
+      print(data['user']);
       return message.contains('verified');
     } catch (e) {
       debugPrint("Error verifying otp: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> scheduleEvent(String eventId, String time) async{
+    try {
+      await dio.post('/notification/createEvent', data: {
+        'topic': eventId,
+        'time': time,
+      });
+      
+    } catch (e) {
+      debugPrint("Error scheduling event: $e");
       rethrow;
     }
   }

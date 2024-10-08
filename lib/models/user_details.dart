@@ -22,10 +22,14 @@ class UserDetails {
   }
 
   Map<String, dynamic> toJson() {
-    return {'eventList': eventList, 'email': email, 'fcmToken': fcmToken};
+    return {
+      'eventList': eventList,
+      'email': email,
+      'fcmToken': fcmToken,
+    };
   }
 
-  Future<void> saveToSharedPreferences() async{
+  Future<void> saveToSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final userDetails = jsonEncode(toJson());
     prefs.setString('userDetails', userDetails);

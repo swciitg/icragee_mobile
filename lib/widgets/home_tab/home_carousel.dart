@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/widgets/home_tab/home_carousel_tile.dart';
@@ -26,11 +27,18 @@ class _HomeCarouselState extends State<HomeCarousel> {
     super.dispose();
   }
 
+  Future<List<String>> _getUserEventIds() async {
+    final user = await UserDetails.getFromSharedPreferences();
+    if (user == null) {
+      return Future.error("User Not Logged In");
+    }
+    return DataService.getUserEventIds(user.email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // TODO: email
-      future: DataService.getUserEventIds("venkylm10@gmail.com"),
+      future: _getUserEventIds(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

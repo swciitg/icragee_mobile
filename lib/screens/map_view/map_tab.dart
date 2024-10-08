@@ -53,7 +53,7 @@ class _MapTabState extends State<MapTab> {
         });
       }
     } catch (e) {
-      print("Error fetching locations: $e");
+      debugPrint("Error fetching locations: $e");
     }
   }
 

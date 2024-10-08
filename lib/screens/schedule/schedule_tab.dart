@@ -59,8 +59,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
             onDaySelected: (val) {
               setState(() {
                 selectedDay = val;
-                calendarController.displayDate =
-                    dayOneDate.add(Duration(days: val - 1));
+                calendarController.displayDate = dayOneDate.add(Duration(days: val - 1));
               });
             },
           ),
@@ -88,9 +87,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
                   );
                 } else {
                   List<Event> schedules = snapshot.data!;
-                  return calendarView
-                      ? _buildCalendarView(schedules)
-                      : _buildListView(schedules);
+                  return calendarView ? _buildCalendarView(schedules) : _buildListView(schedules);
                 }
               },
             ),
@@ -101,12 +98,16 @@ class _ScheduleTabState extends State<ScheduleTab> {
   }
 
   Padding _buildCalendarView(List<Event> schedules) {
+    final minDate = DateTime(2024, 10, 07);
+    final maxDate = DateTime(2024, 10, 09);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: MediaQuery.sizeOf(context).height - 64,
         child: SfCalendar(
           view: CalendarView.timelineDay,
+          minDate: minDate,
+          maxDate: maxDate,
           dataSource: EventDataSource(schedules),
           controller: calendarController,
           timeSlotViewSettings: const TimeSlotViewSettings(
@@ -131,9 +132,11 @@ class _ScheduleTabState extends State<ScheduleTab> {
             if (details.draggingTime == null) return;
             setState(() {
               selectedDay = details.draggingTime!.day - 7;
-              calendarController.displayDate =
-                  DateTime(2024, 09, 07 + selectedDay);
+              calendarController.displayDate = DateTime(2024, 10, 07 + selectedDay);
             });
+          },
+          onViewChanged: (viewChangedDetails) {
+            //TODO: update seleceted day tab
           },
           appointmentBuilder: (context, calendarAppointmentDetails) {
             final events = (calendarAppointmentDetails.appointments).toList();
@@ -168,8 +171,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) =>
-          EventScheduleTile(event: schedules[index]),
+      itemBuilder: (context, index) => EventScheduleTile(event: schedules[index]),
     );
   }
 }

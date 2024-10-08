@@ -7,6 +7,8 @@ import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../services/api_service.dart';
+
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
 
@@ -169,8 +171,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, true); // Open time picker for start time
+                        await _selectTime(context, true); // Open time picker for start time
                       },
                     ),
                   ),
@@ -193,8 +194,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, false); // Open time picker for end time
+                        await _selectTime(context, false); // Open time picker for end time
                       },
                     ),
                   ),
@@ -213,10 +213,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(
-                        color: Colors.white, size: 32)
-                    : const Text('Submit',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
+                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -275,8 +273,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
         day: selectedDay!,
       );
 
-      await DataService.addEvent(newEvent);
+      final id = await DataService.addEvent(newEvent);
       showSnackBar("Event added successfully");
+      if (id == null) {
+        showSnackBar("Failed to add event. Please try again.");
+        return;
+      }
+      await ApiService().scheduleEvent(id, newEvent.startTime.toUtc().toString());
     } catch (e) {
       showSnackBar("Failed to add event. Please try again.");
     } finally {
@@ -311,12 +314,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text =
-              pickedTime.format(context); // Update the start time field
+          _startTimeController.text = pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text =
-              pickedTime.format(context); // Update the end time field
+          _endTimeController.text = pickedTime.format(context); // Update the end time field
         }
       });
     }

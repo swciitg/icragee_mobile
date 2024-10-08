@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,6 +157,8 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
         "venkylm10@gmail.com",
         widget.event.id,
       );
+      await FirebaseMessaging.instance.subscribeToTopic(widget.event.id);
+      debugPrint("Subscribed to topic: ${widget.event.id}");
       showSnackBar("Added to your schedule");
     } catch (e) {
       debugPrint(e.toString());

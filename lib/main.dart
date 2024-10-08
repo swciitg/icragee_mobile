@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/providers/user_provider.dart';
 import 'package:icragee_mobile/firebase_options.dart';
 import 'package:icragee_mobile/routing/route_config.dart';
+import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/notification_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
@@ -25,7 +26,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        Provider(create: (_) => ApiService()),
+      ],
       child: MaterialApp.router(
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         supportedLocales: const [Locale('en', 'US')],
