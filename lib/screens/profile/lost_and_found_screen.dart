@@ -153,7 +153,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         color: MyColors.primaryColor,
                       ),
                     ),
@@ -191,7 +191,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         color: MyColors.primaryColor,
                       ),
                     ),
@@ -229,7 +229,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         color: MyColors.primaryColor,
                       ),
                     ),
