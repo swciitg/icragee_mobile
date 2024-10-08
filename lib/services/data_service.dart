@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/emergency_contact.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DataService {
   // Method to fetch FAQs from Firestore
@@ -120,13 +121,15 @@ class DataService {
     }
   }
 
+// TODO: Email and name should come from Shared Prefs after Authentication is integrated
   static Future<void> postLostFoundData({
     required String category,
     required String title,
     required String description,
     required String location,
     required String contact,
-    required String image,
+    required XFile image,
+    required String name,
     required String email,
   }) async {
     try {
@@ -138,8 +141,9 @@ class DataService {
         "description": description,
         "location": location,
         "contact": contact,
-        "image": image,
+        "image": image.path,
         "email": email,
+        "name": name,
         "submittedAt": FieldValue.serverTimestamp(),
       });
     } catch (error) {

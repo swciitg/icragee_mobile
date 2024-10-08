@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class LostItemForm extends StatefulWidget {
   static const id = "/lostItemForm";
-  final String imageString;
+  final XFile imageFile;
 
-  const LostItemForm({Key? key, required this.imageString}) : super(key: key);
+  const LostItemForm({Key? key, required this.imageFile}) : super(key: key);
 
   @override
   State<LostItemForm> createState() => _LostItemFormState();
@@ -138,8 +139,8 @@ class _LostItemFormState extends State<LostItemForm> {
               description: _description.text.trim(),
               location: _location.text.trim(),
               contact: _contactNumber.text.trim(),
-              image: widget.imageString,
-              // Replace with actual user data
+              image: widget.imageFile,
+              name: "your name",
               email: "Your Email", // Replace with actual user data
             );
 

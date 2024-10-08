@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/widgets/lost_found/add_item_button.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../shared/colors.dart';
 import '../../widgets/lost_found/item_card.dart';
@@ -126,6 +127,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     setState(() {
                       selected = 1;
                     });
+                    _getItems(); // Update items when tab is switched
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -163,6 +165,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     setState(() {
                       selected = 2;
                     });
+                    _getItems(); // Update items when tab is switched
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -200,6 +203,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     setState(() {
                       selected = 3;
                     });
+                    _getItems(); // Update items when tab is switched
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -252,11 +256,16 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                 return ListView(
                   children: items.map((doc) {
                     final data = doc.data() as Map<String, dynamic>;
+                    // Check if the 'image' is an XFile and convert it
+                    String imagePath = data['image'] is XFile
+                        ? (data['image'] as XFile).path
+                        : data['image'] ?? 'assets/images/logo.png';
+
                     return ItemCard(
                       title: data['title'] ?? 'No Title',
                       location: data['location'] ?? 'Unknown location',
                       time: _formatTimestamp(data['submittedAt']),
-                      imagePath: data['image'] ?? 'assets/images/logo.png',
+                      imageFile: data['image'] ?? 'assets/images/logo.png',
                       isLost: selected == 1,
                     );
                   }).toList(),
@@ -266,16 +275,12 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          if (selected == 1) {
-            AddItemButton(type: "Lost");
-          } else if (selected == 2) {
-            AddItemButton(type: "Found");
-          }
-          ;
-        },
+      floatingActionButton: AddItemButton(
+        type: selected == 1
+            ? 'Lost'
+            : selected == 2
+                ? 'Found'
+                : 'MyAds', // Pass the correct type
       ),
     );
   }

@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:icragee_mobile/shared/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../screens/profile/found_item_form.dart';
 import '../../screens/profile/lost_item_form.dart';
+import '../../shared/colors.dart';
 
 class AddItemButton extends StatefulWidget {
   const AddItemButton({
@@ -30,64 +28,63 @@ class _AddItemButtonState extends State<AddItemButton> {
       onTap: () async {
         XFile? xFile;
         await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  title:
-                      const Text("From where do you want to take the photo?"),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: const Text("Gallery"),
-                          onTap: () async {
-                            xFile = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
-                            if (!mounted) return;
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        const Padding(padding: EdgeInsets.all(8.0)),
-                        GestureDetector(
-                          child: const Text("Camera"),
-                          onTap: () async {
-                            xFile = await ImagePicker()
-                                .pickImage(source: ImageSource.camera);
-                            if (!mounted) return;
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("From where do you want to take the photo?"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: const Text("Gallery"),
+                      onTap: () async {
+                        xFile = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                      },
                     ),
-                  ));
-            });
+                    const Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: const Text("Camera"),
+                      onTap: () async {
+                        xFile = await ImagePicker()
+                            .pickImage(source: ImageSource.camera);
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
 
         if (!mounted) return;
         if (xFile != null) {
-          var bytes = File(xFile!.path).readAsBytesSync();
-          var imageSize =
-              (bytes.lengthInBytes / (1048576)); // dividing by 1024*1024
+          // Check the image size
+          var imageSize = (await xFile!.length()) / (1024 * 1024); // MB
           if (imageSize > 2.5) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-              "Maximum image size can be 2.5 MB",
-              style: TextStyle(fontSize: 20),
-            )));
+              content: Text(
+                "Maximum image size can be 2.5 MB",
+                style: TextStyle(fontSize: 20),
+              ),
+            ));
             return;
           }
-          var imageString = base64Encode(bytes);
 
+          // Pass the XFile directly to LostItemForm
           if (widget.type == "Lost") {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => LostItemForm(
-                      imageString: imageString,
-                    )));
+              builder: (context) => LostItemForm(
+                imageFile: xFile!,
+              ),
+            ));
           } else if (widget.type == "Found") {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => LostFoundLocationForm(
-                      imageString: imageString,
-                      category: "Found",
-                    )));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => FoundItemForm()));
           }
         }
       },

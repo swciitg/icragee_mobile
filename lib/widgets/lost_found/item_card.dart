@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,7 +9,7 @@ class ItemCard extends StatelessWidget {
   final String title;
   final String location;
   final String time;
-  final String imagePath;
+  final String imageFile;
   final bool isLost;
 
   const ItemCard({
@@ -15,7 +17,7 @@ class ItemCard extends StatelessWidget {
     required this.title,
     required this.location,
     required this.time,
-    required this.imagePath,
+    required this.imageFile,
     required this.isLost,
   }) : super(key: key);
 
@@ -41,6 +43,7 @@ class ItemCard extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis, // Prevents overflow
                 ),
                 Text(
                   '${isLost ? "Lost at" : "Found at"}: $location',
@@ -48,6 +51,7 @@ class ItemCard extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis, // Prevents overflow
                 ),
                 Text(
                   time,
@@ -55,19 +59,24 @@ class ItemCard extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis, // Prevents overflow
                 ),
               ],
             ),
           ),
 
           // Image section
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              imagePath,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(imageFile), // Display the image from XFile
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],
