@@ -6,13 +6,17 @@ import 'package:icragee_mobile/models/faq.dart';
 class DataService {
   // Method to fetch FAQs from Firestore
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot =
+        await FirebaseFirestore.instance.collection('FAQs').get();
 
-    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
+    return collectionSnapshot.docs
+        .map((doc) => FaqContent.fromJson(doc.data()))
+        .toList();
   }
 
   // Method to fetch emergency contacts by category from Firestore
-  static Future<List<EmergencyContact>> fetchContactsByCategory(String category) async {
+  static Future<List<EmergencyContact>> fetchContactsByCategory(
+      String category) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('important_contacts')
@@ -48,10 +52,13 @@ class DataService {
   }
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('day', isEqualTo: day)
+        .get();
     return querySnapshot.docs.map((doc) {
-      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson(
+          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
@@ -63,14 +70,20 @@ class DataService {
   }
 
   static Future<List<Event>> getEvents() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('events').get();
     return snapshot.docs.map((doc) {
-      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson(
+          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
   static Stream<Event> getEventById(String id) {
-    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .doc(id)
+        .snapshots()
+        .map((doc) {
       return Event.fromJson(doc.data() as Map<String, dynamic>);
     });
   }
@@ -83,7 +96,8 @@ class DataService {
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
-      List<String> eventList = List<String>.from(userDoc.data()['eventList'] ?? []);
+      List<String> eventList =
+          List<String>.from(userDoc.data()['eventList'] ?? []);
       return eventList;
     } else {
       throw Exception('User not found!');
@@ -103,6 +117,33 @@ class DataService {
       });
     } else {
       throw Exception('User not found!');
+    }
+  }
+
+  static Future<void> postLostFoundData({
+    required String category,
+    required String title,
+    required String description,
+    required String location,
+    required String contact,
+    required String image,
+    required String email,
+  }) async {
+    try {
+      // Choose the collection based on the category (Lost or Found)
+      String collectionName = category == "Lost" ? "lost_items" : "found_items";
+
+      await FirebaseFirestore.instance.collection(collectionName).add({
+        "title": title,
+        "description": description,
+        "location": location,
+        "contact": contact,
+        "image": image,
+        "email": email,
+        "submittedAt": FieldValue.serverTimestamp(),
+      });
+    } catch (error) {
+      throw ('Failed to post $category item: $error');
     }
   }
 }
