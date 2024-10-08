@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/widgets/lost_found/add_item_button.dart';
 
 import '../../shared/colors.dart';
 import '../../widgets/lost_found/item_card.dart';
@@ -11,6 +13,36 @@ class LostAndFoundScreen extends StatefulWidget {
 
 class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
   int selected = 1; // By default, the first tab (Lost Items) is selected
+  late Stream<QuerySnapshot> itemStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _getItems(); // Initialize the stream for lost items by default
+  }
+
+  void _getItems() {
+    setState(() {
+      if (selected == 1) {
+        // Fetch lost items from "lost_items" collection
+        itemStream = FirebaseFirestore.instance
+            .collection('lost_items')
+            .orderBy('submittedAt', descending: true)
+            .snapshots();
+      } else if (selected == 2) {
+        // Fetch found items from "found_items" collection
+        itemStream = FirebaseFirestore.instance
+            .collection('found_items')
+            .orderBy('submittedAt', descending: true)
+            .snapshots();
+      } else {
+        // My Ads logic, modify as needed
+        itemStream = FirebaseFirestore.instance
+            .collection('lost_items') // Example for showing "My Ads"
+            .snapshots();
+      }
+    });
+  }
 
   // Dummy data for items
   final List<Map<String, dynamic>> items = [
@@ -206,24 +238,58 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
             height: 8,
           ),
           Expanded(
-            child: ListView(
-              children: getFilteredItems().map((item) {
-                return ItemCard(
-                  title: item['title'],
-                  location: item['location'],
-                  time: item['time'],
-                  imagePath: item['imagePath'],
-                  isLost: item['isLost'],
+            child: StreamBuilder<QuerySnapshot>(
+              stream: itemStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text("No items found"));
+                }
+                final items = snapshot.data!.docs;
+                return ListView(
+                  children: items.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    return ItemCard(
+                      title: data['title'] ?? 'No Title',
+                      location: data['location'] ?? 'Unknown location',
+                      time: _formatTimestamp(data['submittedAt']),
+                      imagePath: data['image'] ?? 'assets/images/logo.png',
+                      isLost: selected == 1,
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              },
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          if (selected == 1) {
+            AddItemButton(type: "Lost");
+          } else if (selected == 2) {
+            AddItemButton(type: "Found");
+          }
+          ;
+        },
       ),
     );
+  }
+
+  String _formatTimestamp(Timestamp? timestamp) {
+    if (timestamp == null) return "Unknown time";
+    final DateTime date = timestamp.toDate();
+    final Duration difference = DateTime.now().difference(date);
+    if (difference.inDays > 1) {
+      return "${difference.inDays} days ago";
+    } else if (difference.inHours > 1) {
+      return "${difference.inHours} hours ago";
+    } else {
+      return "Just now";
+    }
   }
 }
