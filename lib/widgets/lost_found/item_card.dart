@@ -24,57 +24,68 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
         color: MyColors.whiteColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         children: [
           // Text section
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 19,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis, // Prevents overflow
                   ),
-                  overflow: TextOverflow.ellipsis, // Prevents overflow
-                ),
-                Text(
-                  '${isLost ? "Lost at" : "Found at"}: $location',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                  Text(
+                    '${isLost ? "Lost at" : "Found at"}: $location',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis, // Prevents overflow
                   ),
-                  overflow: TextOverflow.ellipsis, // Prevents overflow
-                ),
-                Text(
-                  time,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(height: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: MyColors.primaryColorTint,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      time,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue[300],
+                      ),
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis, // Prevents overflow
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
-          // Image section
-          SizedBox(
-            width: 60,
-            height: 60,
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 130, maxWidth: 155),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
               child: Image.file(
                 File(imageFile), // Display the image from XFile
-                width: 60,
-                height: 60,
+                width: 150,
+                height: 130,
                 fit: BoxFit.cover,
               ),
             ),
