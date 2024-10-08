@@ -42,7 +42,7 @@ class ItemCard extends StatelessWidget {
                     title,
                     style: GoogleFonts.poppins(
                       fontSize: 19,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                     ),
                     overflow: TextOverflow.ellipsis, // Prevents overflow
                   ),
