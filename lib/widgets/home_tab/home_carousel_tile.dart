@@ -6,12 +6,10 @@ import 'package:intl/intl.dart';
 class HomeCarouselTile extends StatefulWidget {
   final Event event;
 
-  // final UserDetails userEventDetails;
 
   const HomeCarouselTile({
     super.key,
     required this.event,
-    // required this.userEventDetails,
   });
 
   @override
@@ -19,19 +17,6 @@ class HomeCarouselTile extends StatefulWidget {
 }
 
 class _HomeCarouselTileState extends State<HomeCarouselTile> {
-  void _updateUserEventDetails() {
-    //   if (widget.userEventDetails.lastUpdated
-    //       .isBefore(widget.event.lastUpdated)) {
-    //     // TODO: remove hardcoded email once auth is implemented
-    //     DataService.updateUserEvent("venkylm10@gmail.com", widget.event);
-    //   }
-  }
-
-  @override
-  void initState() {
-    _updateUserEventDetails();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

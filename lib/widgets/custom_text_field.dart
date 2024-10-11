@@ -5,20 +5,25 @@ import 'package:icragee_mobile/shared/colors.dart';
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    required this.emailController,
+    required this.controller,
     required this.label,
     this.keyboardType = TextInputType.text,
   });
 
-  final TextEditingController emailController;
+  final TextEditingController controller;
   final String label;
   final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: emailController,
+      controller: controller,
       keyboardType: keyboardType,
+      style: GoogleFonts.poppins(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: MyColors.whiteColor,
+      ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.poppins(

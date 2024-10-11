@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
-import 'package:icragee_mobile/shared/colors.dart';
-import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../services/api_service.dart';
+class EditEventScreen extends StatefulWidget {
+  final Event event;
 
-class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+  const EditEventScreen({super.key, required this.event});
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<EditEventScreen> createState() => _EditEventScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
-  // State variables for selected venue, date, and time
+class _EditEventScreenState extends State<EditEventScreen> {
   bool isLoading = false;
+
+  // State variables for selected venue, date, and time
   String? selectedVenue;
   int? selectedDay;
   TimeOfDay? startTime;
@@ -35,6 +34,28 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _endTimeController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Pre-fill the text fields with existing event data
+    _titleController.text = widget.event.title;
+    _descriptionController.text = widget.event.description;
+    selectedVenue = widget.event.venue;
+    selectedDay = widget.event.day;
+
+    // Extract TimeOfDay from DateTime and fill start and end time controllers
+    startTime = TimeOfDay.fromDateTime(widget.event.startTime);
+    endTime = TimeOfDay.fromDateTime(widget.event.endTime);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Now it's safe to use Localizations and format the time
+    _startTimeController.text = startTime!.format(context);
+    _endTimeController.text = endTime!.format(context);
+  }
+
+  @override
   void dispose() {
     // Dispose controllers to avoid memory leaks
     _titleController.dispose();
@@ -47,14 +68,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(title: const Text('Add Event')),
+      backgroundColor: const Color(0xFFC6FCED),
+      appBar: AppBar(
+        title: const Text('Edit Event'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop(); // Back navigation
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Event Title TextField
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -171,7 +201,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(context, true); // Open time picker for start time
+                        await _selectTime(
+                            context, true); // Open time picker for start time
                       },
                     ),
                   ),
@@ -194,7 +225,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(context, false); // Open time picker for end time
+                        await _selectTime(
+                            context, false); // Open time picker for end time
                       },
                     ),
                   ),
@@ -202,19 +234,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               const Spacer(),
 
-              // Add Button
+              // save Button
               ElevatedButton(
-                onPressed: _addEvent,
+                onPressed: _editEvent,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.primaryColor,
+                  backgroundColor: const Color(0xFF40E0D0),
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
-                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(
+                        color: Colors.white, size: 32)
+                    : const Text('Submit',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -224,9 +258,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   // Method to handle adding an event
-  Future<void> _addEvent() async {
+  void _editEvent() async {
     if (isLoading) return;
-    final goRouter = GoRouter.of(context);
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         selectedVenue == null ||
@@ -237,34 +270,28 @@ class _AddEventScreenState extends State<AddEventScreen> {
       return;
     }
     setState(() {
-      isLoading = true; // Show loader
+      isLoading = true;
     });
+    final goRouter = GoRouter.of(context);
 
     try {
       final startTimeDateTime = DateTime(
-        dayOneDate.year,
-        dayOneDate.month,
-        dayOneDate.day,
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
         startTime!.hour,
         startTime!.minute,
       );
 
       final endTimeDateTime = DateTime(
-        dayOneDate.year,
-        dayOneDate.month,
-        dayOneDate.day,
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
         endTime!.hour,
         endTime!.minute,
       );
-      // Check if the start time is before the end time
-      if (!startTimeDateTime.isBefore(endTimeDateTime)) {
-        showSnackBar("Start time must be before end time");
-        setState(() {
-          isLoading = false; // Hide loader
-        });
-        return;
-      }
-      final newEvent = Event(
+
+      final updatedEvent = Event(
         title: _titleController.text.trim(),
         startTime: startTimeDateTime,
         endTime: endTimeDateTime,
@@ -273,18 +300,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
         day: selectedDay!,
       );
 
-      final id = await DataService.addEvent(newEvent);
-      showSnackBar("Event added successfully");
-      if (id == null) {
-        showSnackBar("Failed to add event. Please try again.");
-        return;
-      }
-      await ApiService().scheduleEvent(id, newEvent.startTime.toUtc().toString());
+      await DataService.editEvent(widget.event.id, updatedEvent);
+      showSnackBar("Event edited successfully");
     } catch (e) {
-      showSnackBar("Failed to add event. Please try again.");
+      showSnackBar("Failed to edit event. Please try again.");
     } finally {
       setState(() {
-        isLoading = false; // Hide loader when done
+        isLoading = false;
       });
       goRouter.pop();
     }
@@ -314,10 +336,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text = pickedTime.format(context); // Update the start time field
+          _startTimeController.text =
+              pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text = pickedTime.format(context); // Update the end time field
+          _endTimeController.text =
+              pickedTime.format(context); // Update the end time field
         }
       });
     }

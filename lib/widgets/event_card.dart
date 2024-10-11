@@ -1,15 +1,20 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
-import 'package:icragee_mobile/widgets/status_chip.dart';
+import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/utility/functions.dart';
+import 'package:icragee_mobile/widgets/event_status_chip.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
+
+import '../screens/edit_event_screen.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
+  final Function() onChange;
 
   const EventCard({
     super.key,
+    required this.onChange,
     required this.event,
   });
 
@@ -18,7 +23,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  late Timer _timer;
   bool _isExpanded = false;
 
   late String _currentStatus;
@@ -27,27 +31,17 @@ class _EventCardState extends State<EventCard> {
   void initState() {
     super.initState();
     _currentStatus = _getEventStatus();
-    // Update status every minute
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      setState(() {
-        _currentStatus = _getEventStatus();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   String _getEventStatus() {
     final now = DateTime.now();
+    final eventStart =
+        getActualEventTime(widget.event.startTime, widget.event.day);
+    final eventEnd = getActualEventTime(widget.event.endTime, widget.event.day);
 
-    if (now.isBefore(widget.event.startTime)) {
+    if (now.isBefore(eventStart)) {
       return 'Upcoming';
-    } else if (now.isAfter(widget.event.startTime) &&
-        now.isBefore(widget.event.endTime)) {
+    } else if (now.isAfter(eventStart) && now.isBefore(eventEnd)) {
       return 'Ongoing';
     } else {
       return 'Finished';
@@ -83,7 +77,7 @@ class _EventCardState extends State<EventCard> {
                     overflow: TextOverflow.visible,
                   ),
                 ),
-                StatusChip(status: _currentStatus),
+                EventStatusChip(eventStatus: _currentStatus),
               ],
             ),
 
@@ -96,8 +90,8 @@ class _EventCardState extends State<EventCard> {
                     const Icon(Icons.access_time, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      '${DateFormat('kk:mm').format(widget.event.startTime.toLocal())}'
-                      ' - ${DateFormat('kk:mm').format(widget.event.endTime.toLocal())}',
+                      '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                      ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 14),
                     ),
@@ -139,7 +133,42 @@ class _EventCardState extends State<EventCard> {
                         height: 18,
                         width: 18,
                         color: Colors.teal,
-                      )
+                      ),
+                      Expanded(child: Container()),
+                      PopupMenuButton<String>(
+                        onSelected: (value) async {
+                          if (value == 'Edit Event') {
+                            // Navigate to the Edit Event Screen
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditEventScreen(
+                                  event: widget.event,
+                                ),
+                              ),
+                            );
+                          } else if (value == 'Delete Event') {
+                            try {
+                              await DataService.deleteEvent(widget.event.id);
+                              showSnackBar('Event deleted successfully!');
+                            } catch (e) {
+                              showSnackBar('Some error occurred!');
+                            }
+                          }
+                          widget.onChange();
+                        },
+                        itemBuilder: (BuildContext context) => [
+                          const PopupMenuItem(
+                            value: 'Edit Event',
+                            child: Text('Edit Event'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Delete Event',
+                            child: Text('Delete Event'),
+                          ),
+                        ],
+                        icon: const Icon(Icons.more_vert),
+                      ),
                     ],
                   ),
                 ),

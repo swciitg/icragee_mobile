@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,11 +22,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(
-        () {
+        () async {
           setState(() {});
           if (controller.status == AnimationStatus.completed) {
             final goRouter = context.replace;
-            goRouter('/get-started');
+            final user = await UserDetails.getFromSharedPreferences();
+            if (user == null) {
+              goRouter('/get-started');
+            } else {
+              goRouter('/homeScreen');
+            }
           }
         },
       );

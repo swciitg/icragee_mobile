@@ -3,6 +3,8 @@ import 'package:icragee_mobile/models/emergency_contact.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:icragee_mobile/models/user_details.dart';
+import 'package:icragee_mobile/utility/functions.dart';
 
 class DataService {
   // Method to fetch FAQs from Firestore
@@ -53,21 +55,37 @@ class DataService {
   }
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('events')
-        .where('day', isEqualTo: day)
-        .get();
-    return querySnapshot.docs.map((doc) {
-      return Event.fromJson(
-          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+    final docs = querySnapshot.docs.map((doc) {
+      final event = Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return event.copyWith(
+          startTime: getActualEventTime(event.startTime, event.day),
+          endTime: getActualEventTime(event.endTime, event.day));
     }).toList();
+    docs.sort((a, b) {
+      return a.startTime.compareTo(b.startTime);
+    });
+    return docs;
   }
 
-  static Future<void> addEvent(Event event) async {
+  static Future<String?> addEvent(Event event) async {
+    try {
+      final collectionRef = FirebaseFirestore.instance.collection('events');
+      final doc = collectionRef.doc();
+      event = event.copyWith(id: doc.id);
+      await doc.set(event.toJson());
+      return doc.id;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<void> editEvent(String eventId, Event updatedEvent) async {
     final collectionRef = FirebaseFirestore.instance.collection('events');
-    final doc = collectionRef.doc();
-    event = event.copyWith(id: doc.id);
-    await doc.set(event.toJson());
+    final doc = collectionRef.doc(eventId);
+
+    await doc.update(updatedEvent.toJson());
   }
 
   static Future<List<Event>> getEvents() async {
@@ -89,6 +107,20 @@ class DataService {
     });
   }
 
+  static Future<UserDetails?> getUserDetails(String email) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('userDetails')
+        .where('email', isEqualTo: email)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final userDoc = querySnapshot.docs.first;
+      return UserDetails.fromJson(userDoc.data());
+    } else {
+      return null;
+    }
+  }
+
   static Future<List<String>> getUserEventIds(String email) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('userDetails')
@@ -105,7 +137,22 @@ class DataService {
     }
   }
 
-  // TODO: Email should come from Shared Prefs after Authentication is integrated
+  static Stream<List<Event>> getUserEvents(List<String> eventIds) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .where(FieldPath.documentId, whereIn: eventIds)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Event.fromJson(doc.data());
+      }).toList();
+    });
+  }
+
+  static Future<void> deleteEvent(String eventId) async {
+    await FirebaseFirestore.instance.collection('events').doc(eventId).delete();
+  }
+
   static Future<void> addEventToUser(String email, String eventId) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('userDetails')
