@@ -25,47 +25,33 @@ class _HomeScreenState extends State<AdminScreen> {
     super.initState();
   }
 
-  final List<Map<String, String>> notifications = [
+  List<Map<String, String>> notifications = [
     {
-      'sender': 'Prof. Sharma',
-      'priority': 'Important',
-      'time': 'Just now',
-      'message': 'Faucibus purus in massa tempor.'
+      'title': 'Event Reminder',
+      'message': 'Don\'t forget to attend the annual tech conference tomorrow!',
+      'time': '2024-10-16 09:00 AM',
     },
     {
-      'sender': 'Dr Prakash',
-      'priority': 'Important',
-      'time': '10 minutes ago',
-      'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra.'
+      'title': 'Workshop Registration',
+      'message': 'Your spot is confirmed for the Flutter workshop today.',
+      'time': '2024-10-16 11:00 AM',
     },
     {
-      'sender': 'Co-Ordinator',
-      'priority': '',
-      'time': '1 hour ago',
-      'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+      'title': 'Session Starting Soon',
+      'message': 'The keynote session will start in 30 minutes. Join us!',
+      'time': '2024-10-16 01:30 PM',
     },
     {
-      'sender': 'Admin',
-      'priority': 'Important',
-      'time': '1 hour ago',
+      'title': 'Networking Event',
       'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+          'The networking event is starting at the main hall. See you there!',
+      'time': '2024-10-16 03:00 PM',
     },
     {
-      'sender': 'Admn',
-      'priority': 'Important',
-      'time': '1 hour ago',
+      'title': 'Event Survey',
       'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
-    },
-    {
-      'sender': 'Ad',
-      'priority': 'Important',
-      'time': '1 hour ago',
-      'message':
-          'Faucibus purus in massa tempor. Egestas sed tempus urna et pharetra. Porttitor rhoncus dolor purus non enim praesent.'
+          'Please take a moment to fill out the event survey. Your feedback matters!',
+      'time': '2024-10-16 05:00 PM',
     },
   ];
 
@@ -300,41 +286,13 @@ class _HomeScreenState extends State<AdminScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            notification['sender']!,
+                            notification['title']!,
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
                           ),
-                          if (notification['priority']!.isNotEmpty)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Colors.red),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 2),
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Text(
-                                    'Important',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  const SizedBox(width: 2),
-                                ],
-                              ),
-                            ),
                           Text(
                             notification['time']!,
                             style: const TextStyle(color: Colors.grey),
