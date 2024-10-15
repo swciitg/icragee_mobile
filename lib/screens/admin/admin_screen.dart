@@ -72,162 +72,176 @@ class _HomeScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.whiteColor,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, top: 10, right: 20, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Welcome Back!',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  GestureDetector(
-                    child: const Icon(
-                      Icons.logout_rounded,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TabButton(
-                      text: 'Events',
-                      isSelected: _eventsSelected,
-                      onPressed: () {
-                        setState(() {
-                          _eventsSelected = true;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TabButton(
-                      text: 'Notification',
-                      isSelected: !_eventsSelected,
-                      onPressed: () {
-                        setState(() {
-                          _eventsSelected = false;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Align(
-                alignment: Alignment.center,
-                child: InkWell(
-                  onTap: () {},
-                  child: const Text(
-                    'Click here to view feedbacks',
-                    style: TextStyle(
-                        color: MyColors.primaryTextColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-            if (_eventsSelected) ...[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: Container(
+          color: MyColors.backgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: Colors.white,
+                child: Column(
                   children: [
-                    DayButton(
-                      dayNumber: 1,
-                      selectedDay: _selectedDay,
-                      onPressed: (dayNumber) {
-                        setState(() {
-                          _selectedDay = dayNumber;
-                        });
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, top: 10, right: 20, bottom: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Welcome Back!',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold)),
+                          GestureDetector(
+                            child: const Icon(
+                              Icons.logout_rounded,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 10),
-                    DayButton(
-                      dayNumber: 2,
-                      onPressed: (dayNumber) {
-                        setState(() {
-                          _selectedDay = dayNumber;
-                        });
-                      },
-                      selectedDay: _selectedDay,
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TabButton(
+                              text: 'Events',
+                              isSelected: _eventsSelected,
+                              onPressed: () {
+                                setState(() {
+                                  _eventsSelected = true;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TabButton(
+                              text: 'Notification',
+                              isSelected: !_eventsSelected,
+                              onPressed: () {
+                                setState(() {
+                                  _eventsSelected = false;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 10),
-                    DayButton(
-                      dayNumber: 3,
-                      selectedDay: _selectedDay,
-                      onPressed: (dayNumber) {
-                        setState(() {
-                          _selectedDay = dayNumber;
-                        });
-                      },
-                    ),
+                    const SizedBox(height: 15),
+                    // TODO: Uncomment it after DB Integration
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 20),
+                    //   child: Align(
+                    //     alignment: Alignment.center,
+                    //     child: InkWell(
+                    //       onTap: () {},
+                    //       child: const Text(
+                    //         'Click here to view feedbacks',
+                    //         style: TextStyle(
+                    //             color: MyColors.primaryTextColor,
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    if (_eventsSelected)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            DayButton(
+                              dayNumber: 1,
+                              selectedDay: _selectedDay,
+                              onPressed: (dayNumber) {
+                                setState(() {
+                                  _selectedDay = dayNumber;
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            DayButton(
+                              dayNumber: 2,
+                              onPressed: (dayNumber) {
+                                setState(() {
+                                  _selectedDay = dayNumber;
+                                });
+                              },
+                              selectedDay: _selectedDay,
+                            ),
+                            const SizedBox(width: 10),
+                            DayButton(
+                              dayNumber: 3,
+                              selectedDay: _selectedDay,
+                              onPressed: (dayNumber) {
+                                setState(() {
+                                  _selectedDay = dayNumber;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
-              Expanded(
-                child: FutureBuilder<List<Event>>(
-                  future: DataService.getDayWiseEvents(_selectedDay),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                          color: MyColors.backgroundColor,
-                          child: const Center(
-                              child: CircularProgressIndicator(
-                            color: MyColors.primaryColor,
-                          )));
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Container(
-                          color: MyColors.backgroundColor,
-                          child: const Center(child: Text('No events found')));
-                    } else {
-                      List<Event> events = snapshot.data!;
-                      return Container(
-                        decoration: const BoxDecoration(
-                            color: MyColors.backgroundColor),
-                        child: ListView.builder(
-                          itemCount: events.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  15,
-                                  index == 0 ? 15 : 0,
-                                  15,
-                                  index == events.length - 1 ? 100 : 12),
-                              child: EventCard(
-                                  event: events[index],
-                                  onChange: () {
-                                    setState(() {});
-                                  }),
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  },
+              if (_eventsSelected) ...[
+                Expanded(
+                  child: FutureBuilder<List<Event>>(
+                    future: DataService.getDayWiseEvents(_selectedDay),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                            color: MyColors.backgroundColor,
+                            child: const Center(
+                                child: CircularProgressIndicator(
+                              color: MyColors.primaryColor,
+                            )));
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Container(
+                            color: MyColors.backgroundColor,
+                            child:
+                                const Center(child: Text('No events found')));
+                      } else {
+                        List<Event> events = snapshot.data!;
+                        return Container(
+                          decoration: const BoxDecoration(
+                              color: MyColors.backgroundColor),
+                          child: ListView.builder(
+                            itemCount: events.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                    15,
+                                    index == 0 ? 15 : 0,
+                                    15,
+                                    index == events.length - 1 ? 100 : 12),
+                                child: EventCard(
+                                    event: events[index],
+                                    onChange: () {
+                                      setState(() {});
+                                    }),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
-              ),
-            ] else ...[
-              // Notifications Page UI
-              _buildNotificationsPage(),
+              ] else ...[
+                // Notifications Page UI
+                _buildNotificationsPage(),
+              ],
             ],
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -256,80 +270,85 @@ class _HomeScreenState extends State<AdminScreen> {
     return Expanded(
       child: Container(
         color: MyColors.backgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 75),
-          child: ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              notification['sender']!,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            if (notification['priority']!.isNotEmpty)
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 2),
-                                    Container(
-                                      width: 8,
-                                      height: 8,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    const Text(
-                                      'Important',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    const SizedBox(width: 2),
-                                  ],
-                                ),
-                              ),
-                            Text(
-                              notification['time']!,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Text(notification['message']!),
-                      ],
+        child: ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            final notification = notifications[index];
+            return Padding(
+              padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
+                  index == notifications.length - 1 ? 100 : 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(28, 28, 28, 0.2),
+                      offset: Offset(0, 4),
+                      blurRadius: 16,
+                      spreadRadius: 0,
                     ),
+                  ],
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            notification['sender']!,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          if (notification['priority']!.isNotEmpty)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.red),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 2),
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Text(
+                                    'Important',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  const SizedBox(width: 2),
+                                ],
+                              ),
+                            ),
+                          Text(
+                            notification['time']!,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Text(notification['message']!),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -20,8 +20,17 @@ class DayButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? MyColors.backgroundColor : Colors.white,
+        color: isSelected ? MyColors.backgroundColor : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          if (isSelected)
+            const BoxShadow(
+              color: Color.fromRGBO(28, 28, 28, 0.2),
+              // offset: Offset(0, 4),
+              blurRadius: 24,
+              spreadRadius: 0,
+            ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,

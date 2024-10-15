@@ -16,22 +16,30 @@ class TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor:
-              isSelected ? MyColors.primaryColor : MyColors.backgroundColor,
-          foregroundColor:
-              isSelected ? Colors.white : MyColors.primaryTextColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 46,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? MyColors.primaryColor : MyColors.backgroundColor,
+          boxShadow: [
+            if (isSelected)
+              const BoxShadow(
+                color: Color.fromRGBO(28, 28, 28, 0.3),
+                blurRadius: 24,
+                spreadRadius: 0,
+              ),
+          ],
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? Colors.white : MyColors.primaryTextColor,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
