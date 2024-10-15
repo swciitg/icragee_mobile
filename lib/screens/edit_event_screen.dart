@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -275,20 +276,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
     final goRouter = GoRouter.of(context);
 
     try {
-      final startTimeDateTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        startTime!.hour,
-        startTime!.minute,
+      final startTimeDateTime = getEventDateFromTimeAndDay(
+        hour: startTime!.hour,
+        minute: startTime!.minute,
+        day: selectedDay!,
       );
+      print(startTimeDateTime);
 
-      final endTimeDateTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        endTime!.hour,
-        endTime!.minute,
+      final endTimeDateTime = getEventDateFromTimeAndDay(
+        hour: endTime!.hour,
+        minute: endTime!.minute,
+        day: selectedDay!,
       );
 
       final updatedEvent = Event(
