@@ -136,41 +136,56 @@ class _HomeScreenState extends State<AdminScreen> {
                     //   ),
                     // ),
                     if (_eventsSelected)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            DayButton(
-                              dayNumber: 1,
-                              selectedDay: _selectedDay,
-                              onPressed: (dayNumber) {
-                                setState(() {
-                                  _selectedDay = dayNumber;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            DayButton(
-                              dayNumber: 2,
-                              onPressed: (dayNumber) {
-                                setState(() {
-                                  _selectedDay = dayNumber;
-                                });
-                              },
-                              selectedDay: _selectedDay,
-                            ),
-                            const SizedBox(width: 10),
-                            DayButton(
-                              dayNumber: 3,
-                              selectedDay: _selectedDay,
-                              onPressed: (dayNumber) {
-                                setState(() {
-                                  _selectedDay = dayNumber;
-                                });
-                              },
-                            ),
-                          ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 25),
+                              DayButton(
+                                dayNumber: 1,
+                                selectedDay: _selectedDay,
+                                onPressed: (dayNumber) {
+                                  setState(() {
+                                    _selectedDay = dayNumber;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              DayButton(
+                                dayNumber: 2,
+                                onPressed: (dayNumber) {
+                                  setState(() {
+                                    _selectedDay = dayNumber;
+                                  });
+                                },
+                                selectedDay: _selectedDay,
+                              ),
+                              const SizedBox(width: 10),
+                              DayButton(
+                                dayNumber: 3,
+                                selectedDay: _selectedDay,
+                                onPressed: (dayNumber) {
+                                  setState(() {
+                                    _selectedDay = dayNumber;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              DayButton(
+                                dayNumber: 4,
+                                selectedDay: _selectedDay,
+                                onPressed: (dayNumber) {
+                                  setState(() {
+                                    _selectedDay = dayNumber;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 15),
+                            ],
+                          ),
                         ),
                       ),
                   ],

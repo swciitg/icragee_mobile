@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/emergency_contact.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/utility/functions.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DataService {
   // Method to fetch FAQs from Firestore
@@ -55,10 +55,13 @@ class DataService {
   }
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('day', isEqualTo: day)
+        .get();
     final docs = querySnapshot.docs.map((doc) {
-      final event = Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      final event = Event.fromJson(
+          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
       return event.copyWith(
           startTime: getActualEventTime(event.startTime, event.day),
           endTime: getActualEventTime(event.endTime, event.day));

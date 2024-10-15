@@ -25,8 +25,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
   TimeOfDay? endTime;
 
   // Lists for dropdown values
-  final dates = ['Day 1', 'Day 2', 'Day 3'];
-  final venues = ['Hall 1', 'Hall 2', 'Hall 3', 'Hall 4'];
+  final dates = ['Day 1', 'Day 2', 'Day 3', 'Day 4'];
+  final venues = [
+    'NA',
+    'Dr. Bhupen Hazarika Auditorium',
+    'Mini Auditorium',
+    'Conference Hall 1',
+    'Conference Hall 2',
+    'Conference Hall 3',
+    'Conference Hall 4',
+  ];
 
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
@@ -87,66 +95,57 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Venue and Date Dropdowns in a Row
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Add Venue',
-                        labelStyle: const TextStyle(color: Colors.black87),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                        prefixIcon: const Icon(Icons.place),
-                      ),
-                      value: selectedVenue,
-                      hint: const Text('Venue'),
-                      items: venues.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedVenue = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<int>(
-                      decoration: InputDecoration(
-                        labelText: 'Add Date',
-                        labelStyle: const TextStyle(color: Colors.black87),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: _buildInputBorder(),
-                        enabledBorder: _buildInputBorder(),
-                        focusedBorder: _buildInputBorder(),
-                        prefixIcon: const Icon(Icons.calendar_today),
-                      ),
-                      value: selectedDay,
-                      hint: const Text('Day'),
-                      items: dates.map((String value) {
-                        return DropdownMenuItem<int>(
-                          value: dates.indexOf(value) + 1,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedDay = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+              DropdownButtonFormField<String>(
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: 'Add Venue',
+                  labelStyle: const TextStyle(color: Colors.black87),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: _buildInputBorder(),
+                  enabledBorder: _buildInputBorder(),
+                  focusedBorder: _buildInputBorder(),
+                  prefixIcon: const Icon(Icons.place),
+                ),
+                value: selectedVenue,
+                hint: const Text('Venue'),
+                items: venues.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedVenue = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<int>(
+                decoration: InputDecoration(
+                  labelText: 'Add Date',
+                  labelStyle: const TextStyle(color: Colors.black87),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: _buildInputBorder(),
+                  enabledBorder: _buildInputBorder(),
+                  focusedBorder: _buildInputBorder(),
+                  prefixIcon: const Icon(Icons.calendar_today),
+                ),
+                value: selectedDay,
+                hint: const Text('Day'),
+                items: dates.map((String value) {
+                  return DropdownMenuItem<int>(
+                    value: dates.indexOf(value) + 1,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedDay = newValue;
+                  });
+                },
               ),
               const SizedBox(height: 16),
 
@@ -203,7 +202,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 ],
               ),
               const Spacer(),
-
               // Add Button
               ElevatedButton(
                 onPressed: _addEvent,
