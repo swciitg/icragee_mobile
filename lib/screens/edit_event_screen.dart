@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -23,18 +24,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   int? selectedDay;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-
-  // Lists for dropdown values
-  final dates = ['Day 1', 'Day 2', 'Day 3', 'Day 4'];
-  final venues = [
-    'NA',
-    'Dr. Bhupen Hazarika Auditorium',
-    'Mini Auditorium',
-    'Conference Hall 1',
-    'Conference Hall 2',
-    'Conference Hall 3',
-    'Conference Hall 4',
-  ];
 
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
@@ -262,7 +251,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   void _editEvent() async {
     if (isLoading) return;
     if (_titleController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
         selectedVenue == null ||
         selectedDay == null ||
         startTime == null ||

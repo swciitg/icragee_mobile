@@ -109,10 +109,9 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
               // ),
             ],
           ),
-          const SizedBox(height: 12),
-          if (true)
+          if (widget.event.description.trim().isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 12, top: 12),
               child: Text(
                 widget.event.description,
                 style: GoogleFonts.poppins(

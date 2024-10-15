@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/utility/functions.dart';
@@ -150,8 +151,20 @@ class _EventCardState extends State<EventCard> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Text(widget.event.description),
+            if (widget.event.description.trim().isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12, top: 10),
+                child: Text(
+                  widget.event.description,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xff1C1C1C),
+                  ),
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
           ],
         ),
       ),

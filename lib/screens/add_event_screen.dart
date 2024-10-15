@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -23,18 +24,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
   int? selectedDay;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-
-  // Lists for dropdown values
-  final dates = ['Day 1', 'Day 2', 'Day 3', 'Day 4'];
-  final venues = [
-    'NA',
-    'Dr. Bhupen Hazarika Auditorium',
-    'Mini Auditorium',
-    'Conference Hall 1',
-    'Conference Hall 2',
-    'Conference Hall 3',
-    'Conference Hall 4',
-  ];
 
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
@@ -148,8 +137,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
               ),
               const SizedBox(height: 16),
-
-              // Start Time and End Time in a Row
               Row(
                 children: [
                   Expanded(
@@ -160,7 +147,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         labelText: 'Start Time',
                         labelStyle: const TextStyle(
                           color: Colors.black87,
-                          // backgroundColor: Color(0xFFC7F7EF),
                         ),
                         hintText: 'Start time',
                         filled: true,
@@ -170,8 +156,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, true); // Open time picker for start time
+                        await _selectTime(context, true);
                       },
                     ),
                   ),
@@ -179,12 +164,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   Expanded(
                     child: TextField(
                       controller: _endTimeController,
-                      readOnly: true, // Disable manual input
+                      readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'End Time',
                         labelStyle: const TextStyle(
                           color: Colors.black87,
-                          //backgroundColor: Color(0xFFC7F7EF),
                         ),
                         hintText: 'End time',
                         filled: true,
@@ -194,15 +178,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, false); // Open time picker for end time
+                        await _selectTime(context, false);
                       },
                     ),
                   ),
                 ],
               ),
               const Spacer(),
-              // Add Button
               ElevatedButton(
                 onPressed: _addEvent,
                 style: ElevatedButton.styleFrom(
@@ -230,7 +212,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
     if (isLoading) return;
     final goRouter = GoRouter.of(context);
     if (_titleController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
         selectedVenue == null ||
         selectedDay == null ||
         startTime == null ||
