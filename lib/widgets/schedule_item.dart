@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +7,7 @@ import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/utility/functions.dart';
+import 'package:icragee_mobile/widgets/event_card.dart';
 import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +27,6 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: MyColors.whiteColor,
@@ -38,6 +36,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
@@ -48,66 +47,70 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                   ),
                 ),
               ),
-              _buildStatus(),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: _buildStatus(),
+              ),
             ],
           ),
           const SizedBox(height: 8),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.schedule_outlined, size: 17),
-              const SizedBox(width: 2),
-              Expanded(
-                child: Text(
-                  '${DateFormat('kk:mm').format(widget.event.startTime.toLocal())}'
-                  ' - ${DateFormat('kk:mm').format(widget.event.endTime.toLocal())}',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconLabel(
+                    text:
+                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                        ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
+                    icon: Icons.schedule_outlined,
                   ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const Icon(Icons.location_on_outlined, size: 17),
-              Expanded(
-                child: Text(
-                  widget.event.venue,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                  const SizedBox(height: 4),
+                  IconLabel(
+                    text: widget.event.venue,
+                    icon: Icons.location_on_outlined,
                   ),
-                ),
+                ],
               ),
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showDescription = !showDescription;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      "Check description",
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        color: MyColors.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Transform.rotate(
-                        angle: showDescription ? pi : 0,
-                        child: SvgPicture.asset(MyIcons.toggleDown, height: 18))
-                  ],
+                onTap: addEventToUser,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: MyColors.primaryColorTint,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(MyIcons.addToList),
                 ),
               ),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       showDescription = !showDescription;
+              //     });
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Text(
+              //         "Check description",
+              //         style: GoogleFonts.poppins(
+              //           fontSize: 12,
+              //           fontWeight: FontWeight.w300,
+              //           color: MyColors.primaryColor,
+              //         ),
+              //       ),
+              //       const SizedBox(width: 6),
+              //       Transform.rotate(
+              //           angle: showDescription ? pi : 0,
+              //           child: SvgPicture.asset(MyIcons.toggleDown, height: 18))
+              //     ],
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(height: 12),
-          if (showDescription)
+          if (true)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
@@ -121,30 +124,20 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: MyColors.primaryColorTint,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SvgPicture.asset(MyIcons.location),
-              ),
-              GestureDetector(
-                onTap: addEventToUser,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: MyColors.primaryColorTint,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: SvgPicture.asset(MyIcons.addToList),
-                ),
-              ),
-            ],
-          )
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Container(
+          //       padding: const EdgeInsets.all(8),
+          //       decoration: BoxDecoration(
+          //         color: MyColors.primaryColorTint,
+          //         borderRadius: BorderRadius.circular(8),
+          //       ),
+          //       child: SvgPicture.asset(MyIcons.location),
+          //     ),
+          //
+          //   ],
+          // )
         ],
       ),
     );
@@ -168,11 +161,13 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
 
   Widget _buildStatus() {
     var status = "";
-    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime =
+        getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) &&
+        endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";

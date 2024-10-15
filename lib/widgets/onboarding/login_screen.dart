@@ -61,8 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      final val =
-          await ApiService().verifyOTP(_emailController.text.trim(), _otpController.text.trim());
+      final val = await ApiService()
+          .verifyOTP(_emailController.text.trim(), _otpController.text.trim());
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");
         setState(() {
@@ -70,7 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         return;
       }
-      final userDetails = await DataService.getUserDetails(_emailController.text.trim());
+      final userDetails =
+          await DataService.getUserDetails(_emailController.text.trim());
       Provider.of<UserProvider>(navigatorKey.currentContext!, listen: false)
           .setUserDetails(userDetails);
       while (navigatorKey.currentContext!.canPop()) {
@@ -125,7 +126,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 color: Colors.black.withOpacity(0.3),
                 child: const Center(
-                  child: CircularProgressIndicator(color: MyColors.primaryColor),
+                  child:
+                      CircularProgressIndicator(color: MyColors.primaryColor),
                 ),
               ),
             ),
@@ -143,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           CustomTextField(
             controller: _emailController,
-            label: 'Username',
+            label: 'Email',
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 16),
@@ -159,7 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: GestureDetector(
               onTap: otpSent ? _verifyOTP : _sendOTP,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),

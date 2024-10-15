@@ -5,7 +5,9 @@ import 'package:icragee_mobile/shared/colors.dart';
 class ScheduleTabDays extends StatelessWidget {
   final int selectedDay;
   final Function(int) onDaySelected;
-  const ScheduleTabDays({super.key, required this.selectedDay, required this.onDaySelected});
+
+  const ScheduleTabDays(
+      {super.key, required this.selectedDay, required this.onDaySelected});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +26,15 @@ class ScheduleTabDays extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              3,
+              4,
               (index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () => onDaySelected(index + 1),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: ShapeDecoration(
                         color: selectedDay == index + 1
                             ? MyColors.whiteColor
@@ -87,7 +90,8 @@ class _PinnedRowDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => maxHeight > minHeight ? maxHeight : minHeight;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return SizedBox.expand(child: child);
   }
 
