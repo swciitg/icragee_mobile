@@ -1,4 +1,5 @@
 # Miscellaneous
+buildAppbundle.ps1
 *.class
 *.log
 *.pyc
