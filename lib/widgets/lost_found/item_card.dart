@@ -13,18 +13,18 @@ class ItemCard extends StatelessWidget {
   final bool isLost;
 
   const ItemCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.location,
     required this.time,
     required this.imageFile,
     required this.isLost,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
         color: MyColors.whiteColor,
         borderRadius: BorderRadius.circular(20),

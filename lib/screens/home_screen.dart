@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBottomBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       decoration: const BoxDecoration(
         color: MyColors.primaryColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -58,18 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 pageController.jumpToPage(index);
               } else {
                 pageController.animateToPage(index,
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.easeIn);
+                    duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
               }
               selectedIndex = index;
             }),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: SvgPicture.asset(
-                index == selectedIndex
-                    ? tab.selectedIconPath
-                    : tab.unselectedIconPath,
-                height: 24,
+                index == selectedIndex ? tab.selectedIconPath : tab.unselectedIconPath,
+                height: 28,
               ),
             ),
           );

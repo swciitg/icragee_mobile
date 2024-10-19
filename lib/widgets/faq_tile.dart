@@ -1,6 +1,6 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/faq.dart';
-import 'package:icragee_mobile/shared/colors.dart';
 
 class FaqTile extends StatefulWidget {
   final FaqContent faq;
@@ -19,11 +19,18 @@ class _FaqTileState extends State<FaqTile> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: double.infinity,
-      padding: const EdgeInsets.all(15.0),
-      margin: const EdgeInsets.symmetric(vertical: 3.0),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +41,7 @@ class _FaqTileState extends State<FaqTile> {
               Text(
                 widget.faq.question,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -45,15 +52,16 @@ class _FaqTileState extends State<FaqTile> {
                   });
                 },
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: MyColors.secondaryColor,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Icon(
-                      isClicked ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.white,
+                  child: Transform.rotate(
+                    angle: isClicked ? pi / 2 : -pi / 2,
+                    child: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 16,
                     ),
                   ),
                 ),
@@ -64,12 +72,13 @@ class _FaqTileState extends State<FaqTile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(color: Colors.grey), // This is the divider
+                const SizedBox(height: 8),
                 Text(
                   widget.faq.answer,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
+                    color: Color(0xff1C1C1C),
                   ),
                 ),
               ],

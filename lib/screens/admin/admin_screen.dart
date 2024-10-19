@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/day_button.dart';
 import '../../widgets/event_card.dart';
@@ -43,14 +45,12 @@ class _HomeScreenState extends State<AdminScreen> {
     },
     {
       'title': 'Networking Event',
-      'message':
-          'The networking event is starting at the main hall. See you there!',
+      'message': 'The networking event is starting at the main hall. See you there!',
       'time': '2024-10-16 03:00 PM',
     },
     {
       'title': 'Event Survey',
-      'message':
-          'Please take a moment to fill out the event survey. Your feedback matters!',
+      'message': 'Please take a moment to fill out the event survey. Your feedback matters!',
       'time': '2024-10-16 05:00 PM',
     },
   ];
@@ -70,15 +70,21 @@ class _HomeScreenState extends State<AdminScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 4),
+                      padding: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Welcome Back!',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                           GestureDetector(
+                            onTap: () async {
+                              final prefs = await SharedPreferences.getInstance();
+                              prefs.clear();
+                              while (navigatorKey.currentContext!.canPop()) {
+                                navigatorKey.currentContext!.pop();
+                              }
+                              navigatorKey.currentContext!.push("/get-started");
+                            },
                             child: const Icon(
                               Icons.logout_rounded,
                               color: Colors.black,
@@ -208,21 +214,16 @@ class _HomeScreenState extends State<AdminScreen> {
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return Container(
                             color: MyColors.backgroundColor,
-                            child:
-                                const Center(child: Text('No events found')));
+                            child: const Center(child: Text('No events found')));
                       } else {
                         List<Event> events = snapshot.data!;
                         return Container(
-                          decoration: const BoxDecoration(
-                              color: MyColors.backgroundColor),
+                          decoration: const BoxDecoration(color: MyColors.backgroundColor),
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    15,
-                                    index == 0 ? 15 : 0,
-                                    15,
+                                padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
                                     index == events.length - 1 ? 100 : 12),
                                 child: EventCard(
                                     event: events[index],
@@ -250,11 +251,11 @@ class _HomeScreenState extends State<AdminScreen> {
           if (_eventsSelected) {
             context.push('/addEventScreen');
           } else {
-            // Action to add a notification
+            context.push('/addNotificationScreen');
           }
         },
         label: Text(
-          _eventsSelected ? 'Add Events' : 'Add Notifications',
+          _eventsSelected ? 'Add Event' : 'Add Notification',
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -276,8 +277,8 @@ class _HomeScreenState extends State<AdminScreen> {
           itemBuilder: (context, index) {
             final notification = notifications[index];
             return Padding(
-              padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
-                  index == notifications.length - 1 ? 100 : 12),
+              padding: EdgeInsets.fromLTRB(
+                  15, index == 0 ? 15 : 0, 15, index == notifications.length - 1 ? 100 : 12),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -292,8 +293,7 @@ class _HomeScreenState extends State<AdminScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

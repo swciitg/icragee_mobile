@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:icragee_mobile/providers/user_provider.dart';
+import 'package:icragee_mobile/models/user_details.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
@@ -9,7 +11,6 @@ import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/custom_text_field.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -56,13 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _verifyOTP() async {
+  void _verifyOTP(WidgetRef ref) async {
     setState(() {
       loading = true;
     });
     try {
-      final val = await ApiService()
-          .verifyOTP(_emailController.text.trim(), _otpController.text.trim());
+      final val =
+          await ApiService().verifyOTP(_emailController.text.trim(), _otpController.text.trim());
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");
         setState(() {
@@ -70,16 +71,16 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         return;
       }
-      final userDetails =
-          await DataService.getUserDetails(_emailController.text.trim());
-      Provider.of<UserProvider>(navigatorKey.currentContext!, listen: false)
-          .setUserDetails(userDetails);
+      final userDetails = await UserDetails.getFromSharedPreferences();
+      await DataService.updateUserDetails(userDetails!);
+      ref.read(userProvider.notifier).setUserDetails(userDetails);
       while (navigatorKey.currentContext!.canPop()) {
         navigatorKey.currentContext!.pop();
       }
       navigatorKey.currentContext!.push('/homeScreen');
       return;
     } catch (e) {
+      debugPrint(e.toString());
       showSnackBar("Something went wrong, Please try again");
     }
     setState(() {
@@ -126,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 color: Colors.black.withOpacity(0.3),
                 child: const Center(
-                  child:
-                      CircularProgressIndicator(color: MyColors.primaryColor),
+                  child: CircularProgressIndicator(color: MyColors.primaryColor),
                 ),
               ),
             ),
@@ -158,24 +158,25 @@ class _LoginScreenState extends State<LoginScreen> {
           if (otpSent) const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: otpSent ? _verifyOTP : _sendOTP,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  otpSent ? "Next" : "Send OTP",
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+            child: Consumer(builder: (context, ref, child) {
+              return GestureDetector(
+                onTap: otpSent ? () => _verifyOTP(ref) : () => _sendOTP(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    otpSent ? "Next" : "Send OTP",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         ],
       ),

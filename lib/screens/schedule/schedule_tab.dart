@@ -59,8 +59,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
             onDaySelected: (val) {
               setState(() {
                 selectedDay = val;
-                calendarController.displayDate =
-                    dayOneDate.add(Duration(days: val - 1));
+                calendarController.displayDate = dayOneDate.add(Duration(days: val - 1));
               });
             },
           ),
@@ -138,8 +137,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
             if (details.draggingTime == null) return;
             setState(() {
               selectedDay = details.draggingTime!.day - 7;
-              calendarController.displayDate =
-                  DateTime(2024, 10, 07 + selectedDay);
+              calendarController.displayDate = DateTime(2024, 10, 07 + selectedDay);
             });
           },
           onViewChanged: (viewChangedDetails) {
@@ -180,8 +178,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsets.only(
-            top: index == 0 ? 10 : 0,
-            bottom: index == schedules.length - 1 ? 20 : 0),
+            top: index == 0 ? 10 : 0, bottom: index == schedules.length - 1 ? 20 : 0),
         child: EventScheduleTile(event: schedules[index]),
       ),
     );

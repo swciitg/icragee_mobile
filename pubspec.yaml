@@ -56,7 +56,9 @@ dependencies:
   image_picker: ^1.1.2
   syncfusion_flutter_calendar: ^27.1.50
   loading_animation_widget: ^1.2.1
-  provider: ^6.1.2
+  timeago: ^3.7.0
+  url_launcher: ^6.3.1
+  flutter_riverpod: ^2.5.3
 
 dev_dependencies:
   flutter_test:

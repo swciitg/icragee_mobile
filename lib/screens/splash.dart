@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
-class SplashScreen extends StatefulWidget {
+import '../controllers/user_controller.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
   late Animation animation;
   late AnimationController controller;
+
+  void initDependencies() {}
 
   @override
   void initState() {
@@ -30,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             if (user == null) {
               goRouter('/get-started');
             } else {
+              ref.read(userProvider.notifier).setUserDetails(user);
               goRouter('/homeScreen');
             }
           }

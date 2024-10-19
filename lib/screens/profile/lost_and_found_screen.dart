@@ -8,8 +8,10 @@ import '../../shared/colors.dart';
 import '../../widgets/lost_found/item_card.dart';
 
 class LostAndFoundScreen extends StatefulWidget {
+  const LostAndFoundScreen({super.key});
+
   @override
-  _LostAndFoundScreenState createState() => _LostAndFoundScreenState();
+  State<LostAndFoundScreen> createState() => _LostAndFoundScreenState();
 }
 
 class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
@@ -87,13 +89,9 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
   // Function to filter items based on the selected tab
   List<Map<String, dynamic>> getFilteredItems() {
     if (selected == 1) {
-      return items
-          .where((item) => item['isLost'] == true)
-          .toList(); // Lost Items
+      return items.where((item) => item['isLost'] == true).toList(); // Lost Items
     } else if (selected == 2) {
-      return items
-          .where((item) => item['isLost'] == false)
-          .toList(); // Found Items
+      return items.where((item) => item['isLost'] == false).toList(); // Found Items
     } else {
       // For "My Ads", you can add your own logic to filter based on user ads
       return items; // For now, return all items as a placeholder
@@ -105,11 +103,11 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title: Text('Lost and Found'),
+        title: const Text('Lost and Found'),
         backgroundColor: MyColors.backgroundColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -130,12 +128,9 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     _getItems(); // Update items when tab is switched
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: ShapeDecoration(
-                      color: selected == 1
-                          ? MyColors.whiteColor
-                          : MyColors.primaryColorTint,
+                      color: selected == 1 ? MyColors.whiteColor : MyColors.primaryColorTint,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -159,7 +154,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -168,12 +163,9 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     _getItems(); // Update items when tab is switched
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: ShapeDecoration(
-                      color: selected == 2
-                          ? MyColors.whiteColor
-                          : MyColors.primaryColorTint,
+                      color: selected == 2 ? MyColors.whiteColor : MyColors.primaryColorTint,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -197,7 +189,7 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -206,12 +198,9 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                     _getItems(); // Update items when tab is switched
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: ShapeDecoration(
-                      color: selected == 3
-                          ? MyColors.whiteColor
-                          : MyColors.primaryColorTint,
+                      color: selected == 3 ? MyColors.whiteColor : MyColors.primaryColorTint,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -238,19 +227,18 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: itemStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text("No items found"));
+                  return const Center(child: Text("No items found"));
                 }
                 final items = snapshot.data!.docs;
                 return ListView(

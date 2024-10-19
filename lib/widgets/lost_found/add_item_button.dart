@@ -8,9 +8,9 @@ import '../../shared/colors.dart';
 
 class AddItemButton extends StatefulWidget {
   const AddItemButton({
-    Key? key,
+    super.key,
     required this.type,
-  }) : super(key: key);
+  });
 
   final String type;
 
@@ -66,7 +66,7 @@ class _AddItemButtonState extends State<AddItemButton> {
           // Check the image size
           var imageSize = (await xFile!.length()) / (1024 * 1024); // MB
           if (imageSize > 2.5) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text(
                 "Maximum image size can be 2.5 MB",
                 style: TextStyle(fontSize: 20),
@@ -84,7 +84,7 @@ class _AddItemButtonState extends State<AddItemButton> {
             ));
           } else if (widget.type == "Found") {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => FoundItemForm()));
+                MaterialPageRoute(builder: (context) => const FoundItemForm()));
           }
         }
       },
