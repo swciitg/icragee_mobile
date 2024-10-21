@@ -39,7 +39,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
           _buildUserDetails(),
           Container(
             margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               color: MyColors.whiteColor,
               borderRadius: BorderRadius.circular(12),
@@ -180,58 +180,41 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         children: [
           SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Row(
               children: [
-                Container(
-                  height: 140,
-                  width: 140,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: MyColors.primaryColorTint,
-                      width: 4,
-                    ),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Text(
-                  user.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                IconButton(
+                  onPressed: () {
+                    navigatorKey.currentContext!.pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
                     color: MyColors.whiteColor,
                   ),
                 ),
-                Text(
-                  user.email.split('@').first,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: MyColors.whiteColor,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.fullName,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.whiteColor,
+                      ),
+                    ),
+                    Text(
+                      user.email.split('@').first,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: MyColors.whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
               ],
             ),
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            child: IconButton(
-              onPressed: () {
-                navigatorKey.currentContext!.pop();
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: MyColors.whiteColor,
-              ),
-            ),
-          )
         ],
       ),
     );

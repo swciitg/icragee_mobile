@@ -18,9 +18,8 @@ class DataService {
   // Method to fetch emergency contacts by category from Firestore
   static Future<List<ContactModel>> fetchImportantContacts() async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('important_contacts')
-          .get();
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('important_contacts').get();
 
       // Convert each document into a Contact object
       List<ContactModel> contacts = querySnapshot.docs.map((doc) {

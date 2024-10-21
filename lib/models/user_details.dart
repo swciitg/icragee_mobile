@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDetails {
   final String id;
-  final String name;
+  final Name name;
   final String title;
   final String designation;
   final String institution;
@@ -15,6 +15,8 @@ class UserDetails {
   final String contact;
   final List<String> eventList;
   final String? fcmToken;
+
+  String get fullName => name.fullName;
 
   const UserDetails({
     required this.id,
@@ -35,7 +37,7 @@ class UserDetails {
     final name = Name.fromJson(json['name'] as Map<String, dynamic>);
     return UserDetails(
       id: json[id],
-      name: name.fullName,
+      name: name,
       title: json['title'],
       designation: json['designation'],
       institution: json['institution'],
@@ -50,9 +52,9 @@ class UserDetails {
   }
 
   Map<String, dynamic> toJson({bool eventList = false}) {
-    final data = <String, dynamic>{
+    final data = {
       'id': id,
-      'name': name,
+      'name': name.toJson(),
       'title': title,
       'designation': designation,
       'institution': institution,
@@ -86,7 +88,7 @@ class UserDetails {
 
   UserDetails copyWith({
     String? id,
-    String? name,
+    Name? name,
     String? title,
     String? designation,
     String? institution,
@@ -135,4 +137,12 @@ class Name {
   }
 
   String get fullName => "$first ${middle.isEmpty ? "" : "$middle "}$last";
+
+  Map<String, dynamic> toJson() {
+    return {
+      'first': first,
+      'middle': middle,
+      'last': last,
+    };
+  }
 }

@@ -17,52 +17,7 @@ class HomeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        scrolledUnderElevation: 0,
-        backgroundColor: MyColors.primaryColor,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(24),
-          ),
-        ),
-        title: Consumer(builder: (context, ref, child) {
-          final user = ref.read(userProvider)!;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                "Hello,",
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: MyColors.whiteColor.withOpacity(0.8),
-                ),
-              ),
-              Text(
-                user.name,
-                style: GoogleFonts.poppins(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: MyColors.whiteColor,
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-          );
-        }),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
-            },
-            icon: Image.asset(MyIcons.homeProfile, height: 36),
-          ),
-          const SizedBox(width: 4)
-        ],
-      ),
+      appBar: _buildAppBar(context),
       body: ListView(
         padding: EdgeInsets.zero,
         physics: const BouncingScrollPhysics(),
@@ -115,6 +70,7 @@ class HomeTab extends StatelessWidget {
                     return ListView.builder(
                       itemCount: notifications.length,
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final noti = notifications[index];
                         final timeAgo = timeago.format(DateTime.parse(noti.timestamp).toLocal(),
@@ -129,6 +85,55 @@ class HomeTab extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      scrolledUnderElevation: 0,
+      backgroundColor: MyColors.primaryColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(24),
+        ),
+      ),
+      title: Consumer(builder: (context, ref, child) {
+        final user = ref.read(userProvider)!;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              "Hello,",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: MyColors.whiteColor.withOpacity(0.8),
+              ),
+            ),
+            Text(
+              user.fullName,
+              style: GoogleFonts.poppins(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: MyColors.whiteColor,
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        );
+      }),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
+          },
+          icon: Image.asset(MyIcons.homeProfile, height: 36),
+        ),
+        const SizedBox(width: 4)
+      ],
     );
   }
 }

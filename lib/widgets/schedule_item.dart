@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
@@ -61,8 +63,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconLabel(
-                    text:
-                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                    text: '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
                         ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                     icon: Icons.schedule_outlined,
                   ),
@@ -73,17 +74,20 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: addEventToUser,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: MyColors.primaryColorTint,
-                    borderRadius: BorderRadius.circular(8),
+              Consumer(builder: (context, ref, child) {
+                final email = ref.read(userProvider)!.email;
+                return GestureDetector(
+                  onTap: () => addEventToUser(email),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: MyColors.primaryColorTint,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SvgPicture.asset(MyIcons.addToList),
                   ),
-                  child: SvgPicture.asset(MyIcons.addToList),
-                ),
-              ),
+                );
+              }),
               // GestureDetector(
               //   onTap: () {
               //     setState(() {
@@ -142,11 +146,10 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
     );
   }
 
-  void addEventToUser() async {
+  void addEventToUser(String email) async {
     try {
-      // TODO: remove email hardcoding
       await DataService.addEventToUser(
-        "venkylm10@gmail.com",
+        email,
         widget.event.id,
       );
       await FirebaseMessaging.instance.subscribeToTopic(widget.event.id);
@@ -160,13 +163,11 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
 
   Widget _buildStatus() {
     var status = "";
-    final startTime =
-        getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) &&
-        endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";
