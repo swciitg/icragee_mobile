@@ -8,7 +8,7 @@ class LostItemForm extends StatefulWidget {
   static const id = "/lostItemForm";
   final XFile imageFile;
 
-  const LostItemForm({Key? key, required this.imageFile}) : super(key: key);
+  const LostItemForm({super.key, required this.imageFile});
 
   @override
   State<LostItemForm> createState() => _LostItemFormState();

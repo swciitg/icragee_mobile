@@ -8,6 +8,8 @@ class ApiService {
   final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   Future<void> sendOTP(String email) async {
+    // TODO: newadmin instead user for admin login
+    // Error 'Admin not found' in message
     try {
       await dio.post('/user/send-otp', data: {'email': email});
     } catch (e) {

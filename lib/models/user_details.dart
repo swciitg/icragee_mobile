@@ -32,10 +32,10 @@ class UserDetails {
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json, {String id = 'id'}) {
-    //TODO: Implement, once response is jsonEncoded
+    final name = Name.fromJson(json['name'] as Map<String, dynamic>);
     return UserDetails(
       id: json[id],
-      name: "Name",
+      name: name.fullName,
       title: json['title'],
       designation: json['designation'],
       institution: json['institution'],
@@ -128,11 +128,11 @@ class Name {
 
   factory Name.fromJson(Map<String, dynamic> json) {
     return Name(
-      first: json['first'],
-      middle: json['middle'],
-      last: json['last'],
+      first: json['first'].toString(),
+      middle: json['middle'].toString(),
+      last: json['last'].toString(),
     );
   }
 
-  String get fullName => first + (middle.isEmpty ? " " : middle) + last;
+  String get fullName => "$first ${middle.isEmpty ? "" : "$middle "}$last";
 }
