@@ -252,14 +252,19 @@ class _AddEventScreenState extends State<AddEventScreen> {
         day: selectedDay!,
       );
 
-      final id = await DataService.addEvent(newEvent);
+      final eventId = await DataService.addEvent(newEvent);
       showSnackBar("Event added successfully");
-      if (id == null) {
+      if (eventId == null) {
         showSnackBar("Failed to add event. Please try again.");
         return;
       }
-      await ApiService()
-          .scheduleEvent(id, newEvent.startTime.toUtc().toString());
+      await ApiService().scheduleTopicNotification(
+        topic: eventId,
+        time: newEvent.startTime,
+        title: "Event starting soon!",
+        body: "'${newEvent.title}' event is about to start in 15 minutes! "
+            "Please report to ${newEvent.venue}.",
+      );
     } catch (e) {
       showSnackBar("Failed to add event. Please try again.");
     } finally {

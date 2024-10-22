@@ -4,11 +4,11 @@ import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/admin/event_card.dart';
+import 'package:icragee_mobile/widgets/admin/notifications_page.dart';
+import 'package:icragee_mobile/widgets/day_button.dart';
+import 'package:icragee_mobile/widgets/tab_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../widgets/day_button.dart';
-import '../../widgets/event_card.dart';
-import '../../widgets/tab_button.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -27,34 +27,6 @@ class _HomeScreenState extends State<AdminScreen> {
     super.initState();
   }
 
-  List<Map<String, String>> notifications = [
-    {
-      'title': 'Event Reminder',
-      'message': 'Don\'t forget to attend the annual tech conference tomorrow!',
-      'time': '2024-10-16 09:00 AM',
-    },
-    {
-      'title': 'Workshop Registration',
-      'message': 'Your spot is confirmed for the Flutter workshop today.',
-      'time': '2024-10-16 11:00 AM',
-    },
-    {
-      'title': 'Session Starting Soon',
-      'message': 'The keynote session will start in 30 minutes. Join us!',
-      'time': '2024-10-16 01:30 PM',
-    },
-    {
-      'title': 'Networking Event',
-      'message': 'The networking event is starting at the main hall. See you there!',
-      'time': '2024-10-16 03:00 PM',
-    },
-    {
-      'title': 'Event Survey',
-      'message': 'Please take a moment to fill out the event survey. Your feedback matters!',
-      'time': '2024-10-16 05:00 PM',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,15 +42,18 @@ class _HomeScreenState extends State<AdminScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 4),
+                      padding: const EdgeInsets.only(
+                          left: 20, top: 10, right: 20, bottom: 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Welcome Back!',
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold)),
                           GestureDetector(
                             onTap: () async {
-                              final prefs = await SharedPreferences.getInstance();
+                              final prefs =
+                                  await SharedPreferences.getInstance();
                               prefs.clear();
                               while (navigatorKey.currentContext!.canPop()) {
                                 navigatorKey.currentContext!.pop();
@@ -214,16 +189,21 @@ class _HomeScreenState extends State<AdminScreen> {
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return Container(
                             color: MyColors.backgroundColor,
-                            child: const Center(child: Text('No events found')));
+                            child:
+                                const Center(child: Text('No events found')));
                       } else {
                         List<Event> events = snapshot.data!;
                         return Container(
-                          decoration: const BoxDecoration(color: MyColors.backgroundColor),
+                          decoration: const BoxDecoration(
+                              color: MyColors.backgroundColor),
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
+                                padding: EdgeInsets.fromLTRB(
+                                    15,
+                                    index == 0 ? 15 : 0,
+                                    15,
                                     index == events.length - 1 ? 100 : 12),
                                 child: EventCard(
                                     event: events[index],
@@ -239,8 +219,11 @@ class _HomeScreenState extends State<AdminScreen> {
                   ),
                 ),
               ] else ...[
+                const SizedBox(height: 10),
                 // Notifications Page UI
-                _buildNotificationsPage(),
+                const Expanded(
+                  child: SingleChildScrollView(child: NotificationsPage()),
+                ),
               ],
             ],
           ),
@@ -265,65 +248,6 @@ class _HomeScreenState extends State<AdminScreen> {
         backgroundColor: MyColors.primaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  Widget _buildNotificationsPage() {
-    return Expanded(
-      child: Container(
-        color: MyColors.backgroundColor,
-        child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            final notification = notifications[index];
-            return Padding(
-              padding: EdgeInsets.fromLTRB(
-                  15, index == 0 ? 15 : 0, 15, index == notifications.length - 1 ? 100 : 12),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(28, 28, 28, 0.2),
-                      offset: Offset(0, 4),
-                      blurRadius: 16,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            notification['title']!,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            notification['time']!,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(notification['message']!),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
     );
   }
 }

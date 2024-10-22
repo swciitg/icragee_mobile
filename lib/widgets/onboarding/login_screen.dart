@@ -1,9 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
@@ -24,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _otpController;
   var otpSent = false;
   var loading = false;
-  
 
   @override
   void initState() {
@@ -63,8 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      final val =
-          await ApiService().verifyOTP(_emailController.text.trim(), _otpController.text.trim());
+      final val = await ApiService()
+          .verifyOTP(_emailController.text.trim(), _otpController.text.trim());
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");
         setState(() {
@@ -77,6 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ref.read(userProvider.notifier).setUserDetails(userDetails);
       while (navigatorKey.currentContext!.canPop()) {
         navigatorKey.currentContext!.pop();
+      }
+      for (int i = 0; i < userDetails.eventList.length; i++) {
+        await FirebaseMessaging.instance
+            .subscribeToTopic(userDetails.eventList[i]);
       }
       navigatorKey.currentContext!.push('/homeScreen');
       return;
@@ -128,7 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 color: Colors.black.withOpacity(0.3),
                 child: const Center(
-                  child: CircularProgressIndicator(color: MyColors.primaryColor),
+                  child:
+                      CircularProgressIndicator(color: MyColors.primaryColor),
                 ),
               ),
             ),
@@ -163,7 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
               return GestureDetector(
                 onTap: otpSent ? () => _verifyOTP(ref) : () => _sendOTP(),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/notification_model.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -32,18 +33,26 @@ class NotificationCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(noti.title)),
+              Expanded(
+                  child: Text(
+                noti.title,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              )),
               const SizedBox(width: 8),
               if (noti.important)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: Colors.red,
-                        width: 1.5,
+                        width: 1.2,
                       ),
                     ),
                     child: Row(
@@ -57,23 +66,38 @@ class NotificationCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Text("Important"),
+                        Text(
+                          "Important",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff1C1C1C),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               Text(
                 timeAgo,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
                   fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey[600],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(noti.description),
+          Text(
+            noti.description,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xff1C1C1C),
+            ),
+          ),
         ],
       ),
     );

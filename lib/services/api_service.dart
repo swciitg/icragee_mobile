@@ -39,11 +39,18 @@ class ApiService {
     }
   }
 
-  Future<void> scheduleEvent(String eventId, String time) async {
+  Future<void> scheduleTopicNotification({
+    required String topic,
+    required DateTime time,
+    required String title,
+    required String body,
+  }) async {
     try {
       await dio.post('/notification/createEvent', data: {
-        'topic': eventId,
-        'time': time,
+        'topic': topic,
+        'time': time.toUtc().toString(),
+        'title': title,
+        'body': body,
       });
     } catch (e) {
       debugPrint("Error scheduling event: $e");

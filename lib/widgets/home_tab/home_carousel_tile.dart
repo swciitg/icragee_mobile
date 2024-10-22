@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/admin/event_card.dart';
 import 'package:intl/intl.dart';
 
 class HomeCarouselTile extends StatefulWidget {
   final Event event;
-
 
   const HomeCarouselTile({
     super.key,
@@ -17,67 +18,53 @@ class HomeCarouselTile extends StatefulWidget {
 }
 
 class _HomeCarouselTileState extends State<HomeCarouselTile> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width - 24,
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 20),
+      clipBehavior: Clip.none,
       decoration: BoxDecoration(
         color: MyColors.whiteColor,
         borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(28, 28, 28, 0.2),
+            offset: Offset(0, 4),
+            blurRadius: 14,
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.event.title,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            "Speaker Name: Speaker",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
-            ),
+          IconLabel(
+              text:
+                  '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                  ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
+              icon: Icons.access_time),
+          const SizedBox(height: 8),
+          IconLabel(
+            text: widget.event.venue,
+            icon: Icons.location_on,
           ),
+          const SizedBox(height: 10),
+          Expanded(child: Container()),
           Text(
             widget.event.description,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 14,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(Icons.access_time_outlined),
-                const SizedBox(width: 5),
-                Text(
-                  DateFormat('k:mm').format(widget.event.startTime),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                const SizedBox(width: 15),
-                const Icon(Icons.location_on_outlined),
-                const SizedBox(width: 5),
-                Text(
-                  widget.event.venue,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
+              fontWeight: FontWeight.w400,
+              color: const Color(0xff1C1C1C),
             ),
           ),
         ],

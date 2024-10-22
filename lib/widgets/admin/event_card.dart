@@ -7,7 +7,7 @@ import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
 
-import '../screens/edit_event_screen.dart';
+import '../../screens/edit_event_screen.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
@@ -24,8 +24,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  // bool _isExpanded = false;
-
   late String _currentStatus;
 
   @override
@@ -48,12 +46,6 @@ class _EventCardState extends State<EventCard> {
       return 'Finished';
     }
   }
-
-  // void _toggleDescription() {
-  //   setState(() {
-  //     _isExpanded = !_isExpanded;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

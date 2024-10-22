@@ -9,7 +9,7 @@ import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/utility/functions.dart';
-import 'package:icragee_mobile/widgets/event_card.dart';
+import 'package:icragee_mobile/widgets/admin/event_card.dart';
 import 'package:icragee_mobile/widgets/event_status_chip.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +33,13 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
       decoration: BoxDecoration(
         color: MyColors.whiteColor,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(28, 28, 28, 0.2),
+            offset: Offset(0, 4),
+            blurRadius: 14,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +70,8 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconLabel(
-                    text: '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                    text:
+                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
                         ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                     icon: Icons.schedule_outlined,
                   ),
@@ -163,11 +171,13 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
 
   Widget _buildStatus() {
     var status = "";
-    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime =
+        getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) &&
+        endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";
