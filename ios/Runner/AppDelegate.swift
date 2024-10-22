@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import GoogleMaps
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -14,7 +15,7 @@ import UIKit
           let values = decoded.components(separatedBy: "=")
           dartDefinesDictionary[values[0]] = values[1]
       }
-   GMSServices.provideAPIKey(dartDefinesDictionary["GMAP_KEY"] as? String ?? "")
+    GMSServices.provideAPIKey(dartDefinesDictionary["GMAP_KEY"] as? String ?? "")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
