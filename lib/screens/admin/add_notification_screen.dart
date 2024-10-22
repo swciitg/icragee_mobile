@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/notification_model.dart';
+import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
@@ -129,7 +130,6 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
     if (!valid) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please fill all fields'),
-        backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
       ));
       return;
@@ -149,17 +149,21 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
     );
     try {
       await DataService.addNotification(notification);
+      await ApiService.scheduleTopicNotification(
+        topic: 'All',
+        time: DateTime.now().add(const Duration(minutes: 16)),
+        title: notification.title,
+        body: notification.description,
+      );
       navigatorKey.currentContext!.pop();
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
         content: Text('Notification added successfully'),
-        backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: 2),
       ));
     } catch (e) {
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
         content: Text('Failed to add notification'),
-        backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
       ));
     }

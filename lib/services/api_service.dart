@@ -5,11 +5,11 @@ import 'package:icragee_mobile/models/user_details.dart';
 
 class ApiService {
   static const baseUrl = "https://event.iitg.ac.in/8icragee/api";
-  final dio = Dio(BaseOptions(baseUrl: baseUrl));
+  static final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
-  Future<void> sendOTP(String email) async {
-    // TODO: newadmin instead user for admin login
-    // Error 'Admin not found' in message
+  static Future<void> sendOTP(String email) async {
+    // TODO: admin endpoint: /admin/send-otp
+    // Error if user is not admin 'Admin not found' in message
     try {
       await dio.post('/user/send-otp', data: {'email': email});
     } catch (e) {
@@ -18,7 +18,8 @@ class ApiService {
     }
   }
 
-  Future<bool> verifyOTP(String email, String otp) async {
+  static Future<bool> verifyOTP(String email, String otp) async {
+    // TODO: admin endpoint: /admin/verify-otp
     try {
       final res = await dio.post('/user/verify-otp', data: {
         'email': email,
@@ -39,7 +40,7 @@ class ApiService {
     }
   }
 
-  Future<void> scheduleTopicNotification({
+  static Future<void> scheduleTopicNotification({
     required String topic,
     required DateTime time,
     required String title,

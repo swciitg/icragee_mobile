@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,6 +39,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     _pageController = PageController();
     super.initState();
+    FirebaseMessaging.instance.subscribeToTopic('All');
   }
 
   @override

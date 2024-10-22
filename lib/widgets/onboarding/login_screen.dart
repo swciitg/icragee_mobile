@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      await ApiService().sendOTP(_emailController.text.trim());
+      await ApiService.sendOTP(_emailController.text.trim());
       showSnackBar("OTP sent successfully to: ${_emailController.text.trim()}");
       setState(() {
         otpSent = true;
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      final val = await ApiService()
+      final val = await ApiService
           .verifyOTP(_emailController.text.trim(), _otpController.text.trim());
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");

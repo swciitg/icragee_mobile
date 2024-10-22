@@ -195,10 +195,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(
-                        color: Colors.white, size: 32)
-                    : const Text('Submit',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
+                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -258,7 +256,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         showSnackBar("Failed to add event. Please try again.");
         return;
       }
-      await ApiService().scheduleTopicNotification(
+      await ApiService.scheduleTopicNotification(
         topic: eventId,
         time: newEvent.startTime,
         title: "Event starting soon!",
@@ -299,12 +297,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text =
-              pickedTime.format(context); // Update the start time field
+          _startTimeController.text = pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text =
-              pickedTime.format(context); // Update the end time field
+          _endTimeController.text = pickedTime.format(context); // Update the end time field
         }
       });
     }

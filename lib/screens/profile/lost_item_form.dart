@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -64,8 +65,7 @@ class _LostItemFormState extends State<LostItemForm> {
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _location,
-                      decoration:
-                          const InputDecoration(labelText: 'Location Lost'),
+                      decoration: const InputDecoration(labelText: 'Location Lost'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter the location';
@@ -76,8 +76,7 @@ class _LostItemFormState extends State<LostItemForm> {
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _contactNumber,
-                      decoration:
-                          const InputDecoration(labelText: 'Contact Number'),
+                      decoration: const InputDecoration(labelText: 'Contact Number'),
                       keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -92,9 +91,7 @@ class _LostItemFormState extends State<LostItemForm> {
                       decoration: const InputDecoration(labelText: 'Email'),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            !value.contains('@')) {
+                        if (value == null || value.isEmpty || !value.contains('@')) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -103,8 +100,7 @@ class _LostItemFormState extends State<LostItemForm> {
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _description,
-                      decoration:
-                          const InputDecoration(labelText: 'Description'),
+                      decoration: const InputDecoration(labelText: 'Description'),
                       maxLines: 3,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -133,6 +129,7 @@ class _LostItemFormState extends State<LostItemForm> {
 
           try {
             // Call the postLostFoundData method from the LostAndFoundService class
+            final user = await UserDetails.getFromSharedPreferences();
             await DataService.postLostFoundData(
               category: "Lost",
               title: _title.text.trim(),
@@ -140,8 +137,8 @@ class _LostItemFormState extends State<LostItemForm> {
               location: _location.text.trim(),
               contact: _contactNumber.text.trim(),
               image: widget.imageFile,
-              name: "your name",
-              email: "Your Email", // Replace with actual user data
+              name: user!.fullName,
+              email: user.email,
             );
 
             ScaffoldMessenger.of(context).showSnackBar(
