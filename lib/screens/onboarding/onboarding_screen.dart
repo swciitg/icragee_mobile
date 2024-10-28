@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           _nextButton(),
-          if (_currentPage != 0) _backButton()
+          _backButton()
         ],
       ),
     );
@@ -162,7 +162,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   width: 6,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: _currentPage == index ? MyColors.secondaryColor : Colors.white,
+                    color: _currentPage == index
+                        ? MyColors.secondaryColor
+                        : Colors.white,
                     shape: BoxShape.circle,
                   ),
                 );
@@ -205,6 +207,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       top: kToolbarHeight,
       child: IconButton(
         onPressed: () {
+          if (_currentPage == 0) context.pop();
           _pageController.previousPage(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOutCubic,

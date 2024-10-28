@@ -63,8 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      final val = await ApiService
-          .verifyOTP(_emailController.text.trim(), _otpController.text.trim());
+      final val = await ApiService.verifyOTP(
+          _emailController.text.trim(), _otpController.text.trim());
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");
         setState(() {
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await FirebaseMessaging.instance
             .subscribeToTopic(userDetails.eventList[i]);
       }
-      navigatorKey.currentContext!.push('/homeScreen');
+      navigatorKey.currentContext!.pushReplacement('/homeScreen');
       return;
     } catch (e) {
       debugPrint(e.toString());

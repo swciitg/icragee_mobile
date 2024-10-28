@@ -45,7 +45,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(title: const Text('Add Event')),
+      appBar: AppBar(
+        backgroundColor: MyColors.backgroundColor,
+        title: const Text('Add Event'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -195,8 +198,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
-                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(
+                        color: Colors.white, size: 32)
+                    : const Text('Submit',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -297,10 +302,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text = pickedTime.format(context); // Update the start time field
+          _startTimeController.text =
+              pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text = pickedTime.format(context); // Update the end time field
+          _endTimeController.text =
+              pickedTime.format(context); // Update the end time field
         }
       });
     }

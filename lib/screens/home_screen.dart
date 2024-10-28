@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
+      extendBody: true,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
@@ -58,14 +59,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 pageController.jumpToPage(index);
               } else {
                 pageController.animateToPage(index,
-                    duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.easeIn);
               }
               selectedIndex = index;
             }),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: SvgPicture.asset(
-                index == selectedIndex ? tab.selectedIconPath : tab.unselectedIconPath,
+                index == selectedIndex
+                    ? tab.selectedIconPath
+                    : tab.unselectedIconPath,
                 height: 28,
               ),
             ),

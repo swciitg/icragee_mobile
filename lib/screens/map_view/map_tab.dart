@@ -78,7 +78,7 @@ class _MapTabState extends State<MapTab> {
           ),
         ),
       ),
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       body: _locations.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Stack(
@@ -95,9 +95,11 @@ class _MapTabState extends State<MapTab> {
                     _mapController = controller;
                     _addMarker(_selectedLocation);
                   },
+                  zoomControlsEnabled: false,
+                  zoomGesturesEnabled: true,
                 ),
                 Positioned(
-                  top: 75,
+                  top: 0,
                   left: 1,
                   right: 1,
                   child: Padding(
