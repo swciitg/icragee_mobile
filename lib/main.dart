@@ -11,10 +11,14 @@ import 'package:icragee_mobile/shared/globals.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await NotificationService().initNotifications();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await NotificationService().initNotifications();
+  } catch (e) {
+    print(e);
+  }
   runApp(const MyApp());
 }
 
@@ -25,20 +29,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          supportedLocales: const [Locale('en', 'US')],
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          debugShowCheckedModeBanner: false,
-          title: 'ICRAGEE',
-          routerConfig: routeConfig,
-          theme: ThemeData(
-            colorSchemeSeed: MyColors.primaryColor,
-            // Use Google Fonts for the entire app
-            textTheme: GoogleFonts.poppinsTextTheme(
-              Theme.of(context).textTheme,
-            ),
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        supportedLocales: const [Locale('en', 'US')],
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        title: 'ICRAGEE',
+        routerConfig: routeConfig,
+        theme: ThemeData(
+          colorSchemeSeed: MyColors.primaryColor,
+          // Use Google Fonts for the entire app
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
           ),
         ),
+      ),
     );
   }
 }
