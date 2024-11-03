@@ -12,6 +12,7 @@ import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/custom_text_field.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
+import 'package:logger/logger.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,9 +79,18 @@ class _LoginScreenState extends State<LoginScreen> {
       while (navigatorKey.currentContext!.canPop()) {
         navigatorKey.currentContext!.pop();
       }
+      try {
+        FirebaseMessaging.instance.subscribeToTopic('All');
+      } catch (e) {
+        Logger().e(e);
+      }
       for (int i = 0; i < userDetails.eventList.length; i++) {
-        await FirebaseMessaging.instance
-            .subscribeToTopic(userDetails.eventList[i]);
+        try {
+          await FirebaseMessaging.instance
+              .subscribeToTopic(userDetails.eventList[i]);
+        } catch (e) {
+          Logger().e(e);
+        }
       }
       navigatorKey.currentContext!.pushReplacement('/homeScreen');
       return;

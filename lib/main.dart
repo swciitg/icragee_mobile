@@ -11,14 +11,11 @@ import 'package:icragee_mobile/shared/globals.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    await NotificationService().initNotifications();
-  } catch (e) {
-    print(e);
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await NotificationService().initNotifications();
+
   runApp(const MyApp());
 }
 
