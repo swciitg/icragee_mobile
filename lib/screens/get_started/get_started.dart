@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
@@ -77,51 +79,55 @@ class _GetStartedState extends State<GetStarted> {
               ),
             ),
             const SizedBox(height: 16),
-            GestureDetector(
-              onTap: () {
-                context.push('/admin-screen');
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    "Login as Admin",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+            Consumer(builder: (context, ref, child) {
+              return GestureDetector(
+                onTap: () {
+                  ref.read(userProvider.notifier).setAdminAuth(true);
+                  context.push('/onboarding');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Login as Admin",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
             const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                context.push('/onboarding');
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    "Login as Guest",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+            Consumer(builder: (context, ref, child) {
+              return GestureDetector(
+                onTap: () {
+                  ref.read(userProvider.notifier).setAdminAuth(false);
+                  context.push('/onboarding');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Login as Guest",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),

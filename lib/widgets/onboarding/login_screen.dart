@@ -14,24 +14,28 @@ import 'package:icragee_mobile/widgets/custom_text_field.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:logger/logger.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _otpController;
   var otpSent = false;
   var loading = false;
+  var admin = false;
 
   @override
   void initState() {
     _emailController = TextEditingController();
     _otpController = TextEditingController();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      admin = ref.read(userProvider.notifier).adminAuth;
+    });
   }
 
   @override
@@ -46,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     try {
-      await ApiService.sendOTP(_emailController.text.trim());
+      await ApiService.sendOTP(_emailController.text.trim(), admin: admin);
       showSnackBar("OTP sent successfully to: ${_emailController.text.trim()}");
       setState(() {
         otpSent = true;
@@ -65,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final val = await ApiService.verifyOTP(
-          _emailController.text.trim(), _otpController.text.trim());
+          _emailController.text.trim(), _otpController.text.trim(),
+          admin: admin);
       if (!val) {
         showSnackBar("Invalid OTP, Please try again");
         setState(() {
@@ -86,13 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       for (int i = 0; i < userDetails.eventList.length; i++) {
         try {
-          await FirebaseMessaging.instance
-              .subscribeToTopic(userDetails.eventList[i]);
+          await FirebaseMessaging.instance.subscribeToTopic(userDetails.eventList[i]);
         } catch (e) {
           Logger().e(e);
         }
       }
-      navigatorKey.currentContext!.pushReplacement('/homeScreen');
+      navigatorKey.currentContext!.pushReplacement(admin ? '/admin-screen' : '/homeScreen');
       return;
     } catch (e) {
       debugPrint(e.toString());
@@ -142,8 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 color: Colors.black.withOpacity(0.3),
                 child: const Center(
-                  child:
-                      CircularProgressIndicator(color: MyColors.primaryColor),
+                  child: CircularProgressIndicator(color: MyColors.primaryColor),
                 ),
               ),
             ),
@@ -178,8 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
               return GestureDetector(
                 onTap: otpSent ? () => _verifyOTP(ref) : () => _sendOTP(),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),

@@ -9,6 +9,13 @@ final userProvider = StateNotifierProvider<UserProvider, UserDetails?>((ref) {
 class UserProvider extends StateNotifier<UserDetails?> {
   UserProvider() : super(null);
 
+  var adminAuth = false;
+
+  void setAdminAuth(bool value) {
+    debugPrint("Admin auth: $value");
+    adminAuth = value;
+  }
+
   void setUserDetails(UserDetails? userDetails) {
     state = userDetails;
     if (state != null) {
