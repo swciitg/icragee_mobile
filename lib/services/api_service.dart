@@ -9,11 +9,11 @@ class ApiService {
   static final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   static Future<void> sendOTP(String email, {bool admin = false}) async {
-    // admin endpoint: /admin/send-otp
+    // admin endpoint: /newadmin/send-otp
     // Error if user is not admin 'Admin not found' in message
     try {
       debugPrint("Sending OTP to (${admin ? "admin" : "user"}): $email");
-      await dio.post('/${admin ? "admin" : "user"}/send-otp', data: {'email': email});
+      await dio.post('/${admin ? "newadmin" : "user"}/send-otp', data: {'email': email});
     } on DioException catch (e) {
       final data = e.response?.data as Map<String, dynamic>?;
       final message = data?['message'] as String?;
@@ -29,10 +29,10 @@ class ApiService {
   }
 
   static Future<bool> verifyOTP(String email, String otp, {bool admin = false}) async {
-    // admin endpoint: /admin/verify-otp
+    // admin endpoint: /newadmin/verify-otp
     try {
       debugPrint("Verify OTP (${admin ? "admin" : "user"}): $email");
-      final res = await dio.post('/${admin ? "admin" : "user"}/verify-otp', data: {
+      final res = await dio.post('/${admin ? "newadmin" : "user"}/verify-otp', data: {
         'email': email,
         'otp': int.parse(otp),
       });
