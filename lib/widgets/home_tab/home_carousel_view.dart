@@ -34,7 +34,26 @@ class _HomeCarouselViewState extends State<HomeCarouselView> {
         }
         List<String> eventIds = snapshot.data!;
         if (eventIds.isEmpty) {
-          return const Center(child: Text('No events lined up'));
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                Text(
+                  "Saved Events",
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('No saved events'),
+                  ],
+                ),
+              ],
+            ),
+          );
         }
 
         return StreamBuilder(
@@ -50,8 +69,7 @@ class _HomeCarouselViewState extends State<HomeCarouselView> {
               return const Center(child: Text('An error occurred'));
             }
             List<Event> userEvents = snapshot.data!;
-            userEvents
-                .sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
+            userEvents.sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
             return HomeCarousel(events: userEvents);
           },
         );

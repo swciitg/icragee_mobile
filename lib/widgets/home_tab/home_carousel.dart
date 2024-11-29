@@ -25,7 +25,7 @@ class _HomeCarouselState extends State<HomeCarousel> {
           Padding(
             padding: EdgeInsets.fromLTRB(15, 8, 15, 0),
             child: Text(
-              "Upcoming Events",
+              "Saved Events",
               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
           ),

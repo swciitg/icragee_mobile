@@ -1,6 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
@@ -11,14 +13,14 @@ import 'package:icragee_mobile/widgets/day_button.dart';
 import 'package:icragee_mobile/widgets/tab_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AdminScreen extends StatefulWidget {
+class AdminScreen extends ConsumerStatefulWidget {
   const AdminScreen({super.key});
 
   @override
-  State<AdminScreen> createState() => _HomeScreenState();
+  ConsumerState<AdminScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<AdminScreen> {
+class _HomeScreenState extends ConsumerState<AdminScreen> {
   bool _eventsSelected = true;
   int _selectedDay = 1;
   List<Event> events = [];
@@ -27,6 +29,9 @@ class _HomeScreenState extends State<AdminScreen> {
   void initState() {
     super.initState();
     FirebaseMessaging.instance.unsubscribeFromTopic('All');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProvider.notifier).updateIfSuperUser();
+    });
   }
 
   @override
@@ -43,75 +48,9 @@ class _HomeScreenState extends State<AdminScreen> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Welcome Back!',
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  navigatorKey.currentContext!.push('/qr-scanner');
-                                },
-                                child: const Icon(
-                                  Icons.qr_code_scanner_rounded,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              GestureDetector(
-                                onTap: () async {
-                                  final prefs = await SharedPreferences.getInstance();
-                                  prefs.clear();
-                                  while (navigatorKey.currentContext!.canPop()) {
-                                    navigatorKey.currentContext!.pop();
-                                  }
-                                  navigatorKey.currentContext!.push("/get-started");
-                                },
-                                child: const Icon(
-                                  Icons.logout_rounded,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TabButton(
-                              text: 'Events',
-                              isSelected: _eventsSelected,
-                              onPressed: () {
-                                setState(() {
-                                  _eventsSelected = true;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TabButton(
-                              text: 'Notification',
-                              isSelected: !_eventsSelected,
-                              onPressed: () {
-                                setState(() {
-                                  _eventsSelected = false;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _appBar(),
+                    const SizedBox(height: 16),
+                    _tabs(),
                     const SizedBox(height: 15),
                     // TODO: Uncomment it after DB Integration
                     // Padding(
@@ -237,26 +176,105 @@ class _HomeScreenState extends State<AdminScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          if (_eventsSelected) {
-            await context.push('/addEventScreen');
-            setState(() {});
-          } else {
-            context.push('/addNotificationScreen');
-          }
+      floatingActionButton: Builder(
+        builder: (context) {
+          final superUser = ref.watch(userProvider)!.superUser;
+          if (!superUser) return const SizedBox();
+          return FloatingActionButton.extended(
+            onPressed: () async {
+              if (_eventsSelected) {
+                await context.push('/addEventScreen');
+                setState(() {});
+              } else {
+                context.push('/addNotificationScreen');
+              }
+            },
+            label: Text(
+              _eventsSelected ? 'Add Event' : 'Add Notification',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            backgroundColor: MyColors.primaryColor,
+          );
         },
-        label: Text(
-          _eventsSelected ? 'Add Event' : 'Add Notification',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        backgroundColor: MyColors.primaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Padding _tabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: TabButton(
+              text: 'Events',
+              isSelected: _eventsSelected,
+              onPressed: () {
+                setState(() {
+                  _eventsSelected = true;
+                });
+              },
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TabButton(
+              text: 'Notification',
+              isSelected: !_eventsSelected,
+              onPressed: () {
+                setState(() {
+                  _eventsSelected = false;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _appBar() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Welcome Back!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  navigatorKey.currentContext!.push('/qr-scanner');
+                },
+                child: const Icon(
+                  Icons.qr_code_scanner_rounded,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(width: 24),
+              GestureDetector(
+                onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
+                  while (navigatorKey.currentContext!.canPop()) {
+                    navigatorKey.currentContext!.pop();
+                  }
+                  navigatorKey.currentContext!.push("/get-started");
+                },
+                child: const Icon(
+                  Icons.logout_rounded,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

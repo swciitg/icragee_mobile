@@ -15,6 +15,9 @@ class UserDetails {
   final String contact;
   final List<String> eventList;
   final String? fcmToken;
+  final bool inCampus;
+  final List<MealAccess> mealAccess;
+  final bool superUser;
 
   String get fullName => name.fullName;
 
@@ -31,6 +34,9 @@ class UserDetails {
     required this.contact,
     required this.eventList,
     this.fcmToken,
+    this.inCampus = false,
+    this.mealAccess = const [],
+    this.superUser = false,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json, {String id = 'id'}) {
@@ -48,6 +54,8 @@ class UserDetails {
       contact: json['contact'].toString(),
       eventList: (json['eventList'] as List? ?? []).map((e) => e.toString()).toList(),
       fcmToken: json['fcmToken'],
+      inCampus: json['inCampus'] ?? false,
+      mealAccess: (json['mealAccess'] as List? ?? []).map((e) => MealAccess.fromJson(e)).toList(),
     );
   }
 
@@ -64,6 +72,8 @@ class UserDetails {
       'contact': contact,
       'email': email,
       'fcmToken': fcmToken,
+      'inCampus': inCampus,
+      'mealAccess': mealAccess.map((e) => e.toJson()).toList(),
     };
 
     if (eventList) {
@@ -99,6 +109,9 @@ class UserDetails {
     String? contact,
     List<String>? eventList,
     String? fcmToken,
+    bool? inCampus,
+    List<MealAccess>? mealAccess,
+    bool? superUser,
   }) {
     return UserDetails(
       id: id ?? this.id,
@@ -113,6 +126,9 @@ class UserDetails {
       contact: contact ?? this.contact,
       eventList: eventList ?? this.eventList,
       fcmToken: fcmToken ?? this.fcmToken,
+      inCampus: inCampus ?? this.inCampus,
+      mealAccess: mealAccess ?? this.mealAccess,
+      superUser: superUser ?? this.superUser,
     );
   }
 }
@@ -143,6 +159,34 @@ class Name {
       'first': first,
       'middle': middle,
       'last': last,
+    };
+  }
+}
+
+class MealAccess {
+  final int day;
+  final String mealType;
+  final bool taken;
+
+  const MealAccess({
+    required this.day,
+    required this.mealType,
+    required this.taken,
+  });
+
+  factory MealAccess.fromJson(Map<String, dynamic> json) {
+    return MealAccess(
+      day: json['day'],
+      mealType: json['mealType'],
+      taken: json['taken'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'day': day,
+      'mealType': mealType,
+      'taken': taken,
     };
   }
 }

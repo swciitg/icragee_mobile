@@ -4,6 +4,7 @@ import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
 import 'package:icragee_mobile/models/notification_model.dart';
 import 'package:icragee_mobile/models/user_details.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/utility/functions.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -194,9 +195,31 @@ class DataService {
 
   static Future<void> updateUserDetails(UserDetails user) async {
     final userRef = FirebaseFirestore.instance.collection('userDetails').doc(user.id);
-    if ((await userRef.get()).exists) {
+    final doc = await userRef.get();
+    if (doc.exists) {
       userRef.update(user.toJson());
     } else {
+      if (user.mealAccess.isEmpty) {
+        final defaultMeals = [
+          // Day 1
+          MealAccess(day: 1, mealType: "Breakfast", taken: false),
+          MealAccess(day: 1, mealType: "Lunch", taken: false),
+          MealAccess(day: 1, mealType: "Dinner", taken: false),
+          // Day 2
+          MealAccess(day: 2, mealType: "Breakfast", taken: false),
+          MealAccess(day: 2, mealType: "Lunch", taken: false),
+          MealAccess(day: 2, mealType: "Dinner", taken: false),
+          // Day 3
+          MealAccess(day: 3, mealType: "Breakfast", taken: false),
+          MealAccess(day: 3, mealType: "Lunch", taken: false),
+          MealAccess(day: 3, mealType: "Dinner", taken: false),
+          // Day 4
+          MealAccess(day: 4, mealType: "Breakfast", taken: false),
+          MealAccess(day: 4, mealType: "Lunch", taken: false),
+          MealAccess(day: 4, mealType: "Dinner", taken: false),
+        ];
+        user = user.copyWith(mealAccess: defaultMeals, inCampus: doc.data()!['inCampus'] ?? false);
+      }
       userRef.set(user.toJson(eventList: true));
     }
   }
@@ -219,5 +242,25 @@ class DataService {
         return NotificationModel.fromJson(doc.data());
       }).toList();
     });
+  }
+
+  static Future<bool> isSuperUser(String email) async {
+    final doc = await FirebaseFirestore.instance.collection('globals').doc('superUsers').get();
+    final superUsers = List<String>.from(doc.data()!['emails'] ?? []);
+
+    return superUsers.contains(email);
+  }
+
+  static Future<void> fetchDayOneDate() async {
+    final doc = await FirebaseFirestore.instance.collection('globals').doc('event').get();
+    dayOneDate = DateTime.parse(doc.data()!['dayOneDate']);
+  }
+
+  static Future<void> markPresentInCampus(String id) async {
+    final userRef = FirebaseFirestore.instance.collection('userDetails').doc(id);
+    final doc = await userRef.get();
+    if (doc.exists) {
+      userRef.update({'inCampus': true});
+    }
   }
 }
