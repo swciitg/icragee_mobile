@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/routing/app_routes.dart';
 import 'package:icragee_mobile/screens/admin/add_notification_screen.dart';
 import 'package:icragee_mobile/screens/admin/admin_screen.dart';
+import 'package:icragee_mobile/screens/admin/qr_scanner_screen.dart';
 import 'package:icragee_mobile/screens/get_started/get_started.dart';
 import 'package:icragee_mobile/screens/home_screen.dart';
 import 'package:icragee_mobile/screens/onboarding/onboarding_screen.dart';
@@ -55,6 +56,11 @@ final routeConfig = GoRouter(
       parentNavigatorKey: navigatorKey,
       path: '/get-started',
       builder: (context, state) => const GetStarted(),
+    ),
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: '/qr-scanner',
+      builder: (context, state) => const QrScannerScreen(),
     )
   ],
 );

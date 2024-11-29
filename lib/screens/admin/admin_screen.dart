@@ -44,28 +44,39 @@ class _HomeScreenState extends State<AdminScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 4),
+                      padding: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Welcome Back!',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold)),
-                          GestureDetector(
-                            onTap: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.clear();
-                              while (navigatorKey.currentContext!.canPop()) {
-                                navigatorKey.currentContext!.pop();
-                              }
-                              navigatorKey.currentContext!.push("/get-started");
-                            },
-                            child: const Icon(
-                              Icons.logout_rounded,
-                              color: Colors.black,
-                            ),
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  navigatorKey.currentContext!.push('/qr-scanner');
+                                },
+                                child: const Icon(
+                                  Icons.qr_code_scanner_rounded,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              GestureDetector(
+                                onTap: () async {
+                                  final prefs = await SharedPreferences.getInstance();
+                                  prefs.clear();
+                                  while (navigatorKey.currentContext!.canPop()) {
+                                    navigatorKey.currentContext!.pop();
+                                  }
+                                  navigatorKey.currentContext!.push("/get-started");
+                                },
+                                child: const Icon(
+                                  Icons.logout_rounded,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -191,21 +202,16 @@ class _HomeScreenState extends State<AdminScreen> {
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return Container(
                             color: MyColors.backgroundColor,
-                            child:
-                                const Center(child: Text('No events found')));
+                            child: const Center(child: Text('No events found')));
                       } else {
                         List<Event> events = snapshot.data!;
                         return Container(
-                          decoration: const BoxDecoration(
-                              color: MyColors.backgroundColor),
+                          decoration: const BoxDecoration(color: MyColors.backgroundColor),
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    15,
-                                    index == 0 ? 15 : 0,
-                                    15,
+                                padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
                                     index == events.length - 1 ? 100 : 12),
                                 child: EventCard(
                                     event: events[index],

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/user_controller.dart';
 
@@ -36,7 +37,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               goRouter('/get-started');
             } else {
               ref.read(userProvider.notifier).setUserDetails(user);
-              goRouter('/homeScreen');
+              final prefs = await SharedPreferences.getInstance();
+              final admin = prefs.getBool('admin') ?? false;
+              if (admin) {
+                goRouter('/admin-screen');
+              } else {
+                goRouter('/homeScreen');
+              }
             }
           }
         },

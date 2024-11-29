@@ -13,6 +13,7 @@ import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/custom_text_field.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -96,6 +97,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Logger().e(e);
         }
       }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('admin', true);
       navigatorKey.currentContext!.pushReplacement(admin ? '/admin-screen' : '/homeScreen');
       return;
     } catch (e) {
