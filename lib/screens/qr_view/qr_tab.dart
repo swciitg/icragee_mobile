@@ -37,7 +37,7 @@ class _QrTabState extends State<QrTab> {
         child: SizedBox(
           width: 300,
           height: 300,
-          child: QrCodeWidget(data: 'Your QR Code Data'),
+          child: QrCodeWidget(),
         ),
       ),
     );

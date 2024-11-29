@@ -98,7 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       }
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('admin', true);
+      await prefs.setBool('admin', admin);
       navigatorKey.currentContext!.pushReplacement(admin ? '/admin-screen' : '/homeScreen');
       return;
     } catch (e) {

@@ -4,14 +4,13 @@ import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrCodeWidget extends ConsumerWidget {
-  final String data;
-  const QrCodeWidget({super.key, required this.data});
+  const QrCodeWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final email = ref.read(userProvider)!.email;
+    final id = ref.read(userProvider)!.id;
     final qr = QrImageView(
-      data: email,
+      data: id,
       version: QrVersions.auto,
       size: 300,
       gapless: false,

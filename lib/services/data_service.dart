@@ -96,7 +96,7 @@ class DataService {
     });
   }
 
-  static Future<UserDetails?> getUserDetails(String email) async {
+  static Future<UserDetails?> getUserDetailsByEmail(String email) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('userDetails')
         .where('email', isEqualTo: email)
@@ -108,6 +108,13 @@ class DataService {
     } else {
       return null;
     }
+  }
+
+  static Future<UserDetails?> getUserDetailsById(String id) async {
+    final querySnapshot = await FirebaseFirestore.instance.collection('userDetails').doc(id).get();
+
+    if (!querySnapshot.exists) return null;
+    return UserDetails.fromJson(querySnapshot.data()!);
   }
 
   static Future<List<String>> getUserEventIds(String email) async {

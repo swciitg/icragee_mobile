@@ -61,6 +61,6 @@ final routeConfig = GoRouter(
       parentNavigatorKey: navigatorKey,
       path: '/qr-scanner',
       builder: (context, state) => const QrScannerScreen(),
-    )
+    ),
   ],
 );

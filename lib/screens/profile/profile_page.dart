@@ -9,6 +9,7 @@ import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/profile/lost_and_found_screen.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/profile_screen/profile_details_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -36,7 +37,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         children: [
           _buildAppBar(context),
           const SizedBox(height: 24),
-          _buildUserDetails(),
+          ProfileDetailsCard(user: user),
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -113,60 +114,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  Container _buildUserDetails() {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: MyColors.whiteColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDetailTile("Institute", "Indian Institute of Technology, Guwahati"),
-          _buildDetailTile("Email ID", user.email),
-          _buildDetailTile("Registratin Category", user.registrationCategory, isLast: true),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailTile(String title, String value, {bool isLast = false}) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[500],
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Color(0xff1C1C1C),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Container _buildAppBar(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
@@ -191,26 +138,13 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                     color: MyColors.whiteColor,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.fullName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: MyColors.whiteColor,
-                      ),
-                    ),
-                    Text(
-                      user.email.split('@').first,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: MyColors.whiteColor,
-                      ),
-                    ),
-                  ],
+                Text(
+                  user.fullName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.whiteColor,
+                  ),
                 ),
               ],
             ),

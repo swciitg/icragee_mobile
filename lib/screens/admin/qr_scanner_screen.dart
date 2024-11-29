@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/screens/admin/access_update_screen.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -12,6 +15,7 @@ class QrScannerScreen extends StatefulWidget {
 
 class _QrScannerScreenState extends State<QrScannerScreen> {
   late MobileScannerController mobileScannerController;
+  var scanned = false;
 
   @override
   void initState() {
@@ -23,35 +27,74 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   }
 
   @override
+  void dispose() {
+    mobileScannerController.stop();
+    mobileScannerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       appBar: _appBar(context),
       backgroundColor: MyColors.primaryColorTint,
       body: Center(
-        child: Container(
-          height: width * 0.8,
-          width: width * 0.8,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: MyColors.primaryColor,
-              width: 4,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: width * 0.8,
+              width: width * 0.8,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: MyColors.primaryColor,
+                  width: 4,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: MobileScanner(
+                  controller: mobileScannerController,
+                  onDetect: (code) async {
+                    mobileScannerController.stop();
+                    setState(() {
+                      scanned = true;
+                    });
+                    final id = code.barcodes.first.displayValue ?? "";
+                    debugPrint("ID: $id");
+                    final user = await DataService.getUserDetailsById(id);
+                    if (user == null) {
+                      showSnackBar("No user found with ID: $id");
+                      setState(() {
+                        scanned = true;
+                      });
+                      return;
+                    }
+                    await navigatorKey.currentState!.push(
+                      MaterialPageRoute(
+                        builder: (context) => AccessUpdateScreen(user: user),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: MobileScanner(
-              controller: mobileScannerController,
-              onDetect: (code) {
-                final email = code.barcodes.first.displayValue ?? "";
-                print(email);
-                if (!_isEmail(email)) {
-                  showSnackBar("Invalid QR Code");
-                }
-              },
-            ),
-          ),
+            if (scanned)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      scanned = false;
+                    });
+                    mobileScannerController.start();
+                  },
+                  child: Text("Scan again"),
+                ),
+              ),
+          ],
         ),
       ),
     );
