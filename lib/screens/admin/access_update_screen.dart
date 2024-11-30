@@ -140,7 +140,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
       return GestureDetector(
         onTap: () async {
           if (!superUser) {
-            showSnackBar("Only super users can revert things");
+            showSnackBar("Only super-admins can revert things");
             return;
           }
           if (loading) return;

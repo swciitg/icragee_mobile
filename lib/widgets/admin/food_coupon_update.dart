@@ -120,7 +120,7 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
             activeColor: MyColors.primaryColor,
             onChanged: (val) {
               if (!superUser && !val) {
-                showSnackBar("Only super users can revert things");
+                showSnackBar("Only super-admins can revert things");
                 return;
               }
               final index = mealAccess.indexWhere((e) {
