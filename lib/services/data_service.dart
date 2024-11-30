@@ -189,11 +189,12 @@ class DataService {
     }
   }
 
-  static Future<void> updateUserDetails(UserDetails user) async {
+  static Future<void> updateUserDetails(UserDetails user,
+      {bool containsFirestoreData = true}) async {
     final userRef = firestore.collection('userDetails').doc(user.id);
     final doc = await userRef.get();
     if (doc.exists) {
-      userRef.update(user.toJson());
+      userRef.update(user.toJson(containsFirestoreData: containsFirestoreData));
     } else {
       if (user.mealAccess.isEmpty) {
         final defaultMeals = [
@@ -214,9 +215,9 @@ class DataService {
           MealAccess(day: 4, mealType: "Lunch", taken: false),
           MealAccess(day: 4, mealType: "Dinner", taken: false),
         ];
-        user = user.copyWith(mealAccess: defaultMeals, inCampus: doc.data()!['inCampus'] ?? false);
+        user = user.copyWith(mealAccess: defaultMeals, inCampus: doc.data()?['inCampus'] ?? false);
       }
-      userRef.set(user.toJson(eventList: true));
+      userRef.set(user.toJson(containsFirestoreData: true));
     }
   }
 

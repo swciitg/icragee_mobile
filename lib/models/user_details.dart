@@ -59,7 +59,7 @@ class UserDetails {
     );
   }
 
-  Map<String, dynamic> toJson({bool eventList = false}) {
+  Map<String, dynamic> toJson({bool containsFirestoreData = false}) {
     final data = {
       'id': id,
       'name': name.toJson(),
@@ -72,12 +72,11 @@ class UserDetails {
       'contact': contact,
       'email': email,
       'fcmToken': fcmToken,
-      'inCampus': inCampus,
-      'mealAccess': mealAccess.map((e) => e.toJson()).toList(),
     };
-
-    if (eventList) {
-      data['eventList'] = this.eventList;
+    if (containsFirestoreData) {
+      data['eventList'] = eventList;
+      data['mealAccess'] = mealAccess.map((e) => e.toJson()).toList();
+      data['inCampus'] = inCampus;
     }
     return data;
   }

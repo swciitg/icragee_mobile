@@ -70,7 +70,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                     StreamBuilder(
                       stream: DataService.getUserMealAccessSteam(widget.user.id),
                       builder: (context, snapshot) {
-                        late List<MealAccess> meals;
+                        List<MealAccess> meals = [];
                         if (!snapshot.hasData) {
                           meals = widget.user.mealAccess;
                         } else {
@@ -139,7 +139,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
       final superUser = ref.read(userProvider)!.superUser;
       return GestureDetector(
         onTap: () async {
-          if (!superUser) {
+          if (!superUser && !inCampus) {
             showSnackBar("Only super-admins can revert things");
             return;
           }
