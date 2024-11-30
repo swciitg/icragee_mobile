@@ -9,9 +9,11 @@ import 'package:icragee_mobile/utility/functions.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DataService {
+  static final firestore = FirebaseFirestore.instance;
+
   // Method to fetch FAQs from Firestore
   static Future<List<FaqContent>> fetchFaqs() async {
-    final collectionSnapshot = await FirebaseFirestore.instance.collection('FAQs').get();
+    final collectionSnapshot = await firestore.collection('FAQs').get();
 
     return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
   }
@@ -19,8 +21,7 @@ class DataService {
   // Method to fetch emergency contacts by category from Firestore
   static Future<List<ContactModel>> fetchImportantContacts() async {
     try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('important_contacts').get();
+      QuerySnapshot querySnapshot = await firestore.collection('important_contacts').get();
 
       // Convert each document into a Contact object
       List<ContactModel> contacts = querySnapshot.docs.map((doc) {
@@ -40,7 +41,7 @@ class DataService {
     required String feedback,
   }) async {
     try {
-      await FirebaseFirestore.instance.collection("feedback").add({
+      await firestore.collection("feedback").add({
         "name": name,
         "email": email,
         "feedback": feedback,
@@ -52,7 +53,7 @@ class DataService {
 
   static Future<List<Event>> getDayWiseEvents(int day) async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('events').where('day', isEqualTo: day).get();
+        await firestore.collection('events').where('day', isEqualTo: day).get();
     final docs = querySnapshot.docs.map((doc) {
       final event = Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
       return event.copyWith(
@@ -67,7 +68,7 @@ class DataService {
 
   static Future<String?> addEvent(Event event) async {
     try {
-      final collectionRef = FirebaseFirestore.instance.collection('events');
+      final collectionRef = firestore.collection('events');
       final doc = collectionRef.doc();
       event = event.copyWith(id: doc.id);
       await doc.set(event.toJson());
@@ -78,30 +79,28 @@ class DataService {
   }
 
   static Future<void> editEvent(String eventId, Event updatedEvent) async {
-    final collectionRef = FirebaseFirestore.instance.collection('events');
+    final collectionRef = firestore.collection('events');
     final doc = collectionRef.doc(eventId);
 
     await doc.update(updatedEvent.toJson());
   }
 
   static Future<List<Event>> getEvents() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').get();
+    QuerySnapshot snapshot = await firestore.collection('events').get();
     return snapshot.docs.map((doc) {
       return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
   static Stream<Event> getEventById(String id) {
-    return FirebaseFirestore.instance.collection('events').doc(id).snapshots().map((doc) {
+    return firestore.collection('events').doc(id).snapshots().map((doc) {
       return Event.fromJson(doc.data() as Map<String, dynamic>);
     });
   }
 
   static Future<UserDetails?> getUserDetailsByEmail(String email) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
@@ -112,17 +111,15 @@ class DataService {
   }
 
   static Future<UserDetails?> getUserDetailsById(String id) async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('userDetails').doc(id).get();
+    final querySnapshot = await firestore.collection('userDetails').doc(id).get();
 
     if (!querySnapshot.exists) return null;
     return UserDetails.fromJson(querySnapshot.data()!);
   }
 
   static Future<List<String>> getUserEventIds(String email) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
@@ -134,7 +131,7 @@ class DataService {
   }
 
   static Stream<List<Event>> getUserEvents(List<String> eventIds) {
-    return FirebaseFirestore.instance
+    return firestore
         .collection('events')
         .where(FieldPath.documentId, whereIn: eventIds)
         .snapshots()
@@ -146,14 +143,12 @@ class DataService {
   }
 
   static Future<void> deleteEvent(String eventId) async {
-    await FirebaseFirestore.instance.collection('events').doc(eventId).delete();
+    await firestore.collection('events').doc(eventId).delete();
   }
 
   static Future<void> addEventToUser(String email, String eventId) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
       await userDoc.reference.update({
@@ -178,7 +173,7 @@ class DataService {
       // Choose the collection based on the category (Lost or Found)
       String collectionName = category == "Lost" ? "lost_items" : "found_items";
 
-      await FirebaseFirestore.instance.collection(collectionName).add({
+      await firestore.collection(collectionName).add({
         "title": title,
         "description": description,
         "location": location,
@@ -194,7 +189,7 @@ class DataService {
   }
 
   static Future<void> updateUserDetails(UserDetails user) async {
-    final userRef = FirebaseFirestore.instance.collection('userDetails').doc(user.id);
+    final userRef = firestore.collection('userDetails').doc(user.id);
     final doc = await userRef.get();
     if (doc.exists) {
       userRef.update(user.toJson());
@@ -226,14 +221,14 @@ class DataService {
 
   static Future<void> addNotification(NotificationModel notification) async {
     try {
-      await FirebaseFirestore.instance.collection('notifications').add(notification.toJson());
+      await firestore.collection('notifications').add(notification.toJson());
     } catch (e) {
       throw Exception('Failed to add notification: $e');
     }
   }
 
   static Stream<List<NotificationModel>> getNotifications() {
-    return FirebaseFirestore.instance
+    return firestore
         .collection('notifications')
         .orderBy('timestamp', descending: true)
         .snapshots()
@@ -245,22 +240,30 @@ class DataService {
   }
 
   static Future<bool> isSuperUser(String email) async {
-    final doc = await FirebaseFirestore.instance.collection('globals').doc('superUsers').get();
+    final doc = await firestore.collection('globals').doc('superUsers').get();
     final superUsers = List<String>.from(doc.data()!['emails'] ?? []);
 
     return superUsers.contains(email);
   }
 
   static Future<void> fetchDayOneDate() async {
-    final doc = await FirebaseFirestore.instance.collection('globals').doc('event').get();
+    final doc = await firestore.collection('globals').doc('event').get();
     dayOneDate = DateTime.parse(doc.data()!['dayOneDate']);
   }
 
-  static Future<void> markPresentInCampus(String id) async {
-    final userRef = FirebaseFirestore.instance.collection('userDetails').doc(id);
+  static Future<void> markPresentInCampus(String id, bool value) async {
+    final userRef = firestore.collection('userDetails').doc(id);
     final doc = await userRef.get();
     if (doc.exists) {
-      userRef.update({'inCampus': true});
+      userRef.update({'inCampus': value});
     }
+  }
+
+  static Stream<List<MealAccess>> getUserMealAccessSteam(String uid) {
+    final ref = firestore.collection('userDetails').doc(uid);
+    return ref.snapshots().map((doc) {
+      final user = UserDetails.fromJson(doc.data()!);
+      return user.mealAccess;
+    });
   }
 }

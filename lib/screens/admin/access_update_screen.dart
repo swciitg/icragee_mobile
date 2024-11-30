@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/admin/food_coupon_update.dart';
 import 'package:icragee_mobile/widgets/profile_screen/profile_details_card.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 
@@ -25,44 +28,99 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: _appBar(context),
       body: Stack(
         children: [
-          Column(
-            children: [
-              const SizedBox(height: 16),
-              Stack(
+          SizedBox(
+            height: size.height,
+            width: size.width,
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  ProfileDetailsCard(user: widget.user, includeName: true),
-                  if (inCampus)
-                    Positioned(
-                      right: 24,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: MyColors.primaryColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          "Present",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                  const SizedBox(height: 16),
+                  Stack(
+                    children: [
+                      ProfileDetailsCard(user: widget.user, includeName: true),
+                      if (inCampus)
+                        Positioned(
+                          right: 24,
+                          top: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: MyColors.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "Present",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (inCampus)
+                    StreamBuilder(
+                      stream: DataService.getUserMealAccessSteam(widget.user.id),
+                      builder: (context, snapshot) {
+                        late List<MealAccess> meals;
+                        if (!snapshot.hasData) {
+                          meals = widget.user.mealAccess;
+                        } else {
+                          meals = snapshot.data!;
+                        }
+                        return FoodCouponUpdate(
+                          meals: meals,
+                          onUpdate: (updatedList) async {
+                            setState(() {
+                              loading = true;
+                            });
+                            try {
+                              final user = widget.user.copyWith(mealAccess: updatedList);
+                              await DataService.updateUserDetails(user);
+                            } catch (e) {
+                              showSnackBar("Something went wrong!");
+                            }
+                            setState(() {
+                              loading = false;
+                            });
+                          },
+                        );
+                      },
                     ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Only super-admins can revert things",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
           if (loading)
             Positioned.fill(
               child: Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.white.withOpacity(0.3),
                 child: Center(
                   child: CircularProgressIndicator(
                     color: MyColors.primaryColor,
@@ -77,44 +135,50 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
   }
 
   Widget _markPresentButton() {
-    if (inCampus) return const SizedBox();
-    return GestureDetector(
-      onTap: () async {
-        if (loading) return;
-        setState(() {
-          loading = true;
-        });
-        try {
-          await DataService.markPresentInCampus(widget.user.id);
+    return Consumer(builder: (context, ref, child) {
+      final superUser = ref.read(userProvider)!.superUser;
+      return GestureDetector(
+        onTap: () async {
+          if (!superUser) {
+            showSnackBar("Only super users can revert things");
+            return;
+          }
+          if (loading) return;
           setState(() {
-            inCampus = true;
+            loading = true;
           });
-        } catch (e) {
-          showSnackBar("Something went wrong");
-        }
-        setState(() {
-          loading = false;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: MyColors.primaryColor,
-          borderRadius: BorderRadius.circular(8),
+          try {
+            await DataService.markPresentInCampus(widget.user.id, !inCampus);
+            setState(() {
+              inCampus = !inCampus;
+            });
+          } catch (e) {
+            showSnackBar("Something went wrong");
+          }
+          setState(() {
+            loading = false;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          decoration: BoxDecoration(
+            color: MyColors.primaryColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                inCampus ? "Not in-campus" : "Present in-campus",
+                style: TextStyle(color: Colors.white),
+              ),
+              const SizedBox(width: 8),
+              Icon(Icons.hail_rounded, color: Colors.white)
+            ],
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Mark present in-person",
-              style: TextStyle(color: Colors.white),
-            ),
-            const SizedBox(width: 8),
-            Icon(Icons.hail_rounded, color: Colors.white)
-          ],
-        ),
-      ),
-    );
+      );
+    });
   }
 
   AppBar _appBar(BuildContext context) {
