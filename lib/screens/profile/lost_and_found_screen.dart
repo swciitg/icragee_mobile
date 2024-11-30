@@ -47,191 +47,37 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
     });
   }
 
-  // Dummy data for items
-  final List<Map<String, dynamic>> items = [
-    {
-      'title': 'cello Swift 1 litre',
-      'location': 'Room 1204',
-      'time': '3 hours ago',
-      'imagePath': 'assets/images/logo.png',
-      'isLost': true
-    },
-    {
-      'title': 'ID card',
-      'location': 'near central...',
-      'time': 'a day ago',
-      'imagePath': 'assets/images/logo.png',
-      'isLost': true
-    },
-    {
-      'title': 'earphone',
-      'location': 'Lecture Hall...',
-      'time': 'a day ago',
-      'imagePath': 'assets/images/logo.png',
-      'isLost': true
-    },
-    {
-      'title': 'earphone',
-      'location': 'Lecture Hall...',
-      'time': 'a day ago',
-      'imagePath': 'assets/images/logo.png',
-      'isLost': false
-    },
-    {
-      'title': 'earphone',
-      'location': 'Lecture Hall...',
-      'time': 'a day ago',
-      'imagePath': 'assets/images/logo.png',
-      'isLost': true
-    },
-  ];
-
-  // Function to filter items based on the selected tab
-  List<Map<String, dynamic>> getFilteredItems() {
-    if (selected == 1) {
-      return items.where((item) => item['isLost'] == true).toList(); // Lost Items
-    } else if (selected == 2) {
-      return items.where((item) => item['isLost'] == false).toList(); // Found Items
-    } else {
-      // For "My Ads", you can add your own logic to filter based on user ads
-      return items; // For now, return all items as a placeholder
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
-        title: const Text('Lost and Found'),
-        backgroundColor: MyColors.backgroundColor,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        title: const Text(
+          'Lost and Found',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: MyColors.primaryColor,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selected = 1;
-                    });
-                    _getItems(); // Update items when tab is switched
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: ShapeDecoration(
-                      color: selected == 1 ? MyColors.whiteColor : MyColors.primaryColorTint,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x331C1C1C),
-                          blurRadius: 24,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Text(
-                      'Lost Items',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: MyColors.primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selected = 2;
-                    });
-                    _getItems(); // Update items when tab is switched
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: ShapeDecoration(
-                      color: selected == 2 ? MyColors.whiteColor : MyColors.primaryColorTint,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x331C1C1C),
-                          blurRadius: 24,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Text(
-                      'Found Items',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: MyColors.primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selected = 3;
-                    });
-                    _getItems(); // Update items when tab is switched
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: ShapeDecoration(
-                      color: selected == 3 ? MyColors.whiteColor : MyColors.primaryColorTint,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x331C1C1C),
-                          blurRadius: 24,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Text(
-                      'My Ads',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: MyColors.primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
+          _buildTabs(),
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
+            child: StreamBuilder(
               stream: itemStream,
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -244,17 +90,13 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
                 return ListView(
                   children: items.map((doc) {
                     final data = doc.data() as Map<String, dynamic>;
-                    // Check if the 'image' is an XFile and convert it
-                    String imagePath = data['image'] is XFile
-                        ? (data['image'] as XFile).path
-                        : data['image'] ?? 'assets/images/logo.png';
-
                     return ItemCard(
                       title: data['title'] ?? 'No Title',
                       location: data['location'] ?? 'Unknown location',
                       time: _formatTimestamp(data['submittedAt']),
                       imageFile: data['image'] ?? 'assets/images/logo.png',
                       isLost: selected == 1,
+                      deleteOption: selected == 3,
                     );
                   }).toList(),
                 );
@@ -268,7 +110,57 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
             ? 'Lost'
             : selected == 2
                 ? 'Found'
-                : 'MyAds', // Pass the correct type
+                : 'MyAds',
+      ),
+    );
+  }
+
+  Widget _buildTabs() {
+    final titles = ['Lost Items', 'Found Items', 'My Ads'];
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Wrap(
+        spacing: 8,
+        runAlignment: WrapAlignment.start,
+        alignment: WrapAlignment.start,
+        children: List.generate(titles.length, (index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selected = index + 1;
+              });
+              _getItems();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              decoration: ShapeDecoration(
+                color: selected == index + 1 ? MyColors.whiteColor : MyColors.primaryColorTint,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Text(
+                titles[index],
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: MyColors.primaryColor,
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -281,6 +173,8 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen> {
       return "${difference.inDays} days ago";
     } else if (difference.inHours > 1) {
       return "${difference.inHours} hours ago";
+    } else if (difference.inMinutes > 1) {
+      return "${difference.inMinutes} minutes ago";
     } else {
       return "Just now";
     }

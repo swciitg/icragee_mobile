@@ -181,6 +181,7 @@ class DataService {
         "image": image.path,
         "email": email,
         "name": name,
+        "category": category,
         "submittedAt": FieldValue.serverTimestamp(),
       });
     } catch (error) {

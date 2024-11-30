@@ -1,7 +1,5 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../screens/profile/found_item_form.dart';
 import '../../screens/profile/lost_item_form.dart';
 import '../../shared/colors.dart';
@@ -22,7 +20,7 @@ class _AddItemButtonState extends State<AddItemButton> {
   @override
   Widget build(BuildContext context) {
     if (widget.type == "My Ads") {
-      return Container();
+      return const SizedBox();
     }
     return GestureDetector(
       onTap: () async {
@@ -38,8 +36,7 @@ class _AddItemButtonState extends State<AddItemButton> {
                     GestureDetector(
                       child: const Text("Gallery"),
                       onTap: () async {
-                        xFile = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
+                        xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
                         if (!mounted) return;
                         Navigator.of(context).pop();
                       },
@@ -48,8 +45,7 @@ class _AddItemButtonState extends State<AddItemButton> {
                     GestureDetector(
                       child: const Text("Camera"),
                       onTap: () async {
-                        xFile = await ImagePicker()
-                            .pickImage(source: ImageSource.camera);
+                        xFile = await ImagePicker().pickImage(source: ImageSource.camera);
                         if (!mounted) return;
                         Navigator.of(context).pop();
                       },
@@ -78,13 +74,12 @@ class _AddItemButtonState extends State<AddItemButton> {
           // Pass the XFile directly to LostItemForm
           if (widget.type == "Lost") {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => LostItemForm(
+              builder: (context) => LostFoundItemForm(
                 imageFile: xFile!,
               ),
             ));
           } else if (widget.type == "Found") {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const FoundItemForm()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const FoundItemForm()));
           }
         }
       },
@@ -101,8 +96,8 @@ class _AddItemButtonState extends State<AddItemButton> {
             Padding(
               padding: EdgeInsets.all(20),
               child: Icon(
-                FluentIcons.add_32_filled,
-                size: 30,
+                Icons.add_rounded,
+                color: MyColors.whiteColor,
               ),
             ),
           ],

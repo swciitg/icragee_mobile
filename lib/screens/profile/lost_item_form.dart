@@ -3,19 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 
-class LostItemForm extends StatefulWidget {
+class LostFoundItemForm extends StatefulWidget {
   static const id = "/lostItemForm";
   final XFile imageFile;
+  final bool lostForm;
 
-  const LostItemForm({super.key, required this.imageFile});
+  const LostFoundItemForm({
+    super.key,
+    required this.imageFile,
+    this.lostForm = true,
+  });
 
   @override
-  State<LostItemForm> createState() => _LostItemFormState();
+  State<LostFoundItemForm> createState() => _LostFoundItemFormState();
 }
 
-class _LostItemFormState extends State<LostItemForm> {
+class _LostFoundItemFormState extends State<LostFoundItemForm> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _title = TextEditingController();
   final TextEditingController _description = TextEditingController();
@@ -39,7 +45,7 @@ class _LostItemFormState extends State<LostItemForm> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text("Lost Item Details"),
+        title: Text("${widget.lostForm ? "Lost" : "Found"} Item Details"),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -65,7 +71,8 @@ class _LostItemFormState extends State<LostItemForm> {
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _location,
-                      decoration: const InputDecoration(labelText: 'Location Lost'),
+                      decoration: InputDecoration(
+                          labelText: 'Location ${widget.lostForm ? "lost" : "found"}'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter the location';
@@ -131,7 +138,7 @@ class _LostItemFormState extends State<LostItemForm> {
             // Call the postLostFoundData method from the LostAndFoundService class
             final user = await UserDetails.getFromSharedPreferences();
             await DataService.postLostFoundData(
-              category: "Lost",
+              category: widget.lostForm ? "Lost" : "Found",
               title: _title.text.trim(),
               description: _description.text.trim(),
               location: _location.text.trim(),
@@ -147,9 +154,7 @@ class _LostItemFormState extends State<LostItemForm> {
 
             Navigator.pop(context);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Failed to post the lost item.')),
-            );
+            showSnackBar("Failed to post the lost item.");
           }
 
           setState(() {
