@@ -107,10 +107,10 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
   }
 
   Widget _buildNotifications() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: const Expanded(
-        child: SingleChildScrollView(child: NotificationsPage()),
+    return Expanded(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 8),
+        child: NotificationsPage(),
       ),
     );
   }
