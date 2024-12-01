@@ -83,8 +83,17 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                               loading = true;
                             });
                             try {
-                              final user = widget.user.copyWith(mealAccess: updatedList);
-                              await DataService.updateUserDetails(user);
+                              final meals = widget.user.mealAccess;
+                              meals.removeWhere((e) => e.day == updatedList.first.day);
+                              meals.addAll(updatedList);
+                              final user = widget.user.copyWith(
+                                mealAccess: meals,
+                                inCampus: inCampus,
+                              );
+                              await DataService.updateUserDetails(
+                                user,
+                                containsFirestoreData: true,
+                              );
                             } catch (e) {
                               showSnackBar("Something went wrong!");
                             }
