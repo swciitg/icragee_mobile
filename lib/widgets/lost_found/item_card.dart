@@ -1,25 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/models/lost_found_model.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 
 import '../../shared/colors.dart';
 
 class ItemCard extends StatelessWidget {
-  final String title;
-  final String location;
-  final String time;
-  final String imageFile;
-  final bool isLost;
+  final LostFoundModel item;
   final bool deleteOption;
 
   const ItemCard({
     super.key,
-    required this.title,
-    required this.location,
-    required this.time,
-    required this.imageFile,
-    required this.isLost,
+    required this.item,
     this.deleteOption = false,
   });
 
@@ -43,7 +35,7 @@ class ItemCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        item.title,
                         style: GoogleFonts.poppins(
                           fontSize: 19,
                           fontWeight: FontWeight.w400,
@@ -51,7 +43,7 @@ class ItemCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis, // Prevents overflow
                       ),
                       Text(
-                        '${isLost ? "Lost at" : "Found at"}: $location',
+                        '${item.category == 'lost' ? "Lost at " : "Found at "}: ${item.location}',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                         ),
@@ -65,7 +57,7 @@ class ItemCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          time,
+                          _formatTimestamp(item.submittedAt),
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -85,8 +77,8 @@ class ItemCard extends StatelessWidget {
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
-                  child: Image.file(
-                    File(imageFile),
+                  child: Image.network(
+                    item.image,
                     width: 150,
                     height: 130,
                     fit: BoxFit.cover,
@@ -96,22 +88,63 @@ class ItemCard extends StatelessWidget {
             ],
           ),
         ),
-        Positioned(
-          top: 16,
-          right: 32,
-          child: GestureDetector(
-            onTap: () {},
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: MyColors.primaryColor,
-                borderRadius: BorderRadius.circular(20),
+        if (deleteOption)
+          Positioned(
+            top: 16,
+            right: 32,
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog.adaptive(
+                        title: const Text("Delete Item?"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              DataService.deleteLostFoundItem(item.id);
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Delete"),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: MyColors.primaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(Icons.delete_rounded, color: Colors.white),
               ),
-              child: Icon(Icons.delete_rounded, color: Colors.white),
             ),
-          ),
-        )
+          )
       ],
     );
+  }
+
+  String _formatTimestamp(String timestamp) {
+    final DateTime date = DateTime.parse(timestamp);
+    final Duration difference = DateTime.now().difference(date);
+    if (difference.inDays > 1) {
+      return "${difference.inDays} days ago";
+    } else if (difference.inHours > 1) {
+      return "${difference.inHours} hours ago";
+    } else if (difference.inMinutes > 1) {
+      return "${difference.inMinutes} minutes ago";
+    } else {
+      return "Just now";
+    }
   }
 }

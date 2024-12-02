@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../screens/profile/found_item_form.dart';
-import '../../screens/profile/lost_item_form.dart';
+import '../../screens/profile/lost_found_item_form.dart';
 import '../../shared/colors.dart';
 
 class AddItemButton extends StatefulWidget {
@@ -29,25 +30,31 @@ class _AddItemButtonState extends State<AddItemButton> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text("From where do you want to take the photo?"),
+              title: Text(
+                "Choose your option",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: <Widget>[
+                  children: [
                     GestureDetector(
                       child: const Text("Gallery"),
                       onTap: () async {
-                        xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-                        if (!mounted) return;
-                        Navigator.of(context).pop();
+                        xFile = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery, imageQuality: 50);
+                        navigatorKey.currentState!.pop();
                       },
                     ),
                     const Padding(padding: EdgeInsets.all(8.0)),
                     GestureDetector(
                       child: const Text("Camera"),
                       onTap: () async {
-                        xFile = await ImagePicker().pickImage(source: ImageSource.camera);
-                        if (!mounted) return;
-                        Navigator.of(context).pop();
+                        xFile = await ImagePicker()
+                            .pickImage(source: ImageSource.camera, imageQuality: 50);
+                        navigatorKey.currentState!.pop();
                       },
                     ),
                   ],
@@ -56,31 +63,20 @@ class _AddItemButtonState extends State<AddItemButton> {
             );
           },
         );
-
-        if (!mounted) return;
         if (xFile != null) {
-          // Check the image size
           var imageSize = (await xFile!.length()) / (1024 * 1024); // MB
           if (imageSize > 2.5) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text(
-                "Maximum image size can be 2.5 MB",
-                style: TextStyle(fontSize: 20),
-              ),
-            ));
+            showSnackBar("Maximum image size can be 2.5 MB");
             return;
           }
-
-          // Pass the XFile directly to LostItemForm
-          if (widget.type == "Lost") {
-            Navigator.of(context).push(MaterialPageRoute(
+          navigatorKey.currentState!.push(
+            MaterialPageRoute(
               builder: (context) => LostFoundItemForm(
                 imageFile: xFile!,
+                lostForm: widget.type == "Lost",
               ),
-            ));
-          } else if (widget.type == "Found") {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const FoundItemForm()));
-          }
+            ),
+          );
         }
       },
       child: Container(

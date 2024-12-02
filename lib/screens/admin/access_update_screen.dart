@@ -210,6 +210,11 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
         ),
       ),
       backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
     );
   }
 }

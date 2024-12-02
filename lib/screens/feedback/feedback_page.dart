@@ -1,175 +1,189 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 
-class FeedbackPage extends StatefulWidget {
+class FeedbackPage extends ConsumerStatefulWidget {
   const FeedbackPage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _FeedbackPage();
-  }
+  ConsumerState<ConsumerStatefulWidget> createState() => _FeedbackPageState();
 }
 
-class _FeedbackPage extends State<FeedbackPage> {
-  final _formKey = GlobalKey<FormState>();
+class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _feedbackController = TextEditingController();
+  bool loading = false;
 
-  void _submitFeedback() {
-    if (_formKey.currentState!.validate()) {
-      String name = _nameController.text;
-      String email = _emailController.text;
-      String feedback = _feedbackController.text;
+  Future<void> _submitFeedback() async {
+    if (loading) return;
+    loading = true;
+    if (!checkForm()) return;
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String feedback = _feedbackController.text;
 
-      DataService.submitFeedback(
+    try {
+      await DataService.submitFeedback(
         name: name,
         email: email,
         feedback: feedback,
-      ).then((_) {
-        showSnackBar("Feedback submitted successfully");
-        _formKey.currentState!.reset();
-        _nameController.clear();
-        _emailController.clear();
-        _feedbackController.clear();
-      }).catchError((error) {
-        showSnackBar("Failed to submit feedback: $error");
-      });
+      );
+      _nameController.clear();
+      _emailController.clear();
+      _feedbackController.clear();
+      navigatorKey.currentState!.pop();
+      showSnackBar("Feedback submitted successfully");
+    } catch (error) {
+      showSnackBar("Failed to submit feedback: $error");
     }
+    loading = false;
+  }
+
+  @override
+  void initState() {
+    final user = ref.read(userProvider)!;
+    _nameController.text = user.fullName;
+    _emailController.text = user.email;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _feedbackController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: MyColors.backgroundColor,
-        title: const Text(
-          'Feedback',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
+      appBar: _appBar(context),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                    bottom: 20,
-                    left: 30,
-                    right: 30,
-                  ),
-                  child: Image.asset('assets/images/logo.png'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.only(
+                  bottom: 20,
+                  left: 30,
+                  right: 30,
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  cursorHeight: 20,
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  ),
-                  keyboardType: TextInputType.name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  cursorHeight: 20,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1.5),
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty || !value.contains('@')) {
-                      return 'Please enter your email address';
-                    }
-
-                    return null;
-                  },
-                  controller: _emailController,
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: 100,
-                  child: TextFormField(
-                    cursorHeight: 20,
-                    decoration: const InputDecoration(
-                      labelText: 'Your Feedback',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    ),
-                    keyboardType: TextInputType.text,
-                    maxLines: 4,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your feedback';
-                      }
-                      return null;
-                    },
-                    controller: _feedbackController,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: _submitFeedback,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8), color: MyColors.secondaryColor),
-                        child: const Text(
-                          'Submit',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+                child: Image.asset('assets/images/logo.png'),
+              ),
+              _buildTextField(_nameController, "Name"),
+              _buildTextField(
+                _emailController,
+                "Email",
+                keyboardType: TextInputType.emailAddress,
+              ),
+              _buildTextField(_feedbackController, "Feedback", maxLines: 5),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: GestureDetector(
+        onTap: _submitFeedback,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          decoration:
+              BoxDecoration(borderRadius: BorderRadius.circular(8), color: MyColors.primaryColor),
+          child: const Text(
+            'Submit',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: Colors.white,
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label,
+      {TextInputType keyboardType = TextInputType.text, int? maxLength, int? maxLines}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextField(
+        controller: controller,
+        maxLength: maxLength,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black87),
+          hintText: label,
+          hintStyle: const TextStyle(color: Colors.black26),
+          filled: true,
+          fillColor: Colors.white,
+          border: _buildInputBorder(),
+          enabledBorder: _buildInputBorder(),
+          focusedBorder: _buildInputBorder(),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+      ),
+    );
+  }
+
+  OutlineInputBorder _buildInputBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: Colors.black),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        "Feedback",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+    );
+  }
+
+  bool checkForm() {
+    if (_nameController.text.isEmpty) {
+      showSnackBar("Name cannot be empty");
+      return false;
+    }
+    if (_emailController.text.isEmpty) {
+      showSnackBar("Email cannot be empty");
+      return false;
+    }
+    if (_feedbackController.text.isEmpty) {
+      showSnackBar("Feedback cannot be empty");
+      return false;
+    }
+    return true;
   }
 }

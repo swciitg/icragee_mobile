@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ApiService {
   static const baseUrl = "https://event.iitg.ac.in/8icragee/api";
@@ -66,6 +67,22 @@ class ApiService {
       });
     } catch (e) {
       debugPrint("Error scheduling event: $e");
+      rethrow;
+    }
+  }
+
+  static Future<String?> uploadImage(XFile file) async {
+    try {
+      final name = file.path.split('/').last;
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(file.path, filename: name),
+      });
+      final res = await dio.post('user/uploadimage', data: formData);
+      print("image url data");
+      print(res.data);
+      return res.data['url'] as String?;
+    } catch (e) {
+      debugPrint("Error uploading image: $e");
       rethrow;
     }
   }

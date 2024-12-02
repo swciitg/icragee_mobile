@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/contact_model.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
+import 'package:icragee_mobile/models/lost_found_model.dart';
 import 'package:icragee_mobile/models/notification_model.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/shared/globals.dart';
@@ -159,33 +160,13 @@ class DataService {
     }
   }
 
-  static Future<void> postLostFoundData({
-    required String category,
-    required String title,
-    required String description,
-    required String location,
-    required String contact,
-    required XFile image,
-    required String name,
-    required String email,
-  }) async {
+  static Future<void> postLostFoundData(LostFoundModel model) async {
     try {
-      // Choose the collection based on the category (Lost or Found)
-      String collectionName = category == "Lost" ? "lost_items" : "found_items";
-
-      await firestore.collection(collectionName).add({
-        "title": title,
-        "description": description,
-        "location": location,
-        "contact": contact,
-        "image": image.path,
-        "email": email,
-        "name": name,
-        "category": category,
-        "submittedAt": FieldValue.serverTimestamp(),
-      });
+      final newDoc = firestore.collection('lost_found_items').doc();
+      model = model.copyWith(id: newDoc.id);
+      await newDoc.set(model.toJson());
     } catch (error) {
-      throw ('Failed to post $category item: $error');
+      throw ('Failed to post ${model.category} item: $error');
     }
   }
 
@@ -267,5 +248,9 @@ class DataService {
       final user = UserDetails.fromJson(doc.data()!);
       return user.mealAccess;
     });
+  }
+
+  static Future<void> deleteLostFoundItem(String id) async {
+    await firestore.collection('lost_found_items').doc(id).delete();
   }
 }

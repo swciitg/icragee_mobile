@@ -120,6 +120,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         ),
       ),
       backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
     );
   }
 

@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
         supportedLocales: const [Locale('en', 'US')],
         scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
-        title: 'ICRAGEE',
+        title: 'Icragee',
         routerConfig: routeConfig,
         theme: ThemeData(
           colorSchemeSeed: MyColors.primaryColor,
+          scaffoldBackgroundColor: MyColors.backgroundColor,
           // Use Google Fonts for the entire app
           textTheme: GoogleFonts.poppinsTextTheme(
             Theme.of(context).textTheme,
