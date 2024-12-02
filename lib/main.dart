@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: const [Locale('en', 'US')],
         scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
-        title: 'Icragee',
+        title: '8Icragee',
         routerConfig: routeConfig,
         theme: ThemeData(
           colorSchemeSeed: MyColors.primaryColor,
