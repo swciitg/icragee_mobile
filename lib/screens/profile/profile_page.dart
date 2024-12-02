@@ -13,7 +13,8 @@ import 'package:icragee_mobile/widgets/profile_screen/profile_details_card.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+  final bool admin;
+  const ProfilePage({super.key, this.admin = false});
 
   @override
   ConsumerState<ProfilePage> createState() => ProfilePageState();
@@ -37,7 +38,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         children: [
           _buildAppBar(context),
           const SizedBox(height: 24),
-          ProfileDetailsCard(user: user),
+          ProfileDetailsCard(user: user,admin: widget.admin),
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.symmetric(horizontal: 16),

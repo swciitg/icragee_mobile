@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 
 class ProfileDetailsCard extends StatelessWidget {
   final UserDetails user;
-  final bool includeName;
+  final bool admin;
   const ProfileDetailsCard({
     super.key,
     required this.user,
-    this.includeName = false,
+    this.admin = false,
   });
 
   @override
@@ -31,10 +33,20 @@ class ProfileDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (includeName) _buildDetailTile("Name", user.fullName),
-          _buildDetailTile("Institute", "Indian Institute of Technology, Guwahati"),
           _buildDetailTile("Email ID", user.email),
-          _buildDetailTile("Registratin Category", user.registrationCategory, isLast: true),
+          if (!admin)
+            _buildDetailTile("Registratin Category", user.registrationCategory, isLast: true),
+          if (admin)
+            Consumer(
+              builder: (context, ref, child) {
+                final user = ref.read(userProvider)!;
+                return _buildDetailTile(
+                  "Role",
+                  user.superUser ? "Super-Admin" : "Volunteer",
+                  isLast: true,
+                );
+              },
+            ),
         ],
       ),
     );

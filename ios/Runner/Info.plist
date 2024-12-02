@@ -32,6 +32,12 @@
 	<string>This app requires Photo Library access for Lost/Found or Buy/Sell images</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location to show the key locations needed for user while attending conference like bank, auditorium, guest houses and conference halls.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+  		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
