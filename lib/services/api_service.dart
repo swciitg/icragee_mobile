@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,12 +10,29 @@ class ApiService {
   static const baseUrl = "https://event.iitg.ac.in/8icragee/api";
   static final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
+  static Future<String> uploadImage(XFile? image) async {
+    Map<String, dynamic> mp = {};
+    if (image != null) {
+      String fileName = image.path.split('/').last;
+      mp['image'] = await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+        contentType: MediaType('image', 'png'),
+      );
+    }
+    FormData formData = FormData.fromMap(mp);
+
+    final res = await dio.post('/user/uploadimage', data: formData);
+    return res.data['imageUrl'] ?? '';
+  }
+
   static Future<void> sendOTP(String email, {bool admin = false}) async {
     // admin endpoint: /newadmin/send-otp
     // Error if user is not admin 'Admin not found' in message
     try {
       debugPrint("Sending OTP to (${admin ? "admin" : "user"}): $email");
-      await dio.post('/${admin ? "newadmin" : "user"}/send-otp', data: {'email': email});
+      await dio.post('/${admin ? "newadmin" : "user"}/send-otp',
+          data: {'email': email});
     } on DioException catch (e) {
       final data = e.response?.data as Map<String, dynamic>?;
       final message = data?['message'] as String?;
@@ -29,11 +47,13 @@ class ApiService {
     }
   }
 
-  static Future<bool> verifyOTP(String email, String otp, {bool admin = false}) async {
+  static Future<bool> verifyOTP(String email, String otp,
+      {bool admin = false}) async {
     // admin endpoint: /newadmin/verify-otp
     try {
       debugPrint("Verify OTP (${admin ? "admin" : "user"}): $email");
-      final res = await dio.post('/${admin ? "newadmin" : "user"}/verify-otp', data: {
+      final res =
+          await dio.post('/${admin ? "newadmin" : "user"}/verify-otp', data: {
         'email': email,
         'otp': int.parse(otp),
       });
@@ -67,22 +87,6 @@ class ApiService {
       });
     } catch (e) {
       debugPrint("Error scheduling event: $e");
-      rethrow;
-    }
-  }
-
-  static Future<String?> uploadImage(XFile file) async {
-    try {
-      final name = file.path.split('/').last;
-      final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path, filename: name),
-      });
-      final res = await dio.post('user/uploadimage', data: formData);
-      print("image url data");
-      print(res.data);
-      return res.data['url'] as String?;
-    } catch (e) {
-      debugPrint("Error uploading image: $e");
       rethrow;
     }
   }

@@ -5,6 +5,7 @@ import 'package:icragee_mobile/widgets/lost_found/add_item_button.dart';
 import 'package:icragee_mobile/widgets/lost_found/found_items_list.dart';
 import 'package:icragee_mobile/widgets/lost_found/lost_items_list.dart';
 import 'package:icragee_mobile/widgets/lost_found/myads_list.dart';
+
 import '../../shared/colors.dart';
 
 class LostAndFoundScreen extends ConsumerStatefulWidget {
@@ -97,7 +98,9 @@ class _LostAndFoundScreenState extends ConsumerState<LostAndFoundScreen> {
                 vertical: 12,
               ),
               decoration: ShapeDecoration(
-                color: selected == index + 1 ? MyColors.whiteColor : MyColors.primaryColorTint,
+                color: selected == index + 1
+                    ? MyColors.whiteColor
+                    : MyColors.primaryColorTint,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),

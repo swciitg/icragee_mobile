@@ -45,7 +45,8 @@ class _LostFoundItemFormState extends State<LostFoundItemForm> {
               child: Column(
                 children: [
                   _buildTextField(_title, "Title"),
-                  _buildTextField(_location, 'Location ${widget.lostForm ? "lost" : "found"}'),
+                  _buildTextField(_location,
+                      'Location ${widget.lostForm ? "lost" : "found"}'),
                   _buildTextField(
                     _contactNumber,
                     "Contact Number",
@@ -75,7 +76,7 @@ class _LostFoundItemFormState extends State<LostFoundItemForm> {
           });
           try {
             final user = await UserDetails.getFromSharedPreferences();
-            await ApiService.uploadImage(widget.imageFile);
+            final imageUrl = await ApiService.uploadImage(widget.imageFile);
             final model = LostFoundModel(
               id: "",
               category: widget.lostForm ? "lost" : "found",
@@ -83,7 +84,8 @@ class _LostFoundItemFormState extends State<LostFoundItemForm> {
               description: _description.text.trim(),
               location: _location.text.trim(),
               contact: _contactNumber.text.trim(),
-              image: widget.imageFile.path, // Replace with image url
+              imageUrl: imageUrl,
+              // Replace with image url
               name: user!.fullName,
               email: user.email,
               submittedAt: DateTime.now().toString(),
@@ -92,7 +94,8 @@ class _LostFoundItemFormState extends State<LostFoundItemForm> {
 
             await DataService.postLostFoundData(model);
 
-            showSnackBar('${widget.lostForm ? "Lost" : "Found"} item posted successfully!');
+            showSnackBar(
+                '${widget.lostForm ? "Lost" : "Found"} item posted successfully!');
             isLoading = false;
 
             navigatorKey.currentState!.pop();
@@ -174,7 +177,9 @@ class _LostFoundItemFormState extends State<LostFoundItemForm> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label,
-      {TextInputType keyboardType = TextInputType.text, int? maxLength, int? maxLines}) {
+      {TextInputType keyboardType = TextInputType.text,
+      int? maxLength,
+      int? maxLines}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(

@@ -51,7 +51,8 @@ class ItemCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: MyColors.primaryColorTint,
                           borderRadius: BorderRadius.circular(20),
@@ -71,14 +72,15 @@ class ItemCard extends StatelessWidget {
               ),
 
               ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 130, maxWidth: 155),
+                constraints:
+                    const BoxConstraints(maxHeight: 130, maxWidth: 155),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
                   child: Image.network(
-                    item.image,
+                    item.imageUrl,
                     width: 150,
                     height: 130,
                     fit: BoxFit.cover,

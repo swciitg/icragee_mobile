@@ -63,6 +63,8 @@ dependencies:
   dots_indicator: ^3.0.0
   logger: ^2.4.0
   mobile_scanner: ^6.0.2
+  path_provider: ^2.1.5
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:

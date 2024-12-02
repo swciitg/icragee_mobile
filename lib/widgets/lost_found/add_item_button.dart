@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/shared/globals.dart';
-import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../screens/profile/lost_found_item_form.dart';
 import '../../shared/colors.dart';
 
@@ -43,8 +43,8 @@ class _AddItemButtonState extends State<AddItemButton> {
                     GestureDetector(
                       child: const Text("Gallery"),
                       onTap: () async {
-                        xFile = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery, imageQuality: 50);
+                        xFile = await ImagePicker().pickImage(
+                            source: ImageSource.gallery, imageQuality: 50);
                         navigatorKey.currentState!.pop();
                       },
                     ),
@@ -52,8 +52,8 @@ class _AddItemButtonState extends State<AddItemButton> {
                     GestureDetector(
                       child: const Text("Camera"),
                       onTap: () async {
-                        xFile = await ImagePicker()
-                            .pickImage(source: ImageSource.camera, imageQuality: 50);
+                        xFile = await ImagePicker().pickImage(
+                            source: ImageSource.camera, imageQuality: 50);
                         navigatorKey.currentState!.pop();
                       },
                     ),
@@ -64,11 +64,11 @@ class _AddItemButtonState extends State<AddItemButton> {
           },
         );
         if (xFile != null) {
-          var imageSize = (await xFile!.length()) / (1024 * 1024); // MB
-          if (imageSize > 2.5) {
-            showSnackBar("Maximum image size can be 2.5 MB");
-            return;
-          }
+          // var imageSize = (await xFile!.length()) / (1024 * 1024); // MB
+          // if (imageSize > 2.5) {
+          //   showSnackBar("Maximum image size can be 2.5 MB");
+          //   return;
+          // }
           navigatorKey.currentState!.push(
             MaterialPageRoute(
               builder: (context) => LostFoundItemForm(

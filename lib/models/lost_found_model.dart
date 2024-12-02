@@ -5,7 +5,7 @@ class LostFoundModel {
   final String description;
   final String location;
   final String contact;
-  final String image;
+  final String imageUrl;
   final String name;
   final String email;
   final String submittedAt;
@@ -18,7 +18,7 @@ class LostFoundModel {
     required this.description,
     required this.location,
     required this.contact,
-    required this.image,
+    required this.imageUrl,
     required this.name,
     required this.email,
     required this.submittedAt,
@@ -33,7 +33,7 @@ class LostFoundModel {
       description: json['description'],
       location: json['location'],
       contact: json['contact'],
-      image: json['image'],
+      imageUrl: json['image'],
       name: json['name'],
       email: json['email'],
       submittedAt: json['submittedAt'],
@@ -49,7 +49,7 @@ class LostFoundModel {
       'description': description,
       'location': location,
       'contact': contact,
-      'image': image,
+      'image': imageUrl,
       'name': name,
       'email': email,
       'submittedAt': submittedAt,
@@ -77,7 +77,7 @@ class LostFoundModel {
       description: description ?? this.description,
       location: location ?? this.location,
       contact: contact ?? this.contact,
-      image: image ?? this.image,
+      imageUrl: image ?? this.imageUrl,
       name: name ?? this.name,
       email: email ?? this.email,
       submittedAt: submittedAt ?? this.submittedAt,
