@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 
+import '../services/data_service.dart';
+
 final userProvider = StateNotifierProvider<UserProvider, UserDetails?>((ref) {
   return UserProvider();
 });

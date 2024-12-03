@@ -68,7 +68,8 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconLabel(
-                    text: '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                    text:
+                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
                         ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                     icon: Icons.schedule_outlined,
                   ),
@@ -82,7 +83,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
               Consumer(builder: (context, ref, child) {
                 final user = ref.watch(userProvider)!;
                 final email = user.email;
-                if (user.eventList.contains(widget.event.id)) {
+                if (user.eventList!.contains(widget.event.id)) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: Icon(
@@ -156,11 +157,13 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
 
   Widget _buildStatus() {
     var status = "";
-    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime =
+        getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) &&
+        endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";
