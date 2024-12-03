@@ -6,6 +6,7 @@ import 'package:icragee_mobile/screens/qr_view/qr_tab.dart';
 import 'package:icragee_mobile/screens/schedule/schedule_tab.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tabs.dart';
+import 'package:upgrader/upgrader.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,25 +21,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.backgroundColor,
-      extendBody: true,
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
-        onPageChanged: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        children: const [
-          HomeTab(),
-          ScheduleTab(),
-          MapTab(),
-          QrTab(),
-        ],
+    return UpgradeAlert(
+      child: Scaffold(
+        backgroundColor: MyColors.backgroundColor,
+        extendBody: true,
+        body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          children: const [
+            HomeTab(),
+            ScheduleTab(),
+            MapTab(),
+            QrTab(),
+          ],
+        ),
+        bottomNavigationBar: _buildBottomBar(),
       ),
-      bottomNavigationBar: _buildBottomBar(),
     );
   }
 
@@ -59,17 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 pageController.jumpToPage(index);
               } else {
                 pageController.animateToPage(index,
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.easeIn);
+                    duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
               }
               selectedIndex = index;
             }),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: SvgPicture.asset(
-                index == selectedIndex
-                    ? tab.selectedIconPath
-                    : tab.unselectedIconPath,
+                index == selectedIndex ? tab.selectedIconPath : tab.unselectedIconPath,
                 height: 28,
               ),
             ),
