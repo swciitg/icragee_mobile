@@ -8,6 +8,7 @@ import 'package:icragee_mobile/widgets/snackbar.dart';
 class FoodCouponUpdate extends StatefulWidget {
   final List<MealAccess> meals;
   final Function(List<MealAccess>) onUpdate;
+
   const FoodCouponUpdate({
     super.key,
     required this.meals,
@@ -78,7 +79,8 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
               if (newValue == null) return;
               setState(() {
                 selectedDay = newValue;
-                mealAccess = widget.meals.where((e) => e.day == selectedDay).toList();
+                mealAccess =
+                    widget.meals.where((e) => e.day == selectedDay).toList();
               });
             },
           ),
@@ -114,7 +116,7 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
           ),
         ),
         Consumer(builder: (context, ref, child) {
-          final superUser = ref.read(userProvider)!.superUser;
+          final superUser = ref.read(userProvider)!.role != AdminRole.guest;
           return Switch(
             value: value,
             activeColor: MyColors.primaryColor,
@@ -127,7 +129,8 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
                 return e.day == selectedDay && e.mealType == title;
               });
               mealAccess.removeAt(index);
-              final updatedMeal = MealAccess(day: selectedDay, mealType: title, taken: val);
+              final updatedMeal =
+                  MealAccess(day: selectedDay, mealType: title, taken: val);
               if (index == mealAccess.length) {
                 mealAccess.add(updatedMeal);
               } else {

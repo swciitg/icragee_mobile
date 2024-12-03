@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icragee_mobile/models/user_details.dart';
-import 'package:icragee_mobile/services/data_service.dart';
 
 final userProvider = StateNotifierProvider<UserProvider, UserDetails?>((ref) {
   return UserProvider();
@@ -33,12 +32,12 @@ class UserProvider extends StateNotifier<UserDetails?> {
   }
 
   void updateIfSuperUser() async {
-    if (state == null) {
-      debugPrint("User details is NULL");
-      return;
-    }
-    final isSuperUser = await DataService.isSuperUser(state!.email);
-    state = state!.copyWith(superUser: isSuperUser);
+    // if (state == null) {
+    //   debugPrint("User details is NULL");
+    //   return;
+    // }
+    // final isSuperUser = await DataService.isSuperUser(state!.email);
+    // state = state!.copyWith(role: isSuperUser);
   }
 
   Future<void> updateUserDetails() async {

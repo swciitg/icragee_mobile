@@ -5,6 +5,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 class ApiService {
   static const baseUrl = "https://event.iitg.ac.in/8icragee/api";
@@ -59,10 +60,13 @@ class ApiService {
       });
       final data = res.data as Map<String, dynamic>;
       final user = data['user'] as Map<String, dynamic>?;
+      Logger().i(user);
       final message = data['message'] as String;
       if (user != null) {
         user['fcmToken'] = await FirebaseMessaging.instance.getToken();
+        Logger().i("here");
         final userDetails = UserDetails.fromJson(user, id: "_id");
+        Logger().i("here2");
         await userDetails.saveToSharedPreferences();
       }
       return message.contains("Verified") && user != null;

@@ -10,6 +10,7 @@ import 'package:icragee_mobile/widgets/snackbar.dart';
 
 class AccessUpdateScreen extends StatefulWidget {
   final UserDetails user;
+
   const AccessUpdateScreen({super.key, required this.user});
 
   @override
@@ -22,7 +23,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
 
   @override
   void initState() {
-    inCampus = widget.user.inCampus;
+    inCampus = widget.user.inCampus ?? false;
     super.initState();
   }
 
@@ -68,11 +69,12 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                   const SizedBox(height: 16),
                   if (inCampus)
                     StreamBuilder(
-                      stream: DataService.getUserMealAccessSteam(widget.user.id),
+                      stream:
+                          DataService.getUserMealAccessSteam(widget.user.id),
                       builder: (context, snapshot) {
                         List<MealAccess> meals = [];
                         if (!snapshot.hasData) {
-                          meals = widget.user.mealAccess;
+                          meals = widget.user.mealAccess!;
                         } else {
                           meals = snapshot.data!;
                         }
@@ -84,12 +86,14 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                             });
                             try {
                               final meals = widget.user.mealAccess;
-                              meals.removeWhere((e) => e.day == updatedList.first.day);
+                              meals!.removeWhere(
+                                  (e) => e.day == updatedList.first.day);
                               meals.addAll(updatedList);
                               final user = widget.user.copyWith(
                                 mealAccess: meals,
                                 inCampus: inCampus,
                               );
+
                               await DataService.updateUserDetails(
                                 user,
                                 containsFirestoreData: true,
@@ -145,7 +149,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
 
   Widget _markPresentButton() {
     return Consumer(builder: (context, ref, child) {
-      final superUser = ref.read(userProvider)!.superUser;
+      final superUser = ref.read(userProvider)!.role != AdminRole.guest;
       return GestureDetector(
         onTap: () async {
           if (!superUser && !inCampus) {

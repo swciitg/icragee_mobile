@@ -13,7 +13,7 @@ class QrCodeWidget extends ConsumerWidget {
       data: id,
       version: QrVersions.auto,
       size: 300,
-      gapless: false,
+      gapless: true,
       backgroundColor: Colors.white,
       embeddedImageStyle: const QrEmbeddedImageStyle(
         color: Colors.black,

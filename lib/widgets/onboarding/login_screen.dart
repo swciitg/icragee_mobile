@@ -86,7 +86,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return;
       }
       final userDetails = await UserDetails.getFromSharedPreferences();
-      await DataService.updateUserDetails(userDetails!, containsFirestoreData: false);
+      await DataService.updateUserDetails(userDetails!,
+          containsFirestoreData: false);
       ref.read(userProvider.notifier).setUserDetails(userDetails);
       ref.read(userProvider.notifier).updateIfSuperUser();
       while (navigatorKey.currentContext!.canPop()) {
@@ -97,16 +98,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       } catch (e) {
         Logger().e(e);
       }
-      for (int i = 0; i < userDetails.eventList.length; i++) {
+      for (int i = 0; i < (userDetails.eventList?.length ?? 0); i++) {
         try {
-          await FirebaseMessaging.instance.subscribeToTopic(userDetails.eventList[i]);
+          await FirebaseMessaging.instance
+              .subscribeToTopic(userDetails.eventList![i]);
         } catch (e) {
           Logger().e(e);
         }
       }
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('admin', admin);
-      navigatorKey.currentContext!.pushReplacement(admin ? '/admin-screen' : '/homeScreen');
+      navigatorKey.currentContext!
+          .pushReplacement(admin ? '/admin-screen' : '/homeScreen');
       return;
     } catch (e) {
       debugPrint(e.toString());
@@ -168,7 +171,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Container(
                 color: Colors.black.withOpacity(0.3),
                 child: const Center(
-                  child: CircularProgressIndicator(color: MyColors.primaryColor),
+                  child:
+                      CircularProgressIndicator(color: MyColors.primaryColor),
                 ),
               ),
             ),
@@ -203,7 +207,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               return GestureDetector(
                 onTap: otpSent ? () => _verifyOTP(ref) : () => _sendOTP(),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),

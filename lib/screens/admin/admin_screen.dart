@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/screens/profile/profile_page.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
@@ -79,7 +80,9 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
       ),
       floatingActionButton: Builder(
         builder: (context) {
-          final superUser = ref.watch(userProvider)!.superUser;
+          final superUser =
+              (ref.watch(userProvider)!.role == AdminRole.superAdmin) ||
+                  (ref.watch(userProvider)!.role == AdminRole.eventsVolunteer);
           if (!superUser) return const SizedBox();
           return FloatingActionButton.extended(
             onPressed: () async {
@@ -172,8 +175,8 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        15, index == 0 ? 15 : 0, 15, index == events.length - 1 ? 100 : 12),
+                    padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
+                        index == events.length - 1 ? 100 : 12),
                     child: EventCard(
                         event: events[index],
                         onChange: () {
@@ -228,7 +231,8 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Welcome Back!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const Text('Welcome Back!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           Row(
             children: [
               GestureDetector(

@@ -1,62 +1,86 @@
 import 'dart:convert';
 
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+enum AdminRole {
+  guest("Guest", "guest"),
+  superAdmin("Super Admin", "super-admin"),
+  foodVolunteer("Food Volunteer", "volunteer-food"),
+  eventsVolunteer("Events Volunteer", "volunteer-event"),
+  registrationVolunteer("Registration Volunteer", "volunteer-registration");
+
+  final String displayString;
+  final String? databaseString;
+
+  const AdminRole(this.displayString, this.databaseString);
+}
+
+AdminRole getRoleFromDatabaseString(String role) {
+  return AdminRole.values.firstWhere((e) => e.databaseString == role,
+      orElse: () => AdminRole.guest);
+}
 
 class UserDetails {
   final String id;
   final Name name;
-  final String title;
-  final String designation;
-  final String institution;
+  final String? title;
   final String email;
-  final String billingAddress;
-  final String foodPreference;
-  final String registrationCategory;
-  final String contact;
-  final List<String> eventList;
+  final String? designation;
+  final String? institution;
+  final String? billingAddress;
+  final String? foodPreference;
+  final String? registrationCategory;
+  final String? contact;
+  final List<String>? eventList;
   final String? fcmToken;
-  final bool inCampus;
-  final List<MealAccess> mealAccess;
-  final bool superUser;
+  final bool? inCampus;
+  final List<MealAccess>? mealAccess;
+  final AdminRole role;
 
   String get fullName => name.fullName;
 
   const UserDetails({
     required this.id,
     required this.name,
-    required this.title,
-    required this.designation,
-    required this.institution,
     required this.email,
-    required this.billingAddress,
-    required this.foodPreference,
-    required this.registrationCategory,
-    required this.contact,
-    required this.eventList,
+    this.title,
+    this.designation,
+    this.institution,
+    this.billingAddress,
+    this.foodPreference,
+    this.registrationCategory,
+    this.contact,
+    this.eventList,
     this.fcmToken,
     this.inCampus = false,
     this.mealAccess = const [],
-    this.superUser = false,
+    this.role = AdminRole.guest,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json, {String id = 'id'}) {
+    Logger().i(json);
     final name = Name.fromJson(json['name'] as Map<String, dynamic>);
     return UserDetails(
-      id: json[id],
-      name: name,
-      title: json['title'],
-      designation: json['designation'],
-      institution: json['institution'],
-      email: json['email'],
-      billingAddress: json['billingAddress'],
-      foodPreference: json['foodPreference'],
-      registrationCategory: json['registrationCategory'],
-      contact: json['contact'].toString(),
-      eventList: (json['eventList'] as List? ?? []).map((e) => e.toString()).toList(),
-      fcmToken: json['fcmToken'],
-      inCampus: json['inCampus'] ?? false,
-      mealAccess: (json['mealAccess'] as List? ?? []).map((e) => MealAccess.fromJson(e)).toList(),
-    );
+        id: json[id],
+        name: name,
+        title: json['title'],
+        designation: json['designation'],
+        institution: json['institution'],
+        email: json['email'],
+        billingAddress: json['billingAddress'],
+        foodPreference: json['foodPreference'],
+        registrationCategory: json['registrationCategory'],
+        contact: json['contact'].toString(),
+        eventList: ((json['eventList'] as List?) ?? [])
+            .map((e) => e.toString())
+            .toList(),
+        fcmToken: json['fcmToken'],
+        inCampus: json['inCampus'] ?? false,
+        mealAccess: ((json['mealAccess'] as List?) ?? [])
+            .map((e) => MealAccess.fromJson(e))
+            .toList(),
+        role: getRoleFromDatabaseString(json['role'] ?? ""));
   }
 
   Map<String, dynamic> toJson({bool containsFirestoreData = false}) {
@@ -72,10 +96,11 @@ class UserDetails {
       'contact': contact,
       'email': email,
       'fcmToken': fcmToken,
+      'role': role.databaseString,
     };
     if (containsFirestoreData) {
       data['eventList'] = eventList;
-      data['mealAccess'] = mealAccess.map((e) => e.toJson()).toList();
+      data['mealAccess'] = mealAccess?.map((e) => e.toJson()).toList();
       data['inCampus'] = inCampus;
     }
     return data;
@@ -110,7 +135,7 @@ class UserDetails {
     String? fcmToken,
     bool? inCampus,
     List<MealAccess>? mealAccess,
-    bool? superUser,
+    AdminRole? role,
   }) {
     return UserDetails(
       id: id ?? this.id,
@@ -127,7 +152,7 @@ class UserDetails {
       fcmToken: fcmToken ?? this.fcmToken,
       inCampus: inCampus ?? this.inCampus,
       mealAccess: mealAccess ?? this.mealAccess,
-      superUser: superUser ?? this.superUser,
+      role: role ?? this.role,
     );
   }
 }

@@ -189,7 +189,7 @@ class DataService {
     if (doc.exists) {
       userRef.update(user.toJson(containsFirestoreData: containsFirestoreData));
     } else {
-      if (user.mealAccess.isEmpty) {
+      if (user.mealAccess!.isEmpty) {
         final defaultMeals = [
           // Day 1
           MealAccess(day: 1, mealType: "Breakfast", taken: false),
@@ -236,12 +236,14 @@ class DataService {
     });
   }
 
-  static Future<bool> isSuperUser(String email) async {
-    final doc = await firestore.collection('globals').doc('superUsers').get();
-    final superUsers = List<String>.from(doc.data()!['emails'] ?? []);
-
-    return superUsers.contains(email);
-  }
+  // static Future<AdminRole> getRole(String email) async {
+  //   final docs =
+  //       await firestore.collection('userDetails').get();
+  //   final superUsers = List<String>.from(doc.data()!['emails'] ?? []);
+  //
+  //
+  //   final role = superUsers.firstWhere((e));
+  // }
 
   static Future<void> fetchDayOneDate() async {
     final doc = await firestore.collection('globals').doc('event').get();
@@ -260,7 +262,7 @@ class DataService {
     final ref = firestore.collection('userDetails').doc(uid);
     return ref.snapshots().map((doc) {
       final user = UserDetails.fromJson(doc.data()!);
-      return user.mealAccess;
+      return user.mealAccess!;
     });
   }
 

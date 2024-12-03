@@ -7,6 +7,7 @@ import 'package:icragee_mobile/shared/colors.dart';
 class ProfileDetailsCard extends StatelessWidget {
   final UserDetails user;
   final bool admin;
+
   const ProfileDetailsCard({
     super.key,
     required this.user,
@@ -35,14 +36,15 @@ class ProfileDetailsCard extends StatelessWidget {
         children: [
           _buildDetailTile("Email ID", user.email),
           if (!admin)
-            _buildDetailTile("Registratin Category", user.registrationCategory, isLast: true),
+            _buildDetailTile("Registratin Category", user.registrationCategory!,
+                isLast: true),
           if (admin)
             Consumer(
               builder: (context, ref, child) {
                 final user = ref.read(userProvider)!;
                 return _buildDetailTile(
                   "Role",
-                  user.superUser ? "Super-Admin" : "Volunteer",
+                  user.role.displayString,
                   isLast: true,
                 );
               },
