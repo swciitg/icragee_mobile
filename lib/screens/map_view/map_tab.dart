@@ -22,7 +22,7 @@ class _MapTabState extends State<MapTab> {
   GoogleMapController? _mapController;
   String _selectedSection = "Auditorium";
   Set<Marker> _markers = {};
-  LatLng? _selectedPosition = null;
+  LatLng? _selectedPosition;
   List<CoordinateModel> _currentCoordinates = [];
   List<String> _locationSections = [];
 

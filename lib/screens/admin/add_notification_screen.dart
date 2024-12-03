@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/notification_model.dart';
 import 'package:icragee_mobile/services/api_service.dart';
 import 'package:icragee_mobile/services/data_service.dart';
@@ -7,14 +9,14 @@ import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class AddNotificationScreen extends StatefulWidget {
+class AddNotificationScreen extends ConsumerStatefulWidget {
   const AddNotificationScreen({super.key});
 
   @override
-  State<AddNotificationScreen> createState() => _AddNotificationScreenState();
+  ConsumerState<AddNotificationScreen> createState() => _AddNotificationScreenState();
 }
 
-class _AddNotificationScreenState extends State<AddNotificationScreen> {
+class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
   bool isLoading = false;
   bool important = false;
   final TextEditingController _titleController = TextEditingController();
@@ -116,10 +118,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(
-                        color: Colors.white, size: 32)
-                    : const Text('Submit',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
+                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -131,8 +131,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
   // Method to handle adding an event
   Future<void> _addNotification() async {
     if (isLoading) return;
-    final valid = _titleController.text.isNotEmpty &&
-        _descriptionController.text.isNotEmpty;
+    final valid = _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty;
     if (!valid) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please fill all fields'),
@@ -144,13 +143,13 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
       isLoading = true;
     });
 
+    final user = ref.read(userProvider)!;
     final notification = NotificationModel(
       title: _titleController.text,
       description: _descriptionController.text,
       timestamp: DateTime.now().toUtc().toString(),
-      // TODO: Replace after admin auth
-      creatorId: "testUser1",
-      creatorName: "Test USER 1",
+      creatorId: user.id,
+      creatorName: user.fullName,
       important: important,
     );
     try {
@@ -162,15 +161,13 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
         body: notification.description,
       );
       navigatorKey.currentContext!.pop();
-      ScaffoldMessenger.of(navigatorKey.currentContext!)
-          .showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
         content: Text('Notification added successfully'),
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: 2),
       ));
     } catch (e) {
-      ScaffoldMessenger.of(navigatorKey.currentContext!)
-          .showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
         content: Text('Failed to add notification'),
         behavior: SnackBarBehavior.floating,
       ));

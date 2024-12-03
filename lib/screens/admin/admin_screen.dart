@@ -53,22 +53,6 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
                     const SizedBox(height: 16),
                     _tabs(),
                     const SizedBox(height: 18),
-                    // TODO: Uncomment it after DB Integration
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 20),
-                    //   child: Align(
-                    //     alignment: Alignment.center,
-                    //     child: InkWell(
-                    //       onTap: () {},
-                    //       child: const Text(
-                    //         'Click here to view feedbacks',
-                    //         style: TextStyle(
-                    //             color: MyColors.primaryTextColor,
-                    //             fontWeight: FontWeight.bold),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     _buildDayTabs(),
                   ],
                 ),

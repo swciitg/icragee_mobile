@@ -172,6 +172,21 @@ class DataService {
     }
   }
 
+  static Future<void> removeEventFromUser(String email, String eventId) async{
+    final querySnapshot = await firestore
+        .collection('userDetails')
+        .where('email', isEqualTo: email)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      final userDoc = querySnapshot.docs.first;
+      await userDoc.reference.update({
+        'eventList': FieldValue.arrayRemove([eventId])
+      });
+    } else {
+      throw Exception('User not found!');
+    }
+  }
+
   static Future<void> postLostFoundData(LostFoundModel model) async {
     try {
       final newDoc = firestore.collection('lost_found_items').doc();

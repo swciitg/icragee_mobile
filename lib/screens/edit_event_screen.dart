@@ -269,8 +269,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
         minute: startTime!.minute,
         day: selectedDay!,
       );
-      print(startTimeDateTime);
-
       final endTimeDateTime = getEventDateFromTimeAndDay(
         hour: endTime!.hour,
         minute: endTime!.minute,

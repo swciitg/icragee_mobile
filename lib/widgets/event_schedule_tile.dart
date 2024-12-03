@@ -54,6 +54,19 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                   ),
                 ),
               ),
+              Consumer(builder: (context, ref, child) {
+                final user = ref.watch(userProvider)!;
+                if (user.eventList?.contains(widget.event.id) ?? false) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Icon(
+                      Icons.notifications_active,
+                      color: MyColors.primaryColor,
+                    ),
+                  );
+                }
+                return const SizedBox();
+              }),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: _buildStatus(),
@@ -68,8 +81,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconLabel(
-                    text:
-                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                    text: '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
                         ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                     icon: Icons.schedule_outlined,
                   ),
@@ -80,45 +92,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                   ),
                 ],
               ),
-              Consumer(builder: (context, ref, child) {
-                final user = ref.watch(userProvider)!;
-                final email = user.email;
-                if (user.eventList!.contains(widget.event.id)) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Icon(
-                      Icons.notifications_active,
-                      color: MyColors.primaryColor,
-                    ),
-                  );
-                }
-                return PopupMenuButton<String>(
-                  onSelected: (value) async {
-                    if (value == 'notify') {
-                      await addEventToUser(email);
-                      ref.read(userProvider.notifier).updateUserDetails();
-                    }
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        value: 'notify',
-                        child: Row(
-                          children: [
-                            Icon(Icons.notifications),
-                            const SizedBox(width: 8),
-                            Text('Notify Me'),
-                          ],
-                        ),
-                      ),
-                    ];
-                  },
-                  icon: Icon(
-                    Icons.more_vert,
-                    color: MyColors.primaryColor,
-                  ),
-                );
-              }),
+              _buildPopupMenuButton(),
             ],
           ),
           if (widget.event.description.trim().isNotEmpty)
@@ -140,6 +114,55 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
     );
   }
 
+  Widget _buildPopupMenuButton() {
+    return Consumer(builder: (context, ref, child) {
+      final user = ref.watch(userProvider)!;
+      final email = user.email;
+      final inList = user.eventList?.contains(widget.event.id) ?? false;
+      return PopupMenuButton<String>(
+        onSelected: (value) async {
+          if (value == 'notify') {
+            await addEventToUser(email);
+            ref.read(userProvider.notifier).updateUserDetails();
+          } else if (value == 'un-notify') {
+            await removeEventFromUser(email);
+            ref.read(userProvider.notifier).updateUserDetails();
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          return [
+            if (!inList)
+              PopupMenuItem(
+                value: 'notify',
+                child: Row(
+                  children: [
+                    Icon(Icons.notifications),
+                    const SizedBox(width: 8),
+                    Text('Notify Me'),
+                  ],
+                ),
+              ),
+            if (inList)
+              PopupMenuItem(
+                value: 'un-notify',
+                child: Row(
+                  children: [
+                    Icon(Icons.notifications_off_rounded),
+                    const SizedBox(width: 8),
+                    Text("Un-Notify")
+                  ],
+                ),
+              )
+          ];
+        },
+        icon: Icon(
+          Icons.more_vert,
+          color: MyColors.primaryColor,
+        ),
+      );
+    });
+  }
+
   Future<void> addEventToUser(String email) async {
     try {
       await DataService.addEventToUser(
@@ -155,15 +178,28 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
     }
   }
 
+  Future<void> removeEventFromUser(String email) async {
+    try {
+      await DataService.removeEventFromUser(
+        email,
+        widget.event.id,
+      );
+      await FirebaseMessaging.instance.unsubscribeFromTopic(widget.event.id);
+      debugPrint("Unsubscribed from topic: ${widget.event.id}");
+      showSnackBar("Removed from your schedule");
+    } catch (e) {
+      debugPrint(e.toString());
+      showSnackBar("Failed to remove from your schedule");
+    }
+  }
+
   Widget _buildStatus() {
     var status = "";
-    final startTime =
-        getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) &&
-        endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";
