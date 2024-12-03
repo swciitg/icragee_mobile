@@ -17,8 +17,8 @@ enum AdminRole {
 }
 
 AdminRole getRoleFromDatabaseString(String role) {
-  return AdminRole.values.firstWhere((e) => e.databaseString == role,
-      orElse: () => AdminRole.guest);
+  return AdminRole.values
+      .firstWhere((e) => e.databaseString == role, orElse: () => AdminRole.guest);
 }
 
 class UserDetails {
@@ -31,6 +31,7 @@ class UserDetails {
   final String? billingAddress;
   final String? foodPreference;
   final String? registrationCategory;
+  final bool? isPaymentSuccessFul;
   final String? contact;
   final List<String>? eventList;
   final String? fcmToken;
@@ -53,6 +54,7 @@ class UserDetails {
     this.contact,
     this.eventList,
     this.fcmToken,
+    this.isPaymentSuccessFul = false,
     this.inCampus = false,
     this.mealAccess = const [],
     this.role = AdminRole.guest,
@@ -62,25 +64,23 @@ class UserDetails {
     Logger().i(json);
     final name = Name.fromJson(json['name'] as Map<String, dynamic>);
     return UserDetails(
-        id: json[id],
-        name: name,
-        title: json['title'],
-        designation: json['designation'],
-        institution: json['institution'],
-        email: json['email'],
-        billingAddress: json['billingAddress'],
-        foodPreference: json['foodPreference'],
-        registrationCategory: json['registrationCategory'],
-        contact: json['contact'].toString(),
-        eventList: ((json['eventList'] as List?) ?? [])
-            .map((e) => e.toString())
-            .toList(),
-        fcmToken: json['fcmToken'],
-        inCampus: json['inCampus'] ?? false,
-        mealAccess: ((json['mealAccess'] as List?) ?? [])
-            .map((e) => MealAccess.fromJson(e))
-            .toList(),
-        role: getRoleFromDatabaseString(json['role'] ?? ""));
+      id: json[id],
+      name: name,
+      title: json['title'],
+      designation: json['designation'],
+      institution: json['institution'],
+      email: json['email'],
+      billingAddress: json['billingAddress'],
+      foodPreference: json['foodPreference'],
+      registrationCategory: json['registrationCategory'],
+      contact: json['contact'].toString(),
+      eventList: ((json['eventList'] as List?) ?? []).map((e) => e.toString()).toList(),
+      fcmToken: json['fcmToken'],
+      inCampus: json['inCampus'] ?? false,
+      mealAccess: ((json['mealAccess'] as List?) ?? []).map((e) => MealAccess.fromJson(e)).toList(),
+      role: getRoleFromDatabaseString(json['role'] ?? ""),
+      isPaymentSuccessFul: json['isPaymentSuccessFul'],
+    );
   }
 
   Map<String, dynamic> toJson({bool containsFirestoreData = false}) {
@@ -97,6 +97,7 @@ class UserDetails {
       'email': email,
       'fcmToken': fcmToken,
       'role': role.databaseString,
+      'isPaymentSuccessFul': isPaymentSuccessFul,
     };
     if (containsFirestoreData) {
       data['eventList'] = eventList;
