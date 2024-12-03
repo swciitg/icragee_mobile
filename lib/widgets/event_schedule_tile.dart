@@ -83,9 +83,12 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 final user = ref.watch(userProvider)!;
                 final email = user.email;
                 if (user.eventList.contains(widget.event.id)) {
-                  return Icon(
-                    Icons.notifications_active,
-                    color: MyColors.primaryColor,
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Icon(
+                      Icons.notifications_active,
+                      color: MyColors.primaryColor,
+                    ),
                   );
                 }
                 return PopupMenuButton<String>(
@@ -99,7 +102,13 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                     return [
                       PopupMenuItem(
                         value: 'notify',
-                        child: Text('Notify Me'),
+                        child: Row(
+                          children: [
+                            Icon(Icons.notifications),
+                            const SizedBox(width: 8),
+                            Text('Notify Me'),
+                          ],
+                        ),
                       ),
                     ];
                   },

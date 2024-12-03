@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
@@ -9,14 +11,14 @@ import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_days.dart';
 import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_title.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class ScheduleTab extends StatefulWidget {
+class ScheduleTab extends ConsumerStatefulWidget {
   const ScheduleTab({super.key});
 
   @override
-  State<ScheduleTab> createState() => _ScheduleTabState();
+  ConsumerState<ScheduleTab> createState() => _ScheduleTabState();
 }
 
-class _ScheduleTabState extends State<ScheduleTab> {
+class _ScheduleTabState extends ConsumerState<ScheduleTab> {
   int selectedDay = 1;
   bool calendarView = false;
   late CalendarController calendarController;
@@ -29,6 +31,9 @@ class _ScheduleTabState extends State<ScheduleTab> {
     super.initState();
     calendarController.displayDate = dayOneDate;
     setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProvider.notifier).updateUserDetails();
+    });
   }
 
   @override
