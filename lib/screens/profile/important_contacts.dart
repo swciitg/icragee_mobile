@@ -14,11 +14,9 @@ class ImportantContacts extends StatefulWidget {
 }
 
 class _ImportantContactsState extends State<ImportantContacts> {
-  List<ContactModel> organizingCommittee = [];
-  List<ContactModel> iitgHospital = [];
-  List<ContactModel> transport = [];
   @override
   Widget build(BuildContext context) {
+    Map<String, List<ContactModel>> allContacts = {};
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
@@ -57,27 +55,19 @@ class _ImportantContactsState extends State<ImportantContacts> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             for (var e in snapshot.data!) {
-              if (e.category == 'organizingCommittee') {
-                organizingCommittee.add(e);
-              } else if (e.category == 'iitgHospital') {
-                iitgHospital.add(e);
-              } else if (e.category == 'transport') {
-                transport.add(e);
+              if (allContacts[e.category] == null) {
+                allContacts[e.category] = [];
+              } else {
+                allContacts[e.category]!.add(e);
               }
             }
             return ListView(
               children: [
-                ContactsSection(
-                  title: 'Organizing Committee',
-                  contacts: organizingCommittee,
-                ),
-                ContactsSection(
-                  title: 'IITG Hospital',
-                  contacts: iitgHospital,
-                ),
-                ContactsSection(
-                  title: 'Transport',
-                  contacts: transport,
+                ...allContacts.keys.map(
+                  (key) => ContactsSection(
+                    title: key,
+                    contacts: allContacts[key] ?? [],
+                  ),
                 ),
               ],
             );

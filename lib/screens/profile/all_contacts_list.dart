@@ -7,6 +7,7 @@ import 'package:icragee_mobile/widgets/profile_screen/contact_card.dart';
 class AllContactsList extends StatelessWidget {
   final String title;
   final List<ContactModel> contacts;
+
   const AllContactsList({
     super.key,
     required this.title,
@@ -44,27 +45,29 @@ class AllContactsList extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(16).copyWith(bottom: 8, top: 8),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          color: MyColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: ListView.builder(
-          itemCount: contacts.length,
-          itemBuilder: (context, index) {
-            final contact = contacts[index];
-            final last = index == contacts.length - 1;
-            return ContactCard(contact: contact, last: last);
-          },
+      body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          margin: const EdgeInsets.all(16).copyWith(bottom: 8, top: 8),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            color: MyColors.whiteColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: contacts
+                .map((contact) => ContactCard(contact: contact))
+                .toList(),
+          ),
         ),
       ),
     );

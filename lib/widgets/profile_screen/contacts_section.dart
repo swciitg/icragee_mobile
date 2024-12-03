@@ -22,11 +22,13 @@ class ContactsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (this.contacts.isEmpty) return const SizedBox();
-    final contacts = this.contacts.sublist(0, min(length, this.contacts.length));
+    final contacts =
+        this.contacts.sublist(0, min(length, this.contacts.length));
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(10), color: MyColors.backgroundColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: MyColors.backgroundColor),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -48,7 +50,8 @@ class ContactsSection extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => AllContactsList(title: title, contacts: this.contacts),
+                          builder: (_) => AllContactsList(
+                              title: title, contacts: this.contacts),
                         ),
                       );
                     },
@@ -84,8 +87,7 @@ class ContactsSection extends StatelessWidget {
                 itemCount: contacts.length,
                 itemBuilder: (context, index) {
                   final contact = contacts[index];
-                  final last = index == contacts.length - 1;
-                  return ContactCard(contact: contact, last: last);
+                  return ContactCard(contact: contact);
                 },
               ),
             ),
@@ -95,4 +97,3 @@ class ContactsSection extends StatelessWidget {
     );
   }
 }
-
