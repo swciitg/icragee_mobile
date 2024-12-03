@@ -13,7 +13,8 @@ class AddNotificationScreen extends ConsumerStatefulWidget {
   const AddNotificationScreen({super.key});
 
   @override
-  ConsumerState<AddNotificationScreen> createState() => _AddNotificationScreenState();
+  ConsumerState<AddNotificationScreen> createState() =>
+      _AddNotificationScreenState();
 }
 
 class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
@@ -118,8 +119,10 @@ class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
-                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(
+                        color: Colors.white, size: 32)
+                    : const Text('Submit',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
@@ -131,7 +134,8 @@ class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
   // Method to handle adding an event
   Future<void> _addNotification() async {
     if (isLoading) return;
-    final valid = _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty;
+    final valid = _titleController.text.isNotEmpty &&
+        _descriptionController.text.isNotEmpty;
     if (!valid) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please fill all fields'),
@@ -154,20 +158,21 @@ class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
     );
     try {
       await DataService.addNotification(notification);
-      await ApiService.scheduleTopicNotification(
+      await ApiService.sendInstantTopicNotification(
         topic: 'All',
-        time: DateTime.now().add(const Duration(minutes: 16)),
         title: notification.title,
         body: notification.description,
       );
       navigatorKey.currentContext!.pop();
-      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(navigatorKey.currentContext!)
+          .showSnackBar(const SnackBar(
         content: Text('Notification added successfully'),
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: 2),
       ));
     } catch (e) {
-      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(navigatorKey.currentContext!)
+          .showSnackBar(const SnackBar(
         content: Text('Failed to add notification'),
         behavior: SnackBarBehavior.floating,
       ));

@@ -76,6 +76,23 @@ class ApiService {
     }
   }
 
+  static Future<void> sendInstantTopicNotification({
+    required String topic,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      await dio.post('/notification/sendTopic', data: {
+        'topic': topic,
+        'title': title,
+        'body': body,
+      });
+    } catch (e) {
+      debugPrint("Error scheduling event: $e");
+      rethrow;
+    }
+  }
+
   static Future<void> scheduleTopicNotification({
     required String topic,
     required DateTime time,
