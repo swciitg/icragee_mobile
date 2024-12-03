@@ -59,8 +59,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
             onDaySelected: (val) {
               setState(() {
                 selectedDay = val;
-                calendarController.displayDate =
-                    dayOneDate.add(Duration(days: val - 1));
+                calendarController.displayDate = dayOneDate.add(Duration(days: val - 1));
               });
             },
           ),
@@ -136,17 +135,37 @@ class _ScheduleTabState extends State<ScheduleTab> {
           ),
           onDragUpdate: (details) {
             if (details.draggingTime == null) return;
-            // TODO: update selected day tab
             setState(() {
               selectedDay = details.draggingTime!.day - dayOneDate.day + 1;
-              calendarController.displayDate =
-                  dayOneDate.add(Duration(days: selectedDay - 1));
+              calendarController.displayDate = dayOneDate.add(Duration(days: selectedDay - 1));
             });
           },
+          onTap: (calendarTapDetails) {
+            if (calendarTapDetails.appointments == null ||
+                calendarTapDetails.appointments!.isEmpty) {
+              return;
+            }
+            final event = calendarTapDetails.appointments!.first as Event;
+            showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        EventScheduleTile(event: event),
+                      ],
+                    ),
+                  );
+                });
+          },
           onViewChanged: (viewChangedDetails) {
-            //TODO: update seleceted day tab
-            selectedDay =
-                viewChangedDetails.visibleDates.first.day - dayOneDate.day + 1;
+            final day = viewChangedDetails.visibleDates.first.day - dayOneDate.day + 1;
+            if (day == selectedDay) return;
+            selectedDay = viewChangedDetails.visibleDates.first.day - dayOneDate.day + 1;
+            setState(() {});
           },
           appointmentBuilder: (context, calendarAppointmentDetails) {
             final events = (calendarAppointmentDetails.appointments).toList();
@@ -183,8 +202,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsets.only(
-            top: index == 0 ? 10 : 0,
-            bottom: index == schedules.length - 1 ? 20 : 0),
+            top: index == 0 ? 10 : 0, bottom: index == schedules.length - 1 ? 20 : 0),
         child: EventScheduleTile(event: schedules[index]),
       ),
     );

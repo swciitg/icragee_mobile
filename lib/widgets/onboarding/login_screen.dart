@@ -47,6 +47,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _sendOTP() async {
+    if (!_verify()) {
+      return;
+    }
     setState(() {
       loading = true;
     });
@@ -65,6 +68,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _verifyOTP(WidgetRef ref) async {
+    if (!_verify()) {
+      return;
+    }
     setState(() {
       loading = true;
     });
@@ -109,6 +115,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() {
       loading = false;
     });
+  }
+
+  bool _verify() {
+    if (_emailController.text.trim().isEmpty) {
+      showSnackBar("Email cannot be empty");
+      return false;
+    }
+    if (otpSent && _otpController.text.trim().isEmpty) {
+      showSnackBar("OTP cannot be empty");
+      return false;
+    }
+    return true;
   }
 
   @override

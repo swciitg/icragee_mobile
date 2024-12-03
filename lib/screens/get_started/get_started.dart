@@ -83,7 +83,8 @@ class _GetStartedState extends State<GetStarted> {
               return GestureDetector(
                 onTap: () {
                   ref.read(userProvider.notifier).setAdminAuth(true);
-                  context.push('/onboarding');
+                  // context.push('/onboarding');
+                  context.push('/login-screen');
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
@@ -108,7 +109,8 @@ class _GetStartedState extends State<GetStarted> {
               return GestureDetector(
                 onTap: () {
                   ref.read(userProvider.notifier).setAdminAuth(false);
-                  context.push('/onboarding');
+                  // context.push('/onboarding');
+                  context.push('/login-screen');
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 8),
