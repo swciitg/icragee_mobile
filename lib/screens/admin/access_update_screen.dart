@@ -148,9 +148,15 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
   Widget _markPresentButton() {
     return Consumer(builder: (context, ref, child) {
       final user = ref.read(userProvider)!;
+      final hasAccess =
+          user.role == AdminRole.superAdmin || user.role == AdminRole.registrationVolunteer;
       final superUser = user.role == AdminRole.superAdmin;
       return GestureDetector(
         onTap: () async {
+          if (!hasAccess) {
+            showSnackBar("You don't have access to do this");
+            return;
+          }
           if (!superUser && !inCampus) {
             showSnackBar("Only super-admins can revert things");
             return;

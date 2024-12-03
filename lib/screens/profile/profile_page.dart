@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/screens/feedback/feedback_page.dart';
+import 'package:icragee_mobile/screens/map_entries/map_sections_page.dart';
 import 'package:icragee_mobile/screens/profile/faq_screen.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/profile/lost_and_found_screen.dart';
@@ -38,7 +39,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         children: [
           _buildAppBar(context),
           const SizedBox(height: 24),
-          ProfileDetailsCard(user: user,admin: widget.admin),
+          ProfileDetailsCard(user: user, admin: widget.admin),
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -95,6 +96,24 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                   },
                 ),
                 Container(height: 1, color: MyColors.primaryColor),
+                Consumer(builder: (context, ref, child) {
+                  if (ref.read(userProvider)!.role != AdminRole.superAdmin) {
+                    return const SizedBox();
+                  }
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Map Entries'),
+                        onTap: () async {
+                          navigatorKey.currentState!
+                              .push(MaterialPageRoute(builder: (_) => MapSectionsPage()));
+                        },
+                      ),
+                      Container(height: 1, color: MyColors.primaryColor),
+                    ],
+                  );
+                }),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Sign Out'),

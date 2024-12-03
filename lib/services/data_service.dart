@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icragee_mobile/models/contact_model.dart';
+import 'package:icragee_mobile/models/coordinate_model.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/models/faq.dart';
 import 'package:icragee_mobile/models/lost_found_model.dart';
@@ -15,16 +16,13 @@ class DataService {
   static Future<List<FaqContent>> fetchFaqs() async {
     final collectionSnapshot = await firestore.collection('FAQs').get();
 
-    return collectionSnapshot.docs
-        .map((doc) => FaqContent.fromJson(doc.data()))
-        .toList();
+    return collectionSnapshot.docs.map((doc) => FaqContent.fromJson(doc.data())).toList();
   }
 
   // Method to fetch emergency contacts by category from Firestore
   static Future<List<ContactModel>> fetchImportantContacts() async {
     try {
-      QuerySnapshot querySnapshot =
-          await firestore.collection('important_contacts').get();
+      QuerySnapshot querySnapshot = await firestore.collection('important_contacts').get();
 
       // Convert each document into a Contact object
       List<ContactModel> contacts = querySnapshot.docs.map((doc) {
@@ -58,8 +56,7 @@ class DataService {
     QuerySnapshot querySnapshot =
         await firestore.collection('events').where('day', isEqualTo: day).get();
     final docs = querySnapshot.docs.map((doc) {
-      final event = Event.fromJson(
-          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      final event = Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
       return event.copyWith(
           startTime: getActualEventTime(event.startTime, event.day),
           endTime: getActualEventTime(event.endTime, event.day));
@@ -92,8 +89,7 @@ class DataService {
   static Future<List<Event>> getEvents() async {
     QuerySnapshot snapshot = await firestore.collection('events').get();
     return snapshot.docs.map((doc) {
-      return Event.fromJson(
-          {...(doc.data() as Map<String, dynamic>), 'id': doc.id});
+      return Event.fromJson({...(doc.data() as Map<String, dynamic>), 'id': doc.id});
     }).toList();
   }
 
@@ -104,10 +100,8 @@ class DataService {
   }
 
   static Future<UserDetails?> getUserDetailsByEmail(String email) async {
-    final querySnapshot = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
@@ -118,23 +112,19 @@ class DataService {
   }
 
   static Future<UserDetails?> getUserDetailsById(String id) async {
-    final querySnapshot =
-        await firestore.collection('userDetails').doc(id).get();
+    final querySnapshot = await firestore.collection('userDetails').doc(id).get();
 
     if (!querySnapshot.exists) return null;
     return UserDetails.fromJson(querySnapshot.data()!);
   }
 
   static Future<List<String>> getUserEventIds(String email) async {
-    final querySnapshot = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
-      List<String> eventList =
-          List<String>.from(userDoc.data()['eventList'] ?? []);
+      List<String> eventList = List<String>.from(userDoc.data()['eventList'] ?? []);
       return eventList;
     } else {
       throw Exception('User not found!');
@@ -158,10 +148,8 @@ class DataService {
   }
 
   static Future<void> addEventToUser(String email, String eventId) async {
-    final querySnapshot = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
       await userDoc.reference.update({
@@ -172,11 +160,9 @@ class DataService {
     }
   }
 
-  static Future<void> removeEventFromUser(String email, String eventId) async{
-    final querySnapshot = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: email)
-        .get();
+  static Future<void> removeEventFromUser(String email, String eventId) async {
+    final querySnapshot =
+        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
     if (querySnapshot.docs.isNotEmpty) {
       final userDoc = querySnapshot.docs.first;
       await userDoc.reference.update({
@@ -223,9 +209,7 @@ class DataService {
           MealAccess(day: 4, mealType: "Lunch", taken: false),
           MealAccess(day: 4, mealType: "Dinner", taken: false),
         ];
-        user = user.copyWith(
-            mealAccess: defaultMeals,
-            inCampus: doc.data()?['inCampus'] ?? false);
+        user = user.copyWith(mealAccess: defaultMeals, inCampus: doc.data()?['inCampus'] ?? false);
       }
       userRef.set(user.toJson(containsFirestoreData: true));
     }
@@ -284,4 +268,49 @@ class DataService {
   static Future<void> deleteLostFoundItem(String id) async {
     await firestore.collection('lost_found_items').doc(id).delete();
   }
+
+  static Stream<List<String>> getMapSections() {
+    final locationsRef = firestore.collection('locations');
+    return locationsRef.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return doc['name'] as String;
+      }).toList();
+    });
+  }
+
+  static Future<void> addMapSection(String section) async {
+    final ref = firestore.collection('locations');
+    final doc = ref.doc(section);
+    await doc.set({'name': section});
+  }
+
+  static Stream<List<CoordinateModel>> getMapSectionCoordinates(String section) {
+    final ref = firestore.collection('locations').doc(section).collection('coordinates');
+    return ref.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return CoordinateModel.fromMap(doc.data());
+      }).toList();
+    });
+  }
+
+  static Future<void> addMapSectionCoordinate(String section, CoordinateModel coordinate) async {
+    final ref = firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
+    await ref.set(coordinate.toMap());
+  }
+
+  static Future<void> updateMapSectionCoordinate(String section, CoordinateModel coordinate) async {
+    final ref = firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
+    await ref.update(coordinate.toMap());
+  }
+
+  static Future<void> deleteMapSectionCoordinate(String section, String id) async {
+    final ref = firestore.collection('locations').doc(section).collection('coordinates').doc(id);
+    await ref.delete();
+  }
+
+  static Future<void> deleteMapSection(String section) async {
+    final ref = firestore.collection('locations').doc(section);
+    await ref.delete();
+  }
+
 }
