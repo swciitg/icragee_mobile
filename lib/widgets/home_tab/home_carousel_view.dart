@@ -70,7 +70,12 @@ class _HomeCarouselViewState extends State<HomeCarouselView> {
             }
             List<Event> userEvents = snapshot.data!;
             userEvents.sort((a, b) => a.startTime.isBefore(b.startTime) ? -1 : 1);
-            return HomeCarousel(events: userEvents);
+            return HomeCarousel(
+              events: userEvents,
+              rebuild: () {
+                setState(() {});
+              },
+            );
           },
         );
       },

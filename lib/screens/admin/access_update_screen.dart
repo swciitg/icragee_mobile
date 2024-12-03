@@ -69,8 +69,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                   const SizedBox(height: 16),
                   if (inCampus)
                     StreamBuilder(
-                      stream:
-                          DataService.getUserMealAccessSteam(widget.user.id),
+                      stream: DataService.getUserMealAccessSteam(widget.user.id),
                       builder: (context, snapshot) {
                         List<MealAccess> meals = [];
                         if (!snapshot.hasData) {
@@ -86,8 +85,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                             });
                             try {
                               final meals = widget.user.mealAccess;
-                              meals!.removeWhere(
-                                  (e) => e.day == updatedList.first.day);
+                              meals!.removeWhere((e) => e.day == updatedList.first.day);
                               meals.addAll(updatedList);
                               final user = widget.user.copyWith(
                                 mealAccess: meals,
@@ -149,7 +147,8 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
 
   Widget _markPresentButton() {
     return Consumer(builder: (context, ref, child) {
-      final superUser = ref.read(userProvider)!.role != AdminRole.guest;
+      final user = ref.read(userProvider)!;
+      final superUser = user.role == AdminRole.superAdmin;
       return GestureDetector(
         onTap: () async {
           if (!superUser && !inCampus) {

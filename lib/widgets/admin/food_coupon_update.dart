@@ -79,8 +79,7 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
               if (newValue == null) return;
               setState(() {
                 selectedDay = newValue;
-                mealAccess =
-                    widget.meals.where((e) => e.day == selectedDay).toList();
+                mealAccess = widget.meals.where((e) => e.day == selectedDay).toList();
               });
             },
           ),
@@ -116,11 +115,18 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
           ),
         ),
         Consumer(builder: (context, ref, child) {
-          final superUser = ref.read(userProvider)!.role != AdminRole.guest;
+          final user = ref.read(userProvider)!;
+          final hasAccess =
+              user.role == AdminRole.foodVolunteer || user.role == AdminRole.superAdmin;
+          final superUser = user.role == AdminRole.superAdmin;
           return Switch(
             value: value,
             activeColor: MyColors.primaryColor,
             onChanged: (val) {
+              if (!hasAccess) {
+                showSnackBar("You don't have access to update food coupons");
+                return;
+              }
               if (!superUser && !val) {
                 showSnackBar("Only super-admins can revert things");
                 return;
@@ -129,8 +135,7 @@ class _FoodCouponUpdateState extends State<FoodCouponUpdate> {
                 return e.day == selectedDay && e.mealType == title;
               });
               mealAccess.removeAt(index);
-              final updatedMeal =
-                  MealAccess(day: selectedDay, mealType: title, taken: val);
+              final updatedMeal = MealAccess(day: selectedDay, mealType: title, taken: val);
               if (index == mealAccess.length) {
                 mealAccess.add(updatedMeal);
               } else {

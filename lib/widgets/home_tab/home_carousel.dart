@@ -11,8 +11,9 @@ import 'package:icragee_mobile/widgets/home_tab/home_carousel_tile.dart';
 
 class HomeCarousel extends StatefulWidget {
   final List<Event> events;
+  final VoidCallback rebuild;
 
-  const HomeCarousel({required this.events, super.key});
+  const HomeCarousel({required this.events, super.key, required this.rebuild});
 
   @override
   State<HomeCarousel> createState() => _HomeCarouselState();
@@ -37,9 +38,10 @@ class _HomeCarouselState extends State<HomeCarousel> {
           ),
           if (widget.events.length > 1)
             GestureDetector(
-              onTap: () {
-                navigatorKey.currentState!.push(
+              onTap: () async {
+                await navigatorKey.currentState!.push(
                     MaterialPageRoute(builder: (_) => SavedEventsList(events: widget.events)));
+                widget.rebuild();
               },
               child: Container(
                 margin: EdgeInsets.only(right: 16),
