@@ -35,9 +35,15 @@ class ProfileDetailsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDetailTile("Email ID", user.email),
-          if (!admin)
-            _buildDetailTile("Registratin Category", user.registrationCategory!,
+          if (!admin) ...[
+            _buildDetailTile("Food Preference", user.foodPreference!),
+            _buildDetailTile("Contact", user.contact!),
+            _buildDetailTile("Designation", user.designation!),
+            _buildDetailTile("Institution", user.institution!),
+            _buildDetailTile(
+                "Registration Category", user.registrationCategory!,
                 isLast: true),
+          ],
           if (admin)
             Consumer(
               builder: (context, ref, child) {

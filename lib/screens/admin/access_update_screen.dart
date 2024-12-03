@@ -44,7 +44,7 @@ class _AccessUpdateScreenState extends State<AccessUpdateScreen> {
                   const SizedBox(height: 16),
                   Stack(
                     children: [
-                      ProfileDetailsCard(user: widget.user, admin: true),
+                      ProfileDetailsCard(user: widget.user, admin: false),
                       if (inCampus)
                         Positioned(
                           right: 24,
