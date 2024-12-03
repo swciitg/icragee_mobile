@@ -1,12 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
-import 'package:icragee_mobile/shared/assets.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/admin/event_card.dart';
@@ -70,8 +68,7 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconLabel(
-                    text:
-                        '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
+                    text: '${DateFormat('hh:mm a').format(widget.event.startTime.toLocal())}'
                         ' - ${DateFormat('hh:mm a').format(widget.event.endTime.toLocal())}',
                     icon: Icons.schedule_outlined,
                   ),
@@ -83,42 +80,35 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 ],
               ),
               Consumer(builder: (context, ref, child) {
-                final email = ref.read(userProvider)!.email;
-                return GestureDetector(
-                  onTap: () => addEventToUser(email),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: MyColors.primaryColorTint,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: SvgPicture.asset(MyIcons.addToList),
+                final user = ref.watch(userProvider)!;
+                final email = user.email;
+                if (user.eventList.contains(widget.event.id)) {
+                  return Icon(
+                    Icons.notifications_active,
+                    color: MyColors.primaryColor,
+                  );
+                }
+                return PopupMenuButton<String>(
+                  onSelected: (value) async {
+                    if (value == 'notify') {
+                      await addEventToUser(email);
+                      ref.read(userProvider.notifier).updateUserDetails();
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        value: 'notify',
+                        child: Text('Notify Me'),
+                      ),
+                    ];
+                  },
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: MyColors.primaryColor,
                   ),
                 );
               }),
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       showDescription = !showDescription;
-              //     });
-              //   },
-              //   child: Row(
-              //     children: [
-              //       Text(
-              //         "Check description",
-              //         style: GoogleFonts.poppins(
-              //           fontSize: 12,
-              //           fontWeight: FontWeight.w300,
-              //           color: MyColors.primaryColor,
-              //         ),
-              //       ),
-              //       const SizedBox(width: 6),
-              //       Transform.rotate(
-              //           angle: showDescription ? pi : 0,
-              //           child: SvgPicture.asset(MyIcons.toggleDown, height: 18))
-              //     ],
-              //   ),
-              // ),
             ],
           ),
           if (widget.event.description.trim().isNotEmpty)
@@ -135,26 +125,12 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Container(
-          //       padding: const EdgeInsets.all(8),
-          //       decoration: BoxDecoration(
-          //         color: MyColors.primaryColorTint,
-          //         borderRadius: BorderRadius.circular(8),
-          //       ),
-          //       child: SvgPicture.asset(MyIcons.location),
-          //     ),
-          //
-          //   ],
-          // )
         ],
       ),
     );
   }
 
-  void addEventToUser(String email) async {
+  Future<void> addEventToUser(String email) async {
     try {
       await DataService.addEventToUser(
         email,
@@ -171,13 +147,11 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
 
   Widget _buildStatus() {
     var status = "";
-    final startTime =
-        getActualEventTime(widget.event.startTime, widget.event.day);
+    final startTime = getActualEventTime(widget.event.startTime, widget.event.day);
     final endTime = getActualEventTime(widget.event.endTime, widget.event.day);
     if (endTime.isBefore(DateTime.now())) {
       status = "Finished";
-    } else if (startTime.isBefore(DateTime.now()) &&
-        endTime.isAfter(DateTime.now())) {
+    } else if (startTime.isBefore(DateTime.now()) && endTime.isAfter(DateTime.now())) {
       status = "Ongoing";
     } else {
       status = "Upcoming";

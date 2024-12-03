@@ -40,4 +40,11 @@ class UserProvider extends StateNotifier<UserDetails?> {
     final isSuperUser = await DataService.isSuperUser(state!.email);
     state = state!.copyWith(superUser: isSuperUser);
   }
+
+  Future<void> updateUserDetails() async {
+    if (state == null) return;
+    final user = await DataService.getUserDetailsById(state!.id);
+    if (user == null) return;
+    state = user;
+  }
 }

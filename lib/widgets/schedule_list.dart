@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
-import 'package:icragee_mobile/widgets/schedule_item.dart';
+import 'package:icragee_mobile/widgets/event_schedule_tile.dart';
 
 class SchedulesList extends StatelessWidget {
   const SchedulesList({

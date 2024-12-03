@@ -4,7 +4,7 @@ import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
-import 'package:icragee_mobile/widgets/schedule_item.dart';
+import 'package:icragee_mobile/widgets/event_schedule_tile.dart';
 import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_days.dart';
 import 'package:icragee_mobile/widgets/schedule_tab/schedule_tab_title.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

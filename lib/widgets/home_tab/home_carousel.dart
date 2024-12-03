@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:icragee_mobile/models/event.dart';
+import 'package:icragee_mobile/screens/home/saved_events_list.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/home_tab/home_carousel_tile.dart';
 
 class HomeCarousel extends StatefulWidget {
@@ -20,15 +24,35 @@ class _HomeCarouselState extends State<HomeCarousel> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const Row(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 8, 15, 0),
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Text(
               "Saved Events",
               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
             ),
           ),
+          if (widget.events.length > 1)
+            GestureDetector(
+              onTap: () {
+                navigatorKey.currentState!.push(
+                    MaterialPageRoute(builder: (_) => SavedEventsList(events: widget.events)));
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 16),
+                child: Transform.rotate(
+                  angle: pi,
+                  child: Icon(
+                    Icons.arrow_back_ios_sharp,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                ),
+              ),
+            )
         ],
       ),
       CarouselSlider(
