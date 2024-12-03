@@ -13,6 +13,7 @@ import 'package:icragee_mobile/widgets/admin/event_card.dart';
 import 'package:icragee_mobile/widgets/admin/notifications_page.dart';
 import 'package:icragee_mobile/widgets/day_button.dart';
 import 'package:icragee_mobile/widgets/tab_button.dart';
+import 'package:upgrader/upgrader.dart';
 
 class AdminScreen extends ConsumerStatefulWidget {
   const AdminScreen({super.key});
@@ -37,59 +38,60 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.whiteColor,
-      body: SafeArea(
-        child: Container(
-          color: MyColors.backgroundColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    _appBar(),
-                    const SizedBox(height: 16),
-                    _tabs(),
-                    const SizedBox(height: 18),
-                    _buildDayTabs(),
-                  ],
+    return UpgradeAlert(
+      child: Scaffold(
+        backgroundColor: MyColors.whiteColor,
+        body: SafeArea(
+          child: Container(
+            color: MyColors.backgroundColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      _appBar(),
+                      const SizedBox(height: 16),
+                      _tabs(),
+                      const SizedBox(height: 18),
+                      _buildDayTabs(),
+                    ],
+                  ),
                 ),
-              ),
-              _eventsSelected ? _buildEvents() : _buildNotifications(),
-            ],
+                _eventsSelected ? _buildEvents() : _buildNotifications(),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: Builder(
-        builder: (context) {
-          final superUser =
-              (ref.watch(userProvider)!.role == AdminRole.superAdmin) ||
-                  (ref.watch(userProvider)!.role == AdminRole.eventsVolunteer);
-          if (!superUser) return const SizedBox();
-          return FloatingActionButton.extended(
-            onPressed: () async {
-              if (_eventsSelected) {
-                await context.push('/addEventScreen');
-                setState(() {});
-              } else {
-                context.push('/addNotificationScreen');
-              }
-            },
-            label: Text(
-              _eventsSelected ? 'Add Event' : 'Add Notification',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+        floatingActionButton: Builder(
+          builder: (context) {
+            final superUser = (ref.watch(userProvider)!.role == AdminRole.superAdmin) ||
+                (ref.watch(userProvider)!.role == AdminRole.eventsVolunteer);
+            if (!superUser) return const SizedBox();
+            return FloatingActionButton.extended(
+              onPressed: () async {
+                if (_eventsSelected) {
+                  await context.push('/addEventScreen');
+                  setState(() {});
+                } else {
+                  context.push('/addNotificationScreen');
+                }
+              },
+              label: Text(
+                _eventsSelected ? 'Add Event' : 'Add Notification',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            backgroundColor: MyColors.primaryColor,
-          );
-        },
+              backgroundColor: MyColors.primaryColor,
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -159,8 +161,8 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: EdgeInsets.fromLTRB(15, index == 0 ? 15 : 0, 15,
-                        index == events.length - 1 ? 100 : 12),
+                    padding: EdgeInsets.fromLTRB(
+                        15, index == 0 ? 15 : 0, 15, index == events.length - 1 ? 100 : 12),
                     child: EventCard(
                         event: events[index],
                         onChange: () {
@@ -215,8 +217,7 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Welcome Back!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const Text('Welcome Back!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           Row(
             children: [
               GestureDetector(
