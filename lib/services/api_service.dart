@@ -3,7 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:icragee_mobile/models/user_details.dart';
-import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
@@ -28,8 +27,6 @@ class ApiService {
   }
 
   static Future<void> sendOTP(String email, {bool admin = false}) async {
-    // admin endpoint: /newadmin/send-otp
-    // Error if user is not admin 'Admin not found' in message
     try {
       debugPrint("Sending OTP to (${admin ? "admin" : "user"}): $email");
       await dio.post('/${admin ? "newadmin" : "user"}/send-otp',
@@ -38,13 +35,8 @@ class ApiService {
       final data = e.response?.data as Map<String, dynamic>?;
       final message = data?['message'] as String?;
       if (message != null && message.contains('Admin not found')) {
-        showSnackBar("No admin found with this email");
-        return;
+        throw Exception("No admin found with this email");
       }
-      rethrow;
-    } catch (e) {
-      debugPrint("Error sending otp: $e");
-      rethrow;
     }
   }
 

@@ -60,7 +60,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         otpSent = true;
       });
     } catch (e) {
-      showSnackBar("Sending OTP failed, Please try again");
+      if (e.toString().contains("No admin found")) {
+        showSnackBar(e.toString());
+      } else {
+        showSnackBar("Sending OTP failed, Please try again");
+      }
     }
     setState(() {
       loading = false;
