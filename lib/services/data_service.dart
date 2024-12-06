@@ -294,12 +294,14 @@ class DataService {
   }
 
   static Future<void> addMapSectionCoordinate(String section, CoordinateModel coordinate) async {
-    final ref = firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
+    final ref =
+        firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
     await ref.set(coordinate.toMap());
   }
 
   static Future<void> updateMapSectionCoordinate(String section, CoordinateModel coordinate) async {
-    final ref = firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
+    final ref =
+        firestore.collection('locations').doc(section).collection('coordinates').doc(coordinate.id);
     await ref.update(coordinate.toMap());
   }
 
@@ -313,4 +315,43 @@ class DataService {
     await ref.delete();
   }
 
+  static Stream<int> registeredUsersCount() {
+    return firestore
+        .collection('userDetails')
+        .where('inCampus', isEqualTo: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.length;
+    });
+  }
+
+  static Future<List<String>?> getEventVenues() async {
+    final doc = await firestore.collection('globals').doc('event').get();
+    if (!doc.exists) return null;
+    return List<String>.from(doc.data()!['venues']);
+  }
+
+  static Stream<List<String>> getEventVenueStream() {
+    return firestore.collection('globals').doc('event').snapshots().map((doc) {
+      return List<String>.from(doc.data()!['venues']);
+    });
+  }
+
+  // add event venue
+  static Future<void> addEventVenue(String venue) async {
+    final doc = firestore.collection('globals').doc('event');
+    final data = await doc.get();
+    final venues = List<String>.from(data.data()!['venues']);
+    venues.add(venue);
+    await doc.update({'venues': venues});
+  }
+
+  // delete event venue
+  static Future<void> deleteEventVenue(String venue) async {
+    final doc = firestore.collection('globals').doc('event');
+    final data = await doc.get();
+    final venues = List<String>.from(data.data()!['venues']);
+    venues.remove(venue);
+    await doc.update({'venues': venues});
+  }
 }

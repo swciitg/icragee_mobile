@@ -25,11 +25,34 @@ class _AddEventScreenState extends State<AddEventScreen> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
 
+  var venues = [
+    'NA',
+    'Dr. Bhupen Hazarika Auditorium',
+    'Mini Auditorium',
+    'Conference Hall 1',
+    'Conference Hall 2',
+    'Conference Hall 3',
+    'Conference Hall 4',
+  ];
+
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final res = await DataService.getEventVenues();
+      if (res != null) {
+        setState(() {
+          venues = res;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -45,16 +68,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: MyColors.backgroundColor,
-        title: const Text('Add Event'),
-      ),
+      appBar: _appBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 8),
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -112,6 +133,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     selectedVenue = newValue;
                   });
                 },
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Add event venue from admin profile if not available",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
@@ -198,13 +228,39 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(
-                        color: Colors.white, size: 32)
-                    : const Text('Submit',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
+                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        'Add Event',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
         ),
       ),
     );
@@ -302,12 +358,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text =
-              pickedTime.format(context); // Update the start time field
+          _startTimeController.text = pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text =
-              pickedTime.format(context); // Update the end time field
+          _endTimeController.text = pickedTime.format(context); // Update the end time field
         }
       });
     }

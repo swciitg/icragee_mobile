@@ -8,6 +8,7 @@ import 'package:icragee_mobile/screens/map_entries/map_sections_page.dart';
 import 'package:icragee_mobile/screens/profile/faq_screen.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/profile/lost_and_found_screen.dart';
+import 'package:icragee_mobile/screens/schedule/event_venue_screen.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/profile_screen/profile_details_card.dart';
@@ -114,16 +115,57 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                     ],
                   );
                 }),
+                Consumer(builder: (context, ref, child) {
+                  final role = ref.read(userProvider)!.role;
+                  if (role != AdminRole.superAdmin && role != AdminRole.eventsVolunteer) {
+                    return const SizedBox();
+                  }
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Event venues'),
+                        onTap: () async {
+                          navigatorKey.currentState!
+                              .push(MaterialPageRoute(builder: (_) => EventVenueScreen()));
+                        },
+                      ),
+                      Container(height: 1, color: MyColors.primaryColor),
+                    ],
+                  );
+                }),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Sign Out'),
                   onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.clear();
-                    while (navigatorKey.currentContext!.canPop()) {
-                      navigatorKey.currentContext!.pop();
-                    }
-                    navigatorKey.currentContext!.push("/get-started");
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog.adaptive(
+                          title: const Text('Sign Out'),
+                          content: Text('Are you sure you want to sign out?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                navigatorKey.currentState!.pop();
+                              },
+                              child: const Text('No'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                final prefs = await SharedPreferences.getInstance();
+                                prefs.clear();
+                                while (navigatorKey.currentContext!.canPop()) {
+                                  navigatorKey.currentContext!.pop();
+                                }
+                                navigatorKey.currentContext!.push("/get-started");
+                              },
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ],

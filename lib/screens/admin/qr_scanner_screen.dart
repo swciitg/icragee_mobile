@@ -42,7 +42,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            _buildAttendeeNumbers(),
+            const SizedBox(height: 16),
             Container(
               height: width * 0.8,
               width: width * 0.8,
@@ -97,6 +100,33 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  StreamBuilder<int> _buildAttendeeNumbers() {
+    return StreamBuilder(
+      stream: DataService.registeredUsersCount(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(
+            "Attendees : ${snapshot.data}",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text(
+            "Attendees : Something went wrong",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          );
+        } else {
+          return CircularProgressIndicator(color: Colors.white);
+        }
+      },
     );
   }
 

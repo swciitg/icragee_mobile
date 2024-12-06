@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/event.dart';
 import 'package:icragee_mobile/services/data_service.dart';
+import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/utility/functions.dart';
 import 'package:icragee_mobile/widgets/snackbar.dart';
@@ -25,6 +26,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
 
+  var venues = [
+    'NA',
+    'Dr. Bhupen Hazarika Auditorium',
+    'Mini Auditorium',
+    'Conference Hall 1',
+    'Conference Hall 2',
+    'Conference Hall 3',
+    'Conference Hall 4',
+  ];
+
   // TextEditingControllers for event title, description, and time
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -43,6 +54,14 @@ class _EditEventScreenState extends State<EditEventScreen> {
     // Extract TimeOfDay from DateTime and fill start and end time controllers
     startTime = TimeOfDay.fromDateTime(widget.event.startTime);
     endTime = TimeOfDay.fromDateTime(widget.event.endTime);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final res = await DataService.getEventVenues();
+      if (res != null) {
+        setState(() {
+          venues = res;
+        });
+      }
+    });
   }
 
   @override
@@ -67,21 +86,14 @@ class _EditEventScreenState extends State<EditEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC6FCED),
-      appBar: AppBar(
-        title: const Text('Edit Event'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop(); // Back navigation
-          },
-        ),
-      ),
+      appBar: _appBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 8),
               // Event Title TextField
               TextField(
                 controller: _titleController,
@@ -140,6 +152,15 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   });
                 },
               ),
+              const SizedBox(height: 8),
+              Text(
+                "Add event venue from admin profile if not available",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 12,
+                ),
+              ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 decoration: InputDecoration(
@@ -191,8 +212,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, true); // Open time picker for start time
+                        await _selectTime(context, true); // Open time picker for start time
                       },
                     ),
                   ),
@@ -215,8 +235,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         focusedBorder: _buildInputBorder(),
                       ),
                       onTap: () async {
-                        await _selectTime(
-                            context, false); // Open time picker for end time
+                        await _selectTime(context, false); // Open time picker for end time
                       },
                     ),
                   ),
@@ -235,13 +254,39 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? LoadingAnimationWidget.waveDots(
-                        color: Colors.white, size: 32)
-                    : const Text('Submit',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ? LoadingAnimationWidget.waveDots(color: Colors.white, size: 32)
+                    : const Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        'Edit Event',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
         ),
       ),
     );
@@ -320,12 +365,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
       setState(() {
         if (isStartTime) {
           startTime = pickedTime;
-          _startTimeController.text =
-              pickedTime.format(context); // Update the start time field
+          _startTimeController.text = pickedTime.format(context); // Update the start time field
         } else {
           endTime = pickedTime;
-          _endTimeController.text =
-              pickedTime.format(context); // Update the end time field
+          _endTimeController.text = pickedTime.format(context); // Update the end time field
         }
       });
     }
