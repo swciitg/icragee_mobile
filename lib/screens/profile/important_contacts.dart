@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/contact_model.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
@@ -80,20 +83,26 @@ class _ImportantContactsState extends State<ImportantContacts> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await navigatorKey.currentState!.push(
-            MaterialPageRoute(
-              builder: (_) => AddContactScreen(
-                types: allContacts.keys.toList(),
+      floatingActionButton: Consumer(builder: (context, ref, child) {
+        final role = ref.read(userProvider)!.role;
+        if (role != AdminRole.superAdmin && role != AdminRole.eventsVolunteer) {
+          return const SizedBox();
+        }
+        return FloatingActionButton(
+          onPressed: () async {
+            await navigatorKey.currentState!.push(
+              MaterialPageRoute(
+                builder: (_) => AddContactScreen(
+                  types: allContacts.keys.toList(),
+                ),
               ),
-            ),
-          );
-          setState(() {});
-        },
-        backgroundColor: MyColors.primaryColor,
-        child: Icon(Icons.add),
-      ),
+            );
+            setState(() {});
+          },
+          backgroundColor: MyColors.primaryColor,
+          child: Icon(Icons.add),
+        );
+      }),
     );
   }
 }

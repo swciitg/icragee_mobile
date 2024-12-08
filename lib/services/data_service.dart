@@ -62,7 +62,17 @@ class DataService {
           endTime: getActualEventTime(event.endTime, event.day));
     }).toList();
     docs.sort((a, b) {
-      return a.startTime.compareTo(b.startTime);
+      int timeComparison = a.startTime.compareTo(b.startTime);
+      if (timeComparison != 0) {
+        return timeComparison;
+      } else {
+        int titleComparison = a.title.compareTo(b.title);
+        if (titleComparison != 0) {
+          return titleComparison;
+        } else {
+          return a.venue.compareTo(b.venue);
+        }
+      }
     });
     return docs;
   }
@@ -99,18 +109,6 @@ class DataService {
     });
   }
 
-  static Future<UserDetails?> getUserDetailsByEmail(String email) async {
-    final querySnapshot =
-        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final userDoc = querySnapshot.docs.first;
-      return UserDetails.fromJson(userDoc.data());
-    } else {
-      return null;
-    }
-  }
-
   static Future<UserDetails?> getUserDetailsById(String id) async {
     final querySnapshot = await firestore.collection('userDetails').doc(id).get();
 
@@ -118,17 +116,10 @@ class DataService {
     return UserDetails.fromJson(querySnapshot.data()!);
   }
 
-  static Future<List<String>> getUserEventIds(String email) async {
-    final querySnapshot =
-        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
+  static Future<List<String>> getUserEventIds(String id) async {
+    final user = await firestore.collection('userDetails').doc(id).get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      final userDoc = querySnapshot.docs.first;
-      List<String> eventList = List<String>.from(userDoc.data()['eventList'] ?? []);
-      return eventList;
-    } else {
-      throw Exception('User not found!');
-    }
+    return List<String>.from(user['eventList'] ?? []);
   }
 
   static Stream<List<Event>> getUserEvents(List<String> eventIds) {
@@ -147,30 +138,18 @@ class DataService {
     await firestore.collection('events').doc(eventId).delete();
   }
 
-  static Future<void> addEventToUser(String email, String eventId) async {
-    final querySnapshot =
-        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
-    if (querySnapshot.docs.isNotEmpty) {
-      final userDoc = querySnapshot.docs.first;
-      await userDoc.reference.update({
-        'eventList': FieldValue.arrayUnion([eventId])
-      });
-    } else {
-      throw Exception('User not found!');
-    }
+  static Future<void> addEventToUser(String id, String eventId) async {
+    final doc = firestore.collection('userDetails').doc(id);
+    await doc.update({
+      'eventList': FieldValue.arrayUnion([eventId]),
+    });
   }
 
-  static Future<void> removeEventFromUser(String email, String eventId) async {
-    final querySnapshot =
-        await firestore.collection('userDetails').where('email', isEqualTo: email).get();
-    if (querySnapshot.docs.isNotEmpty) {
-      final userDoc = querySnapshot.docs.first;
-      await userDoc.reference.update({
-        'eventList': FieldValue.arrayRemove([eventId])
-      });
-    } else {
-      throw Exception('User not found!');
-    }
+  static Future<void> removeEventFromUser(String id, String eventId) async {
+    final doc = firestore.collection('userDetails').doc(id);
+    await doc.update({
+      'eventList': FieldValue.arrayRemove([eventId]),
+    });
   }
 
   static Future<void> postLostFoundData(LostFoundModel model) async {
@@ -234,15 +213,6 @@ class DataService {
       }).toList();
     });
   }
-
-  // static Future<AdminRole> getRole(String email) async {
-  //   final docs =
-  //       await firestore.collection('userDetails').get();
-  //   final superUsers = List<String>.from(doc.data()!['emails'] ?? []);
-  //
-  //
-  //   final role = superUsers.firstWhere((e));
-  // }
 
   static Future<void> fetchDayOneDate() async {
     final doc = await firestore.collection('globals').doc('event').get();
@@ -377,5 +347,21 @@ class DataService {
     final doc = await firestore.collection('globals').doc('contact').get();
     if (!doc.exists) return null;
     return List<String>.from(doc.data()!['types']);
+  }
+
+  static Future<List<MealAccess>> getMealAcessofUsers() async {
+    final querySnapshot = await firestore.collection('userDetails').get();
+    List<MealAccess> mealAccess = [];
+    querySnapshot.docs.map((doc) {
+      final user = UserDetails.fromJson(doc.data());
+      mealAccess.addAll(user.mealAccess!);
+    }).toList();
+    return mealAccess;
+  }
+
+  static Future<String?> getScheduleUrl() async {
+    final doc = await firestore.collection('globals').doc('event').get();
+    if (!doc.exists) return null;
+    return doc.data()!['scheduleUrl'];
   }
 }

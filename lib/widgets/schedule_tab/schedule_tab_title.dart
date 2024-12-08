@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ScheduleTabTitle extends StatefulWidget {
   const ScheduleTabTitle({
@@ -59,6 +62,21 @@ class _ScheduleTabTitleState extends State<ScheduleTabTitle> {
         ),
       ),
       actions: [
+        IconButton(
+          onPressed: () async {
+            final url = await DataService.getScheduleUrl();
+            if (url != null) {
+              launchUrlString(url);
+            } else {
+              showSnackBar('Schedule not available');
+            }
+          },
+          icon: Icon(
+            Icons.picture_as_pdf_rounded,
+            color: MyColors.whiteColor,
+          ),
+        ),
+        const SizedBox(width: 4),
         IconButton(
           onPressed: widget.onCalendarViewChanged,
           icon: Icon(

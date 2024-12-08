@@ -159,7 +159,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 hint: const Text('Day'),
                 items: dates.map((String value) {
                   return DropdownMenuItem<int>(
-                    value: dates.indexOf(value) + 1,
+                    value: dates.indexOf(value),
                     child: Text(value),
                   );
                 }).toList(),

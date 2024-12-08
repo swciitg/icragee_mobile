@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/lost_found_model.dart';
+import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/widgets/lost_found/item_card.dart';
 
 class LostItemsList extends ConsumerWidget {
@@ -32,7 +33,12 @@ class LostItemsList extends ConsumerWidget {
               .toList();
           return ListView(
             children: items.map((item) {
-              return ItemCard(item: item, deleteOption: user.id == item.submittedBy);
+              return ItemCard(
+                item: item,
+                deleteOption: user.id == item.submittedBy ||
+                    user.role == AdminRole.superAdmin ||
+                    user.role == AdminRole.eventsVolunteer,
+              );
             }).toList(),
           );
         },

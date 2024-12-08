@@ -3,16 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
+import 'package:icragee_mobile/screens/admin/meal_details_screen.dart';
 import 'package:icragee_mobile/screens/feedback/feedback_page.dart';
 import 'package:icragee_mobile/screens/map_entries/map_sections_page.dart';
-import 'package:icragee_mobile/screens/profile/faq_screen.dart';
 import 'package:icragee_mobile/screens/profile/important_contacts.dart';
 import 'package:icragee_mobile/screens/profile/lost_and_found_screen.dart';
 import 'package:icragee_mobile/screens/schedule/event_venue_screen.dart';
+import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/globals.dart';
 import 'package:icragee_mobile/widgets/profile_screen/profile_details_card.dart';
+import 'package:icragee_mobile/widgets/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final bool admin;
@@ -59,6 +62,19 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
               children: [
                 ListTile(
                   contentPadding: EdgeInsets.zero,
+                  title: const Text('Day wise schedule'),
+                  onTap: () async {
+                    final url = await DataService.getScheduleUrl();
+                    if (url != null) {
+                      launchUrlString(url);
+                    } else {
+                      showSnackBar('Schedule not available');
+                    }
+                  },
+                ),
+                Container(height: 1, color: MyColors.primaryColor),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
                   title: const Text('Important contacts'),
                   onTap: () {
                     Navigator.push(context,
@@ -77,15 +93,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                 Container(height: 1, color: MyColors.primaryColor),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('FAQs'),
-                  onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const FaqScreen()));
-                  },
-                ),
-                Container(height: 1, color: MyColors.primaryColor),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
                   title: const Text('Lost/Found items'),
                   onTap: () {
                     Navigator.push(
@@ -98,7 +105,8 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 Container(height: 1, color: MyColors.primaryColor),
                 Consumer(builder: (context, ref, child) {
-                  if (ref.read(userProvider)!.role != AdminRole.superAdmin) {
+                  final role = ref.read(userProvider)!.role;
+                  if (role != AdminRole.superAdmin && role != AdminRole.eventsVolunteer) {
                     return const SizedBox();
                   }
                   return Column(
@@ -128,6 +136,28 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         onTap: () async {
                           navigatorKey.currentState!
                               .push(MaterialPageRoute(builder: (_) => EventVenueScreen()));
+                        },
+                      ),
+                      Container(height: 1, color: MyColors.primaryColor),
+                    ],
+                  );
+                }),
+                Consumer(builder: (context, ref, child) {
+                  final role = ref.read(userProvider)!.role;
+                  if (role != AdminRole.superAdmin && role != AdminRole.foodVolunteer) {
+                    return const SizedBox();
+                  }
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Meal Taken Details'),
+                        onTap: () async {
+                          navigatorKey.currentState!.push(
+                            MaterialPageRoute(
+                              builder: (_) => MealDetailsScreen(),
+                            ),
+                          );
                         },
                       ),
                       Container(height: 1, color: MyColors.primaryColor),

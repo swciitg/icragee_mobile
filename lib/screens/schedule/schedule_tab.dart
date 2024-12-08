@@ -19,20 +19,20 @@ class ScheduleTab extends ConsumerStatefulWidget {
 }
 
 class _ScheduleTabState extends ConsumerState<ScheduleTab> {
-  int selectedDay = 1;
+  int selectedDay = 0;
   bool calendarView = false;
   late CalendarController calendarController;
   late ScrollController scrollController;
 
   @override
   void initState() {
+    selectedDay = (DateTime.now().day - dayOneDate.day + 1).clamp(0, 4);
     scrollController = ScrollController();
     calendarController = CalendarController();
+    calendarController.displayDate = dayOneDate.subtract(const Duration(days: 1));
     super.initState();
-    calendarController.displayDate = dayOneDate;
-    setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProvider.notifier).updateUserDetails();
+      setState(() {});
     });
   }
 
@@ -108,8 +108,8 @@ class _ScheduleTabState extends ConsumerState<ScheduleTab> {
   }
 
   Padding _buildCalendarView(List<Event> schedules) {
-    final minDate = dayOneDate;
-    final maxDate = dayOneDate.add(const Duration(days: 4));
+    final minDate = dayOneDate.subtract(const Duration(days: 1));
+    final maxDate = dayOneDate.add(const Duration(days: 3));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(

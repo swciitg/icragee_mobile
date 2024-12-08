@@ -99,7 +99,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
       await DataService.updateUserDetails(userDetails, containsFirestoreData: false);
       ref.read(userProvider.notifier).setUserDetails(userDetails);
-      ref.read(userProvider.notifier).updateIfSuperUser();
       while (navigatorKey.currentContext!.canPop()) {
         navigatorKey.currentContext!.pop();
       }

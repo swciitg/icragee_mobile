@@ -117,15 +117,15 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
   Widget _buildPopupMenuButton() {
     return Consumer(builder: (context, ref, child) {
       final user = ref.watch(userProvider)!;
-      final email = user.email;
+      final id = user.id;
       final inList = user.eventList?.contains(widget.event.id) ?? false;
       return PopupMenuButton<String>(
         onSelected: (value) async {
           if (value == 'notify') {
-            await addEventToUser(email);
+            await addEventToUser(id);
             ref.read(userProvider.notifier).updateUserDetails();
           } else if (value == 'un-notify') {
-            await removeEventFromUser(email);
+            await removeEventFromUser(id);
             ref.read(userProvider.notifier).updateUserDetails();
           }
         },
@@ -163,10 +163,10 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
     });
   }
 
-  Future<void> addEventToUser(String email) async {
+  Future<void> addEventToUser(String id) async {
     try {
       await DataService.addEventToUser(
-        email,
+        id,
         widget.event.id,
       );
       await FirebaseMessaging.instance.subscribeToTopic(widget.event.id);
@@ -178,10 +178,10 @@ class _EventScheduleTileState extends State<EventScheduleTile> {
     }
   }
 
-  Future<void> removeEventFromUser(String email) async {
+  Future<void> removeEventFromUser(String id) async {
     try {
       await DataService.removeEventFromUser(
-        email,
+        id,
         widget.event.id,
       );
       await FirebaseMessaging.instance.unsubscribeFromTopic(widget.event.id);

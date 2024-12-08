@@ -177,7 +177,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 hint: const Text('Day'),
                 items: dates.map((String value) {
                   return DropdownMenuItem<int>(
-                    value: dates.indexOf(value) + 1,
+                    value: dates.indexOf(value),
                     child: Text(
                       value,
                       overflow: TextOverflow.ellipsis,

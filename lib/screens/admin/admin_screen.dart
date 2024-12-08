@@ -24,15 +24,16 @@ class AdminScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<AdminScreen> {
   bool _eventsSelected = true;
-  int _selectedDay = 1;
+  int _selectedDay = 0;
   List<Event> events = [];
 
   @override
   void initState() {
+    _selectedDay = (DateTime.now().day - dayOneDate.day + 1).clamp(0, 4);
     super.initState();
     FirebaseMessaging.instance.unsubscribeFromTopic('All');
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userProvider.notifier).updateIfSuperUser();
+      setState(() {});
     });
   }
 
@@ -113,12 +114,12 @@ class _HomeScreenState extends ConsumerState<AdminScreen> {
         children: [
           const SizedBox(width: 16),
           ...List.generate(
-            (4),
+            (5),
             (index) {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: DayButton(
-                  dayNumber: index + 1,
+                  dayNumber: index,
                   selectedDay: _selectedDay,
                   onPressed: (dayNumber) {
                     setState(() {

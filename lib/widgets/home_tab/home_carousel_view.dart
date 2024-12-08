@@ -18,7 +18,7 @@ class _HomeCarouselViewState extends State<HomeCarouselView> {
     if (user == null) {
       return Future.error("User Not Logged In");
     }
-    return DataService.getUserEventIds(user.email);
+    return DataService.getUserEventIds(user.id);
   }
 
   @override
