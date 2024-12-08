@@ -79,8 +79,7 @@ class HomeTab extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
           },
           icon: Image.asset(MyIcons.homeProfile, height: 36),
         ),

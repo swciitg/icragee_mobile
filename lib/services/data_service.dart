@@ -129,7 +129,9 @@ class DataService {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {
-        return Event.fromJson(doc.data());
+        final data = doc.data();
+        data['id'] = doc.id;
+        return Event.fromJson(data);
       }).toList();
     });
   }
@@ -212,6 +214,10 @@ class DataService {
         return NotificationModel.fromJson(doc.data());
       }).toList();
     });
+  }
+
+  static Future<void> deleteNotification(String id) async {
+    await firestore.collection('notifications').doc(id).delete();
   }
 
   static Future<void> fetchDayOneDate() async {

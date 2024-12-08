@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AdminRole {
@@ -61,7 +59,6 @@ class UserDetails {
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json, {String id = 'id'}) {
-    Logger().i(json);
     final name = Name.fromJson(json['name'] as Map<String, dynamic>);
     return UserDetails(
       id: json[id],

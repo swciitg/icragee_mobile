@@ -32,6 +32,7 @@ class _ScheduleTabState extends ConsumerState<ScheduleTab> {
     calendarController.displayDate = dayOneDate.subtract(const Duration(days: 1));
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProvider.notifier).updateUserDetails();
       setState(() {});
     });
   }
@@ -203,7 +204,7 @@ class _ScheduleTabState extends ConsumerState<ScheduleTab> {
       itemCount: schedules.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(bottom: 100),
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsets.only(

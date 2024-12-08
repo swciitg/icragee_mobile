@@ -1,4 +1,5 @@
 class NotificationModel {
+  final String id;
   final String title;
   final String description;
   final String timestamp;
@@ -7,6 +8,7 @@ class NotificationModel {
   final bool important;
 
   const NotificationModel({
+    required this.id,
     required this.title,
     required this.description,
     required this.timestamp,
@@ -17,6 +19,7 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
+      id: json['id'],
       title: json['title'],
       description: json['description'],
       timestamp: json['timestamp'],
@@ -28,6 +31,7 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'description': description,
       'timestamp': timestamp,

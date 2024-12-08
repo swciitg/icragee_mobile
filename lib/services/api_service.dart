@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:icragee_mobile/models/user_details.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 
 class ApiService {
   static const baseUrl = "https://event.iitg.ac.in/8icragee/api";
@@ -29,8 +28,7 @@ class ApiService {
   static Future<void> sendOTP(String email, {bool admin = false}) async {
     try {
       debugPrint("Sending OTP to (${admin ? "admin" : "user"}): $email");
-      await dio.post('/${admin ? "newadmin" : "user"}/send-otp',
-          data: {'email': email});
+      await dio.post('/${admin ? "newadmin" : "user"}/send-otp', data: {'email': email});
     } on DioException catch (e) {
       final data = e.response?.data as Map<String, dynamic>?;
       final message = data?['message'] as String?;
@@ -40,25 +38,20 @@ class ApiService {
     }
   }
 
-  static Future<bool> verifyOTP(String email, String otp,
-      {bool admin = false}) async {
+  static Future<bool> verifyOTP(String email, String otp, {bool admin = false}) async {
     // admin endpoint: /newadmin/verify-otp
     try {
       debugPrint("Verify OTP (${admin ? "admin" : "user"}): $email");
-      final res =
-          await dio.post('/${admin ? "newadmin" : "user"}/verify-otp', data: {
+      final res = await dio.post('/${admin ? "newadmin" : "user"}/verify-otp', data: {
         'email': email,
         'otp': int.parse(otp),
       });
       final data = res.data as Map<String, dynamic>;
       final user = data['user'] as Map<String, dynamic>?;
-      Logger().i(user);
       final message = data['message'] as String;
       if (user != null) {
         user['fcmToken'] = await FirebaseMessaging.instance.getToken();
-        Logger().i("here");
         final userDetails = UserDetails.fromJson(user, id: "_id");
-        Logger().i("here2");
         await userDetails.saveToSharedPreferences();
       }
       return message.contains("Verified") && user != null;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/screens/home/home_tab.dart';
 import 'package:icragee_mobile/screens/map_view/map_tab.dart';
 import 'package:icragee_mobile/screens/qr_view/qr_tab.dart';
@@ -8,16 +10,24 @@ import 'package:icragee_mobile/shared/colors.dart';
 import 'package:icragee_mobile/shared/tabs.dart';
 import 'package:upgrader/upgrader.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final pageController = PageController();
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProvider.notifier).updateUserDetails();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
