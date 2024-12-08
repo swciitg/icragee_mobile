@@ -78,6 +78,7 @@ class MapCoordinatePage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(vertical: 8),
                                     child: Material(
                                       child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           _buildTextField(title, "Title"),
                                           const SizedBox(height: 8),

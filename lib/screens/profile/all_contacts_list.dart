@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/contact_model.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/admin/add_contact_screen.dart';
 import 'package:icragee_mobile/widgets/profile_screen/contact_card.dart';
 
 class AllContactsList extends StatelessWidget {
   final String title;
+  final List<String> types;
   final List<ContactModel> contacts;
 
   const AllContactsList({
     super.key,
     required this.title,
     required this.contacts,
+    required this.types,
   });
 
   @override
@@ -64,11 +68,20 @@ class AllContactsList extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: contacts
-                .map((contact) => ContactCard(contact: contact))
-                .toList(),
+            children: contacts.map((contact) => ContactCard(contact: contact)).toList(),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await navigatorKey.currentState!.push(
+            MaterialPageRoute(
+              builder: (_) => AddContactScreen(types: types),
+            ),
+          );
+        },
+        backgroundColor: MyColors.primaryColor,
+        child: Icon(Icons.add),
       ),
     );
   }

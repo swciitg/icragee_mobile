@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icragee_mobile/models/contact_model.dart';
 import 'package:icragee_mobile/services/data_service.dart';
 import 'package:icragee_mobile/shared/colors.dart';
+import 'package:icragee_mobile/shared/globals.dart';
+import 'package:icragee_mobile/widgets/admin/add_contact_screen.dart';
 
 import '../../widgets/profile_screen/contacts_section.dart';
 
@@ -61,12 +63,14 @@ class _ImportantContactsState extends State<ImportantContacts> {
                 allContacts[e.category]!.add(e);
               }
             }
+            final types = allContacts.keys.toList();
             return ListView(
               children: [
                 ...allContacts.keys.map(
                   (key) => ContactsSection(
                     title: key,
                     contacts: allContacts[key] ?? [],
+                    types: types,
                   ),
                 ),
               ],
@@ -75,6 +79,20 @@ class _ImportantContactsState extends State<ImportantContacts> {
             return const Center(child: Text('No contacts found.'));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await navigatorKey.currentState!.push(
+            MaterialPageRoute(
+              builder: (_) => AddContactScreen(
+                types: allContacts.keys.toList(),
+              ),
+            ),
+          );
+          setState(() {});
+        },
+        backgroundColor: MyColors.primaryColor,
+        child: Icon(Icons.add),
       ),
     );
   }

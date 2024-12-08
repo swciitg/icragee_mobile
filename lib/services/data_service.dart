@@ -354,4 +354,28 @@ class DataService {
     venues.remove(venue);
     await doc.update({'venues': venues});
   }
+
+  static Future<void> addNewContact(ContactModel contact) async {
+    try {
+      await firestore.collection('important_contacts').add(contact.toJson());
+    } catch (e) {
+      throw Exception('Failed to add contact: $e');
+    }
+  }
+
+  static Future<void> deleteContact(String number) async {
+    final contactsRef = firestore.collection('important_contacts');
+    final querySnapshot = await contactsRef.where('phone', isEqualTo: number).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final docId = querySnapshot.docs.first.id;
+      await contactsRef.doc(docId).delete();
+    }
+  }
+
+  static Future<List<String>?> getContactTypes() async {
+    final doc = await firestore.collection('globals').doc('contact').get();
+    if (!doc.exists) return null;
+    return List<String>.from(doc.data()!['types']);
+  }
 }
