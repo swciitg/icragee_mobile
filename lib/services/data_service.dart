@@ -198,7 +198,8 @@ class DataService {
 
   static Future<void> addNotification(NotificationModel notification) async {
     try {
-      await firestore.collection('notifications').add(notification.toJson());
+      final doc = firestore.collection('notifications').doc(notification.id);
+      await doc.set(notification.toJson());
     } catch (e) {
       throw Exception('Failed to add notification: $e');
     }

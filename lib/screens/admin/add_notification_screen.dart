@@ -34,10 +34,7 @@ class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: MyColors.backgroundColor,
-        title: const Text('Add Notification'),
-      ),
+      appBar: _appBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -182,6 +179,34 @@ class _AddNotificationScreenState extends ConsumerState<AddNotificationScreen> {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.0),
       borderSide: const BorderSide(color: Colors.black),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        'Add Notification',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: MyColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
     );
   }
 }
