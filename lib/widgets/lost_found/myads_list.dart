@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/lost_found_model.dart';
-import 'package:icragee_mobile/widgets/lost_found/item_card.dart';
+import 'package:icragee_mobile/widgets/lost_found/lost_or_found_item_card.dart';
 
 class MyAdsList extends ConsumerWidget {
   const MyAdsList({super.key});
@@ -32,7 +32,7 @@ class MyAdsList extends ConsumerWidget {
               .toList();
           return ListView(
             children: items.map((item) {
-              return ItemCard(item: item, deleteOption: true);
+              return LostOrFoundItemCard(item: item, deleteOption: true);
             }).toList(),
           );
         },

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icragee_mobile/controllers/user_controller.dart';
 import 'package:icragee_mobile/models/lost_found_model.dart';
 import 'package:icragee_mobile/models/user_details.dart';
-import 'package:icragee_mobile/widgets/lost_found/item_card.dart';
+import 'package:icragee_mobile/widgets/lost_found/lost_or_found_item_card.dart';
 
 class FoundItemsList extends ConsumerWidget {
   const FoundItemsList({super.key});
@@ -33,7 +33,7 @@ class FoundItemsList extends ConsumerWidget {
               .toList();
           return ListView(
             children: items.map((item) {
-              return ItemCard(
+              return LostOrFoundItemCard(
                 item: item,
                 deleteOption: user.id == item.submittedBy ||
                     user.role == AdminRole.superAdmin ||
